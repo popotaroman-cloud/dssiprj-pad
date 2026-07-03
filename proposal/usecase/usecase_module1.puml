@@ -1,0 +1,51 @@
+' โมดูล 1: บัญชีและการเริ่มต้นใช้งาน (UC-01, UC-02, UC-03, UC-24)
+' ไม่มีความสัมพันธ์ข้ามโมดูล — เป็นจุดเริ่มต้นของทุกโมดูลอื่น
+@startuml usecase_module1
+!theme plain
+skinparam defaultFontName TH Sarabun New
+skinparam defaultFontSize 14
+skinparam roundcorner 10
+
+skinparam usecase {
+  BackgroundColor #FFFDE7
+  BorderColor #795548
+}
+skinparam actor {
+  BackgroundColor #E3F2FD
+  BorderColor #1565C0
+}
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #757575
+  FontStyle bold
+}
+skinparam rectangle {
+  BackgroundColor #FCFCFC
+  BorderColor #9E9E9E
+}
+skinparam ArrowColor #424242
+
+title <b>แอปพลิเคชัน Focus</b>\n(Use Case Diagram — โมดูล 1 · บัญชีและการเริ่มต้นใช้งาน)
+
+left to right direction
+
+actor "ผู้ใช้ทั่วไป\n(Guest)" as Guest
+actor "สมาชิก\n(Member)" as Member
+
+rectangle "โมดูล 1 · บัญชีและการเริ่มต้นใช้งาน" {
+  package "บัญชีและการเริ่มต้นใช้งาน" {
+    usecase "UC-01\nสมัครสมาชิก" as UC01
+    usecase "UC-02\nสร้างอวตาร" as UC02
+    usecase "UC-03\nเพิ่มรายการสิ่งที่โฟกัส" as UC03
+    usecase "UC-24\nตั้งค่าระยะเวลาโฟกัส\nและพักส่วนตัว" as UC24
+  }
+}
+
+Guest -- UC01
+Member -- UC02
+Member -- UC03
+Member -- UC24
+
+UC01 ..> UC02 : <<include>>\nบัญชีใหม่ต้องสร้างอวตาร
+
+@enduml

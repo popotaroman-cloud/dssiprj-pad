@@ -1,0 +1,42 @@
+' โมดูล 6: ประวัติและสถิติ (UC-22)
+' รับความสัมพันธ์ <<include>> เข้ามาจาก UC-25 (โมดูล 5) — วาดไว้ที่ไฟล์โมดูล 5 แทน ไม่วาดซ้ำที่นี่
+@startuml usecase_module6
+!theme plain
+skinparam defaultFontName TH Sarabun New
+skinparam defaultFontSize 14
+skinparam roundcorner 10
+
+skinparam usecase {
+  BackgroundColor #FFFDE7
+  BorderColor #795548
+}
+skinparam actor {
+  BackgroundColor #E3F2FD
+  BorderColor #1565C0
+}
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #757575
+  FontStyle bold
+}
+skinparam rectangle {
+  BackgroundColor #FCFCFC
+  BorderColor #9E9E9E
+}
+skinparam ArrowColor #424242
+
+title <b>แอปพลิเคชัน Focus</b>\n(Use Case Diagram — โมดูล 6 · ประวัติและสถิติ)
+
+left to right direction
+
+actor "สมาชิก\n(Member)" as Member
+
+rectangle "โมดูล 6 · ประวัติและสถิติ" {
+  package "ประวัติและสถิติ" {
+    usecase "UC-22\nดูประวัติและสถิติการโฟกัส\n(โฟกัส/พัก/เบรกเกิน แยกกัน)" as UC22
+  }
+}
+
+Member -- UC22
+
+@enduml

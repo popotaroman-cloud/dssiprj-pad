@@ -1,0 +1,55 @@
+@startuml focus_usecase_overview
+!theme plain
+skinparam defaultFontName TH Sarabun New
+skinparam defaultFontSize 14
+skinparam roundcorner 10
+
+skinparam usecase {
+  BackgroundColor #FFFDE7
+  BorderColor #795548
+}
+skinparam actor {
+  BackgroundColor #E3F2FD
+  BorderColor #1565C0
+}
+skinparam rectangle {
+  BackgroundColor #FCFCFC
+  BorderColor #9E9E9E
+}
+skinparam ArrowColor #424242
+skinparam noteBackgroundColor #FFF8E1
+skinparam noteBorderColor #FF8F00
+
+title <b>แอปพลิเคชันจับเวลาโฟกัสในรูปแบบเกม (Focus)</b>\n(Use Case Diagram — ภาพรวมระดับสูง / Top View)
+
+left to right direction
+
+actor "ผู้ใช้ทั่วไป\n(Guest)" as Guest #E3F2FD
+actor "สมาชิก\n(Member)" as Member #E8F5E9
+actor "สมาชิกในห้อง\n(Room Member)" as RoomMember #FFF3E0
+actor "ผู้ดูแลระบบ\n(Admin)" as Admin #F3E5F5
+
+rectangle "แอปพลิเคชัน Focus" {
+  usecase "สมัครสมาชิก" as UCA
+  usecase "ตั้งค่าโปรไฟล์เริ่มต้น\n(อวตาร, รายการโฟกัส, เวลาเริ่มต้น)" as UCB
+  usecase "โฟกัสแบบตีบอส\n(Core Loop)" as UCC
+  usecase "จัดการไอเทมและกล่องสุ่ม" as UCD
+  usecase "ระบบอวตารและความต่อเนื่อง\n(EXP / HP / Streak / ชุบชีวิต)" as UCE
+  usecase "ห้องโฟกัสและกิจกรรมทางสังคม" as UCF
+  usecase "ดูประวัติและสถิติ" as UCG
+  usecase "บริหารจัดการระบบ" as UCH
+}
+
+Guest -- UCA
+Member -- UCB
+Member -- UCC
+Member -- UCD
+Member -- UCF
+Member -- UCG
+RoomMember -- UCF
+Admin -- UCH
+
+UCA ..> UCB : <<include>>
+UCC ..> UCE : <<include>>\nคำนวณ HP/EXP/Streak\nและจัดการชุบชีวิต
+
+@enduml

@@ -1,0 +1,48 @@
+' โมดูล 7: Admin — การจัดการระบบ (UC-26, UC-27, UC-28, UC-29)
+' ไม่มีความสัมพันธ์ข้ามโมดูล
+@startuml usecase_module7
+!theme plain
+skinparam defaultFontName TH Sarabun New
+skinparam defaultFontSize 14
+skinparam roundcorner 10
+
+skinparam usecase {
+  BackgroundColor #FFFDE7
+  BorderColor #795548
+}
+skinparam actor {
+  BackgroundColor #E3F2FD
+  BorderColor #1565C0
+}
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #757575
+  FontStyle bold
+}
+skinparam rectangle {
+  BackgroundColor #FCFCFC
+  BorderColor #9E9E9E
+}
+skinparam ArrowColor #424242
+
+title <b>แอปพลิเคชัน Focus</b>\n(Use Case Diagram — โมดูล 7 · Admin — การจัดการระบบ)
+
+left to right direction
+
+actor "ผู้ดูแลระบบ\n(Admin)" as Admin
+
+rectangle "โมดูล 7 · Admin — การจัดการระบบ" {
+  package "Admin — การจัดการระบบ" {
+    usecase "UC-26\nจัดการข้อมูลไอเทม\nและอัตราดรอป" as UC26
+    usecase "UC-27\nจัดการรูปแบบอวตาร" as UC27
+    usecase "UC-28\nจัดการบัญชีผู้ใช้\n(ระงับ/ปลดระงับ)" as UC28
+    usecase "UC-29\nเรียกดูแดชบอร์ด\nสถิติการใช้งานระบบ" as UC29
+  }
+}
+
+Admin -- UC26
+Admin -- UC27
+Admin -- UC28
+Admin -- UC29
+
+@enduml

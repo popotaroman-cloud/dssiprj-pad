@@ -1,0 +1,55 @@
+' โมดูล 4: อวตารและความต่อเนื่อง (เหลือ UC-17.1 เท่านั้น)
+' UC-14 (เลเวลอัพ), UC-15 (HP Decay), UC-16 (Streak), UC-17 (หมดสติ)
+' ถูกยุบรวมเป็น business rules ของ UC-04 (โมดูล 2) แล้ว — ดู usecase_description.md
+' UC-17.1 เป็น use case เดียวในโมดูลนี้ที่ actor ริเริ่มเองจริง (ทำภารกิจชุบชีวิต)
+@startuml usecase_module4
+!theme plain
+skinparam defaultFontName TH Sarabun New
+skinparam defaultFontSize 14
+skinparam roundcorner 10
+
+skinparam usecase {
+  BackgroundColor #FFFDE7
+  BorderColor #795548
+}
+skinparam usecase<<external>> {
+  BackgroundColor #ECEFF1
+  BorderColor #9E9E9E
+  FontColor #757575
+}
+skinparam actor {
+  BackgroundColor #E3F2FD
+  BorderColor #1565C0
+}
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #757575
+  FontStyle bold
+}
+skinparam rectangle {
+  BackgroundColor #FCFCFC
+  BorderColor #9E9E9E
+}
+skinparam ArrowColor #424242
+
+title <b>แอปพลิเคชัน Focus</b>\n(Use Case Diagram — โมดูล 4 · อวตารและความต่อเนื่อง (ระบบชุบชีวิต))
+
+left to right direction
+
+actor "สมาชิก\n(Member)" as Member
+
+rectangle "โมดูล 4 · อวตารและความต่อเนื่อง" {
+  package "ระบบชุบชีวิต" {
+    usecase "UC-17.1\nระบบชุบชีวิต\n(Revival System)" as UC171
+  }
+
+  package "อ้างอิงจากโมดูลอื่น" {
+    usecase "UC-04\nเริ่มจับเวลาโฟกัส (ตีบอส)\n(โมดูล 2)" as UC04 <<external>>
+  }
+}
+
+Member -- UC171
+
+UC171 ..> UC04 : <<include>>\nภารกิจโฟกัสเซสชันเดียว
+
+@enduml

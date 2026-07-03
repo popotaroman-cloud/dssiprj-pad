@@ -1,0 +1,67 @@
+' โมดูล 5: ห้องโฟกัสและสังคม (UC-18, UC-19, UC-20, UC-21, UC-25)
+' Room Member เป็นสมาชิกที่กำลังอยู่ในห้อง จึงใช้ actor generalization (RoomMember --|> Member)
+' ความสัมพันธ์ข้ามโมดูล (ออกจากโมดูลนี้): UC-25 include UC-22 (โมดูล 6)
+@startuml usecase_module5
+!theme plain
+skinparam defaultFontName TH Sarabun New
+skinparam defaultFontSize 14
+skinparam roundcorner 10
+
+skinparam usecase {
+  BackgroundColor #FFFDE7
+  BorderColor #795548
+}
+skinparam usecase<<external>> {
+  BackgroundColor #ECEFF1
+  BorderColor #9E9E9E
+  FontColor #757575
+}
+skinparam actor {
+  BackgroundColor #E3F2FD
+  BorderColor #1565C0
+}
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #757575
+  FontStyle bold
+}
+skinparam rectangle {
+  BackgroundColor #FCFCFC
+  BorderColor #9E9E9E
+}
+skinparam ArrowColor #424242
+
+title <b>แอปพลิเคชัน Focus</b>\n(Use Case Diagram — โมดูล 5 · ห้องโฟกัสและสังคม)
+
+left to right direction
+
+actor "สมาชิก\n(Member)" as Member
+actor "สมาชิกในห้อง\n(Room Member)" as RoomMember
+
+rectangle "โมดูล 5 · ห้องโฟกัสและสังคม" {
+  package "ห้องโฟกัสและสังคม" {
+    usecase "UC-18\nสร้างห้องโฟกัส" as UC18
+    usecase "UC-19\nเข้าร่วมห้องโฟกัส" as UC19
+    usecase "UC-20\nดูเวลาโฟกัสของ\nสมาชิกในห้อง" as UC20
+    usecase "UC-21\nเพิ่มเพื่อน" as UC21
+    usecase "UC-25\nทำเครื่องหมาย\nเป้าหมายห้องสำเร็จ" as UC25
+  }
+
+  package "อ้างอิงจากโมดูลอื่น" {
+    usecase "UC-22\nดูประวัติและสถิติการโฟกัส\n(โมดูล 6)" as UC22 <<external>>
+  }
+}
+
+' ===== Actor generalization: Room Member เป็นสมาชิกที่กำลังอยู่ในห้อง =====
+RoomMember --|> Member
+
+Member -- UC18
+Member -- UC19
+Member -- UC21
+RoomMember -- UC20
+RoomMember -- UC25
+
+UC19 ..> UC18 : ต้องมีลิงก์/รหัสเชิญ
+UC25 ..> UC22 : <<include>>\nบันทึกสรุปลงประวัติทุกคน
+
+@enduml

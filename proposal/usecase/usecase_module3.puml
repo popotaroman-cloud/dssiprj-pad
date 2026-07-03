@@ -1,0 +1,49 @@
+' โมดูล 3: ไอเทมและกล่องสุ่ม (UC-10, UC-12, UC-13, UC-23)
+' UC-11 (ตรวจสอบ Pity System) ถูกยุบรวมเป็น business rule ของ UC-10 แล้ว — ดู usecase_description.md
+' ไม่มีความสัมพันธ์ข้ามโมดูล
+@startuml usecase_module3
+!theme plain
+skinparam defaultFontName TH Sarabun New
+skinparam defaultFontSize 14
+skinparam roundcorner 10
+
+skinparam usecase {
+  BackgroundColor #FFFDE7
+  BorderColor #795548
+}
+skinparam actor {
+  BackgroundColor #E3F2FD
+  BorderColor #1565C0
+}
+skinparam package {
+  BackgroundColor #F5F5F5
+  BorderColor #757575
+  FontStyle bold
+}
+skinparam rectangle {
+  BackgroundColor #FCFCFC
+  BorderColor #9E9E9E
+}
+skinparam ArrowColor #424242
+
+title <b>แอปพลิเคชัน Focus</b>\n(Use Case Diagram — โมดูล 3 · ไอเทมและกล่องสุ่ม)
+
+left to right direction
+
+actor "สมาชิก\n(Member)" as Member
+
+rectangle "โมดูล 3 · ไอเทมและกล่องสุ่ม" {
+  package "ไอเทมและกล่องสุ่ม" {
+    usecase "UC-10\nเปิดกล่องสุ่ม\n(รวม Pity System)" as UC10
+    usecase "UC-12\nผสมไอเทม (Crafting)" as UC12
+    usecase "UC-13\nใช้ไอเทมโล่เวลา\n(ป้องกัน HP/Streak 24-48 ชม.)" as UC13
+    usecase "UC-23\nดูกระเป๋าไอเทม" as UC23
+  }
+}
+
+Member -- UC10
+Member -- UC12
+Member -- UC13
+Member -- UC23
+
+@enduml

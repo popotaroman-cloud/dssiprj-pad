@@ -1,0 +1,60 @@
+@startuml usecase_overview
+!theme plain
+skinparam defaultFontName TH Sarabun New
+skinparam defaultFontSize 14
+skinparam roundcorner 10
+
+skinparam usecase {
+  BackgroundColor #FFFDE7
+  BorderColor #795548
+}
+skinparam actor {
+  BackgroundColor #E3F2FD
+  BorderColor #1565C0
+}
+skinparam rectangle {
+  BackgroundColor #FCFCFC
+  BorderColor #9E9E9E
+}
+skinparam ArrowColor #424242
+
+title <b>แอปพลิเคชันจับเวลาโฟกัสในรูปแบบเกม (Focus)</b>\n(Use Case Diagram — ภาพรวมระดับสูง / Top View)
+
+left to right direction
+
+actor "ผู้ใช้ทั่วไป\n(Guest)" as Guest
+actor "สมาชิก\n(Member)" as Member
+actor "สมาชิกในห้อง\n(Room Member)" as RoomMember
+actor "ผู้ดูแลระบบ\n(Admin)" as Admin
+
+rectangle "แอปพลิเคชัน Focus" {
+  usecase "โมดูล 1\nบัญชีและการเริ่มต้นใช้งาน" as M1
+  usecase "โมดูล 2\nเซสชันโฟกัส (Core Loop)" as M2
+  usecase "โมดูล 3\nไอเทมและกล่องสุ่ม" as M3
+  usecase "โมดูล 4\nอวตารและความต่อเนื่อง" as M4
+  usecase "โมดูล 5\nห้องโฟกัสและสังคม" as M5
+  usecase "โมดูล 6\nประวัติและสถิติ" as M6
+  usecase "โมดูล 7\nAdmin — การจัดการระบบ" as M7
+}
+
+' ===== Actor generalization: Room Member เป็นสมาชิกที่กำลังอยู่ในห้อง =====
+RoomMember --|> Member
+
+' ===== ความสัมพันธ์ actor–use case (เส้นธรรมดา) =====
+Guest -- M1
+Member -- M1
+Member -- M2
+Member -- M3
+Member -- M4
+Member -- M5
+Member -- M6
+RoomMember -- M5
+Admin -- M7
+
+' ===== ความสัมพันธ์ระหว่างโมดูล =====
+' หมายเหตุ: HP Decay/Streak/เลเวลอัพ ถูกยุบรวมเป็น business rules ของโมดูล 2 แล้ว
+' ไม่ใช่ use case แยกที่ต้องวาดเป็นความสัมพันธ์ระหว่างโมดูลอีกต่อไป
+M4 ..> M2 : <<include>>\nภารกิจชุบชีวิตใช้กลไกเซสชันโฟกัสเดียวกัน
+M5 ..> M6 : <<include>>\nบันทึกสรุปลงประวัติ
+
+@enduml
