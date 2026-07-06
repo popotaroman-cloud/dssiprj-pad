@@ -61,7 +61,6 @@ Member -- UC21
 RoomMember -- UC20
 RoomMember -- UC25
 
-UC19 ..> UC18 : ต้องมีลิงก์/รหัสเชิญ
-UC25 ..> UC22 : <<include>>\nบันทึกสรุปลงประวัติทุกคน
-
+UC19 ..> UC18 : <<include>>
+UC25 ..> UC22 : <<include>>
 @enduml

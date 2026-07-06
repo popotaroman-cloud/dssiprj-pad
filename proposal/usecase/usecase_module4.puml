@@ -50,6 +50,6 @@ rectangle "โมดูล 4 · อวตารและความต่อเ
 
 Member -- UC171
 
-UC171 ..> UC04 : <<include>>\nภารกิจโฟกัสเซสชันเดียว
+UC171 ..> UC04 : <<include>>
 
 @enduml

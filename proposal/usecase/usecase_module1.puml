@@ -46,6 +46,6 @@ Member -- UC02
 Member -- UC03
 Member -- UC24
 
-UC01 ..> UC02 : <<include>>\nบัญชีใหม่ต้องสร้างอวตาร
+UC01 ..> UC02 : <<include>>
 
 @enduml
