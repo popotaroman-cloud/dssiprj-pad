@@ -1,4 +1,4 @@
-' โมดูล 3: ไอเทมและกล่องสุ่ม (UC-10, UC-12, UC-13, UC-23)
+' โมดูล 3: ไอเทมและกล่องสุ่ม (UC-10, UC-12, UC-13)
 ' UC-11 (ตรวจสอบ Pity System) ถูกยุบรวมเป็น business rule ของ UC-10 แล้ว — ดู usecase_description.md
 ' ไม่มีความสัมพันธ์ข้ามโมดูล
 @startuml usecase_module3
@@ -37,13 +37,11 @@ rectangle "โมดูล 3 · ไอเทมและกล่องสุ่
     usecase "UC-10\nเปิดกล่องสุ่ม\n(รวม Pity System)" as UC10
     usecase "UC-12\nผสมไอเทม (Crafting)" as UC12
     usecase "UC-13\nใช้ไอเทมโล่เวลา\n(ป้องกัน HP/Streak 24-48 ชม.)" as UC13
-    usecase "UC-23\nดูกระเป๋าไอเทม" as UC23
   }
 }
 
 Member -- UC10
 Member -- UC12
 Member -- UC13
-Member -- UC23
 
 @enduml
