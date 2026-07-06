@@ -1,0 +1,57 @@
+@startuml M5_activity_เพิ่มเพื่อน
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-21 เพิ่มเพื่อน — Activity Diagram
+
+|สมาชิก|
+start
+:ค้นหาผู้ใช้อื่นด้วยชื่อหรือรหัส;
+
+|ระบบ|
+if (พบผู้ใช้ที่ค้นหาหรือไม่?) then (ไม่พบ)
+  :แจ้งเตือน;
+  stop
+else (พบ)
+endif
+
+|สมาชิก|
+:กดส่งคำขอเป็นเพื่อน;
+
+|ระบบ|
+:ส่งการแจ้งเตือนไปยังอีกฝ่าย;
+
+|สมาชิกอีกฝ่าย|
+if (ยอมรับคำขอหรือไม่?) then (ปฏิเสธ)
+  |ระบบ|
+  :ยกเลิกคำขอ ไม่เพิ่มเป็นเพื่อน;
+  stop
+else (ยอมรับ)
+endif
+
+|ระบบ|
+:เพิ่มทั้งสองเป็นเพื่อนกัน;
+:แสดงในลิสต์เพื่อนของทั้งคู่;
+
+stop
+
+@enduml

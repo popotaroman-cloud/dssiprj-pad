@@ -1,0 +1,56 @@
+@startuml M6_activity_ดูประวัติและสถิติการโฟกัส
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-22 ดูประวัติและสถิติการโฟกัส — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดหน้าประวัติ/สถิติ;
+
+|ระบบ|
+:แสดงตัวกรองช่วงเวลา;
+
+|สมาชิก|
+:เลือกช่วงเวลาที่ต้องการดู;
+
+|ระบบ|
+if (มีข้อมูลในช่วงเวลาที่เลือกหรือไม่?) then (ยังไม่มี)
+  :แจ้งเตือน;
+  stop
+else (มี)
+endif
+
+:สรุปเวลาโฟกัส/พัก/เบรกเกินรวมในช่วงที่เลือก แยกออกจากกันชัดเจน;
+:แสดงรายละเอียดแยกตามแต่ละรายการที่โฟกัส (UC-03);
+:แสดงรายการเซสชันย้อนหลังพร้อมสถานะ รวมสรุปห้องที่เคยปิดเป้าหมายแล้ว (UC-25);
+
+|สมาชิก|
+if (แตะรายการใดรายการหนึ่งหรือไม่?) then (แตะ)
+  |ระบบ|
+  :แสดงรายละเอียดเซสชันย่อยของรายการนั้น;
+else (ไม่แตะ)
+endif
+
+stop
+
+@enduml

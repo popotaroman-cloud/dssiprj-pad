@@ -1,0 +1,51 @@
+@startuml M4_activity_ระบบชุบชีวิต
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-30 ระบบชุบชีวิต (Revival System) — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดแอปเห็นหน้าจอชุบชีวิตพร้อมภารกิจ;
+:เริ่มเซสชันโฟกัสภารกิจชุบชีวิต (include UC-04);
+
+|ระบบ|
+:ตรวจสอบว่าเซสชันจบสำเร็จครบตามเงื่อนไขหรือไม่;
+
+if (เซสชันสำเร็จครบเงื่อนไข หรือถูกยกเลิกกลางทาง? (UC-05)) then (ยกเลิกกลางทาง)
+  :ภารกิจไม่สำเร็จ อวตารยังคงหมดสติ;
+  |สมาชิก|
+  :ลองใหม่ได้ไม่จำกัดจำนวนครั้ง;
+  stop
+else (สำเร็จครบเงื่อนไข)
+endif
+
+|ระบบ|
+:ชุบชีวิตอวตาร คืน HP เต็ม 100% ปลดล็อกฟีเจอร์;
+:รีเซ็ตเลเวล/EXP กลับจุดเริ่มต้น (ไอเทมในกระเป๋ายังคงอยู่);
+
+|สมาชิก|
+:เห็นการยืนยันความสำเร็จ;
+
+stop
+
+@enduml

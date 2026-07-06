@@ -1,0 +1,140 @@
+@startuml ui_state_diagram
+' ══════════════════════════════════════════════════════════════════
+' รองรับภาษาไทย — อ่านก่อน render:
+' 1. บันทึกไฟล์นี้เป็น UTF-8 (ไม่ต้องมี BOM) เสมอ
+' 2. ถ้า render ผ่าน CLI (plantuml.jar) ต้องระบุ flag encoding ด้วย:
+'      java -Dfile.encoding=UTF-8 -jar plantuml.jar -charset UTF-8 ui_state_diagram.puml
+' 3. บังคับใช้ Smetana (pure-Java layout engine) แทน Graphviz/dot
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+' ══════════════════════════════════════════════════════════════════
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 11
+
+' ===== Monochrome เท่านั้น =====
+skinparam state {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  ArrowFontName "TH Sarabun New"
+}
+
+title Focus App — UI State Transition Diagram (การนำทางระหว่างหน้าจอ)
+
+' ═════════ โซนก่อนเข้าสู่ระบบ ═════════
+state "ยังไม่เข้าสู่ระบบ" as PreAuth {
+  state "หน้าแรก (Welcome)" as Welcome
+  state "สมัครสมาชิก\n(UC-01)" as Register
+  state "เข้าสู่ระบบ\n(UC-31)" as Login
+  state "สร้างอวตาร\n(UC-02)" as CreateAvatar
+
+  [*] --> Welcome
+  Welcome --> Register : กด "สมัครสมาชิก"
+  Welcome --> Login : กด "เข้าสู่ระบบ"
+  Register --> Welcome : ยกเลิกกลางคัน
+  Register --> CreateAvatar : สมัครสำเร็จ\n(include UC-02)
+  Login --> Login : ข้อมูลผิด /\nบัญชีถูกระงับ (UC-28)
+}
+
+' ═════════ โซนสมาชิก ═════════
+state "สมาชิก (เข้าสู่ระบบแล้ว)" as Member {
+  state "หน้าหลัก\n(อวตาร / HP / streak)" as Home
+  state "จัดการรายการโฟกัส\n(UC-03)" as FocusList
+  state "ตั้งค่าเวลาโฟกัส/พัก\n(UC-24)" as Settings
+  state "เซสชันโฟกัส · ตีบอส\n(UC-04, ยกเลิก UC-05)" as Session
+  state "สรุปผลเซสชัน\n(EXP / กล่องสุ่ม)" as Summary
+  state "ช่วงพัก\n(เสร็จสิ้นก่อนเวลา UC-08)" as Break
+  state "ภารกิจชุบชีวิต\n(UC-30)" as Revival
+  state "กระเป๋าไอเทม\n(UC-23, ใช้โล่ UC-13)" as Inventory
+  state "เปิดกล่องสุ่ม\n(UC-10)" as LootBox
+  state "ผสมไอเทม\n(UC-12)" as Crafting
+  state "รายการห้องโฟกัส" as RoomList
+  state "สร้างห้อง\n(UC-18)" as CreateRoom
+  state "เข้าร่วมห้อง\n(UC-19)" as JoinRoom
+  state "หน้าห้อง / อันดับ\n(UC-20, UC-25, UC-34)" as RoomView
+  state "สรุปผลห้อง" as RoomSummary
+  state "เพื่อน\n(UC-21, UC-35)" as Friends
+  state "ประวัติ / สถิติ\n(UC-22)" as History
+
+  ' --- เตรียมพร้อม ---
+  Home --> FocusList : จัดการรายการ
+  FocusList --> Home : กลับ
+  Home --> Settings : ตั้งค่า
+  Settings --> Home : บันทึก / กลับ
+
+  ' --- วงจรเซสชันโฟกัส (core loop) ---
+  Home --> Session : เลือกรายการ + เริ่มโฟกัส
+  Session --> Summary : เวลาครบ (สำเร็จ)
+  Session --> Home : กดค้างยกเลิก (UC-05)
+  Summary --> Break : เริ่มพักอัตโนมัติ
+  Break --> Session : เริ่มเซสชันถัดไป
+  Break --> Home : พักครบ / กด "เสร็จสิ้น" (UC-08)
+
+  ' --- ชุบชีวิต ---
+  Home --> Revival : อวตารหมดสติ (HP = 0)
+  Revival --> Session : เริ่มภารกิจ\n(ใช้กลไก UC-04)
+
+  ' --- ไอเทม ---
+  Home --> Inventory : เปิดกระเป๋า
+  Inventory --> Home : กลับ
+  Inventory --> LootBox : เปิดกล่องสุ่ม
+  LootBox --> Inventory : รับไอเทมแล้ว
+  Inventory --> Crafting : ผสมไอเทม
+  Crafting --> Inventory : ผสมสำเร็จ / กลับ
+
+  ' --- ห้องโฟกัส ---
+  Home --> RoomList : เมนูห้องโฟกัส
+  RoomList --> Home : กลับ
+  RoomList --> CreateRoom : สร้างห้อง
+  CreateRoom --> RoomView : สร้างสำเร็จ\n(ได้ลิงก์/รหัสเชิญ)
+  RoomList --> JoinRoom : กรอกรหัส / กดลิงก์เชิญ
+  JoinRoom --> RoomView : เข้าร่วมสำเร็จ
+  JoinRoom --> RoomList : รหัสผิด / ห้องปิดแล้ว
+  RoomView --> Session : เริ่มโฟกัสในห้อง\n(นับรวมเป้าหมายห้อง)
+  RoomView --> RoomSummary : เจ้าของห้องปิดเป้าหมาย\n(UC-25)
+  RoomView --> Home : ออกจากห้อง (UC-34)
+  RoomSummary --> RoomList : กลับ
+
+  ' --- สังคม / ประวัติ ---
+  Home --> Friends : เมนูเพื่อน
+  Friends --> Home : กลับ
+  Home --> History : ประวัติ / สถิติ
+  History --> Home : กลับ
+}
+
+' ═════════ โซนผู้ดูแลระบบ ═════════
+state "ผู้ดูแลระบบ" as Admin {
+  state "แดชบอร์ดสถิติระบบ\n(UC-29)" as AdminDash
+  state "จัดการไอเทม / อัตราดรอป\n(UC-26)" as ItemMgmt
+  state "จัดการรูปแบบอวตาร\n(UC-27)" as AvatarMgmt
+  state "จัดการบัญชีผู้ใช้\n(UC-28)" as UserMgmt
+
+  AdminDash --> ItemMgmt : เมนูไอเทม
+  ItemMgmt --> AdminDash : กลับ
+  AdminDash --> AvatarMgmt : เมนูอวตาร
+  AvatarMgmt --> AdminDash : กลับ
+  AdminDash --> UserMgmt : เมนูผู้ใช้
+  UserMgmt --> AdminDash : กลับ
+}
+
+' ═════════ ข้ามโซน ═════════
+CreateAvatar --> Home : สร้างอวตารสำเร็จ\n(HP เต็ม เลเวล 1)
+Login --> Home : ล็อกอินสำเร็จ (สมาชิก)
+Login --> Revival : ล็อกอินสำเร็จ\nแต่อวตารหมดสติ
+Login --> AdminDash : ล็อกอินสำเร็จ (ผู้ดูแล)
+Home --> Login : ออกจากระบบ (UC-32)\n(ห้ามออกระหว่างมีเซสชันทำงาน)
+AdminDash --> Login : ออกจากระบบ
+
+note bottom of Member
+  แสดงเฉพาะหน้าจอหลัก — dialog ยืนยัน, popup แจ้งเตือน,
+  และ bottom sheet ไม่นับเป็น state แยก
+end note
+
+@enduml

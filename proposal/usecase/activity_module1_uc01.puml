@@ -1,0 +1,52 @@
+@startuml M1_activity_การสมัครสมาชิก
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-01 การสมัครสมาชิก — Activity Diagram
+
+|Guest|
+start
+:กดปุ่ม "สมัครสมาชิก";
+
+|ระบบ|
+:แสดงฟอร์มกรอกข้อมูล;
+
+|Guest|
+repeat
+  if (ต้องการยกเลิกกลางคันหรือไม่?) then (ยกเลิก)
+    :ล้างข้อมูล กลับหน้าแรก (ยังเป็น Guest);
+    stop
+  else (กรอกต่อ)
+  endif
+  :กรอกข้อมูลครบถ้วนและกดยืนยัน;
+  |ระบบ|
+  :ตรวจสอบความถูกต้องของข้อมูล;
+repeat while (ข้อมูลถูกต้องและไม่ซ้ำหรือไม่?) is (ไม่ครบ/ไม่ถูกรูปแบบ/ซ้ำ — แก้ไขใหม่) not (ถูกต้อง)
+
+:สร้างบัญชีใหม่ บันทึกลงฐานข้อมูล;
+:เปลี่ยนสถานะจาก Guest เป็นสมาชิก;
+
+|Guest|
+:เข้าสู่หน้าสร้างอวตาร (include UC-02);
+stop
+
+@enduml

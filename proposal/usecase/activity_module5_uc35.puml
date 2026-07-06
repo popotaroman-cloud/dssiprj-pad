@@ -1,0 +1,53 @@
+@startuml M5_activity_ยกเลิกคำขอเป็นเพื่อนหรือลบเพื่อน
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-35 ยกเลิกคำขอเป็นเพื่อน / ลบเพื่อน — Activity Diagram
+
+|สมาชิก|
+start
+
+if (เลือกการกระทำ?) then (ยกเลิกคำขอที่ส่งไป)
+  :เปิดรายการคำขอที่ส่งไป;
+  :กดยกเลิกคำขอ;
+  |ระบบ|
+  :ลบคำขอออก;
+  note right: อีกฝ่ายไม่ได้รับการแจ้งเตือนอีกต่อไป
+else (ลบเพื่อน)
+  |สมาชิก|
+  :เปิดลิสต์เพื่อน เลือกเพื่อนที่ต้องการลบ;
+  :กดลบเพื่อน;
+  |ระบบ|
+  :ขอคำยืนยัน;
+  |สมาชิก|
+  if (ยืนยันหรือไม่?) then (ไม่ยืนยัน)
+    :ยังคงเป็นเพื่อนกันตามเดิม;
+    stop
+  else (ยืนยัน)
+  endif
+  |ระบบ|
+  :นำออกจากลิสต์เพื่อนของทั้งสองฝ่าย;
+endif
+
+stop
+
+@enduml

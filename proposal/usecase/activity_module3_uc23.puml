@@ -1,0 +1,53 @@
+@startuml M3_activity_ดูกระเป๋าไอเทม
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-23 ดูกระเป๋าไอเทม — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดหน้ากระเป๋า;
+
+|ระบบ|
+:แสดงไอเทมทั้งหมดแยกตามประเภทและความหายาก;
+
+if (มีไอเทมในกระเป๋าหรือไม่?) then (ยังไม่มี)
+  :แจ้งข้อความชวนเริ่มโฟกัส;
+  stop
+else (มี)
+endif
+
+|สมาชิก|
+if (เลือกทำอะไร?) then (สวมใส่ไอเทมแต่งตัว)
+  :เลือกไอเทมแต่งตัวเพื่อสวมใส่;
+  |ระบบ|
+  :อัพเดตอวตารตามไอเทมที่เลือก;
+else (ใช้ไอเทมใช้งาน)
+  |สมาชิก|
+  :เลือกไอเทมใช้งานเพื่อใช้ (เช่น โล่เวลา — extend UC-13);
+  |ระบบ|
+  :อัพเดตสถานะไอเทมตามที่เลือก;
+endif
+
+stop
+
+@enduml

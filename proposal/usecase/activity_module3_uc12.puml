@@ -1,0 +1,49 @@
+@startuml M3_activity_ผสมไอเทม
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-12 ผสมไอเทม (Crafting) — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดหน้าผสมไอเทมจากกระเป๋า;
+:เลือกไอเทมที่จะนำมาผสม;
+
+|ระบบ|
+:ตรวจสอบว่าไอเทมครบตามเงื่อนไขสูตรผสม;
+
+if (ไอเทมครบตามเงื่อนไขสูตรผสมหรือไม่?) then (ไม่ครบ)
+  :แจ้งเตือน ปิดปุ่มยืนยัน;
+  stop
+else (ครบ)
+endif
+
+|สมาชิก|
+:กดยืนยันการผสม;
+
+|ระบบ|
+:นำไอเทมต้นทางออกจากกระเป๋า;
+:เพิ่มไอเทมผลลัพธ์ที่หายากขึ้นเข้ากระเป๋า;
+
+stop
+
+@enduml

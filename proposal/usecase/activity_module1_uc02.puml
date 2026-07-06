@@ -1,0 +1,43 @@
+@startuml M1_activity_การสร้างอวตาร
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-02 การสร้างอวตาร — Activity Diagram
+
+|ระบบ|
+start
+:แสดงหน้าเลือกรูปแบบอวตารเริ่มต้น;
+
+|สมาชิก|
+repeat
+  :เลือก/เลื่อนดูรูปแบบอวตารที่ต้องการ;
+repeat while (พร้อมยืนยันการสร้างหรือยัง?) is (ยังไม่แน่ใจ — ดูตัวเลือกอื่นต่อ) not (พร้อมยืนยัน)
+
+:กดยืนยันการสร้าง;
+
+|ระบบ|
+:บันทึกอวตาร (HP เต็ม เลเวล 1 ไม่มีไอเทมแต่งตัว);
+:พาสมาชิกเข้าสู่หน้าหลัก;
+
+stop
+
+@enduml

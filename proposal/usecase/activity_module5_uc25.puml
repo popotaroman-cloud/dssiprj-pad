@@ -1,0 +1,53 @@
+@startuml M5_activity_ทำเครื่องหมายเป้าหมายห้องสำเร็จ
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-25 ทำเครื่องหมายเป้าหมายห้องสำเร็จ — Activity Diagram
+
+|เจ้าของห้อง|
+start
+:กดปุ่ม "สำเร็จเป้าหมาย";
+
+|ระบบ|
+:ขอคำยืนยันการปิดห้อง;
+
+|เจ้าของห้อง|
+if (ยืนยันหรือไม่?) then (ไม่ยืนยัน)
+  :ห้องยังคงเปิดอยู่ ไม่มีการบันทึก;
+  stop
+else (ยืนยัน)
+endif
+
+|ระบบ|
+:คำนวณสรุปสถิติของสมาชิกแต่ละคน (แยกเวลาโฟกัส/พัก/เบรกเกิน);
+:บันทึกสรุปห้องลงในประวัติของสมาชิกทุกคน (include UC-22);
+:แสดงหน้าสรุปผลให้ทุกคนเห็นทันที;
+:ปิดห้อง;
+
+note right
+  ถ้าสมาชิกทั่วไป (ไม่ใช่เจ้าของห้อง) กดปุ่มนี้
+  ระบบแจ้งว่าเฉพาะเจ้าของห้องทำได้ และไม่ดำเนินการต่อ
+end note
+
+stop
+
+@enduml

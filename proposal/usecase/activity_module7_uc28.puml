@@ -1,0 +1,63 @@
+@startuml M7_activity_จัดการบัญชีผู้ใช้
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-28 จัดการบัญชีผู้ใช้ (ระงับ/ปลดระงับ) — Activity Diagram
+
+|ผู้ดูแลระบบ|
+start
+:ค้นหาบัญชีผู้ใช้ด้วยชื่อผู้ใช้หรืออีเมล;
+
+|ระบบ|
+if (พบบัญชีที่ค้นหาหรือไม่?) then (ไม่พบ)
+  :แจ้งเตือน;
+  stop
+else (พบ)
+endif
+
+:แสดงข้อมูลบัญชี สถานะปัจจุบัน และประวัติการถูกระงับ (ถ้ามี);
+
+|ผู้ดูแลระบบ|
+:เลือกระงับหรือปลดระงับพร้อมกรอกเหตุผล;
+
+|ระบบ|
+if (กรอกเหตุผลหรือไม่?) then (ไม่กรอก)
+  :แจ้งเตือน ไม่ดำเนินการต่อ;
+  stop
+else (กรอกแล้ว)
+endif
+
+:ขอคำยืนยันก่อนดำเนินการ;
+
+|ผู้ดูแลระบบ|
+if (ยืนยันหรือไม่?) then (ไม่ยืนยัน)
+  stop
+else (ยืนยัน)
+endif
+
+|ระบบ|
+:เปลี่ยนสถานะบัญชี บันทึกเหตุผล/เวลา;
+:แจ้งเตือนเจ้าของบัญชีทางอีเมล;
+
+stop
+
+@enduml

@@ -11,8 +11,8 @@
 **Standalone** = เปิดไฟล์ `.html` ได้ตรงจาก `file://` (ดับเบิลคลิกเปิดในเบราว์เซอร์) หรือรันผ่าน static server ง่ายๆ โดย**ไม่มี**:
 - Backend API จริง (Django/Node/ฯลฯ)
 - ฐานข้อมูลจริง (PostgreSQL/MySQL)
-- Authentication จริง (Keycloak/JWT)
-- การเรียก network request ไปยัง service อื่นจริง
+- Authentication จริง (ระบบ login/session จริง)
+- การเรียก network request ไปยัง backend จริง
 
 **แต่ต้องทำได้ครบ:**
 - ทุกปุ่ม/ลิงก์ต้อง**กดแล้วมีผลจริง** (เปลี่ยนหน้า, เปลี่ยนสถานะ, แสดงข้อมูลใหม่) — ห้ามมี `href="#"` ที่กดแล้วไม่เกิดอะไรขึ้น
@@ -93,7 +93,7 @@ let theses = loadData("theses", mockTheses);
 | Basic Flow (ลำดับเหตุการณ์หลัก) | ลำดับปุ่ม/ฟอร์มบนหน้าจอ ต้องกดตามลำดับได้จริง |
 | Alternative Flow | ต้อง trigger error/แจ้งเตือนได้จริงเมื่อทำตามเงื่อนไขนั้น (เช่น กรอกไม่ครบ → แสดง validation message) |
 | Post-condition | หลังกดปุ่ม action หลัก ต้องเห็นการเปลี่ยนแปลงจริง (สถานะเปลี่ยน, มีข้อมูลใหม่ในตาราง) |
-| เกี่ยวข้องกับ Service/Endpoint อื่น | ดู §7 วิธี simulate การเรียกข้าม service |
+| กฎทางธุรกิจที่เกี่ยวข้อง (Business Rules) | สูตร/เงื่อนไขต้องคำนวณจริงด้วย JS ตาม §7 (pure logic ห้าม mock) |
 
 ---
 
@@ -141,12 +141,12 @@ function loginAs(role) {
 
 | ฟังก์ชันในระบบจริง | ทำไมทำจริงไม่ได้แบบ standalone | วิธี Simulate |
 |---------------------|-------------------------------|----------------|
-| **เรียก API service อื่น** (เช่น M9 เรียก M3 ดึงรายชื่ออาจารย์) | ไม่มี network/server จริง | เขียน mock function คืนค่าจาก `mock-data.js` ทันที พร้อม comment `// ระบบจริงเรียก GET /instructors?expertise=...` |
-| **Authentication/JWT** | ไม่มี Keycloak จริง | ใช้ role switcher ใน §5 แทน ไม่ต้องมี password จริง |
-| **อัปโหลดไฟล์ขึ้น Object Storage** | ไม่มี MinIO/server จริง | ใช้ `FileReader` API อ่านไฟล์ที่เลือกแล้วแสดง preview ในเบราว์เซอร์ ("อัปโหลดสำเร็จ (จำลอง)") โดยไม่ต้องส่งไปไหนจริง |
+| **เรียก API ของ backend** (เช่น ดึงรายการข้อมูลจาก server) | ไม่มี network/server จริง | เขียน mock function คืนค่าจาก `mock-data.js` ทันที พร้อม comment `// ระบบจริงเรียก GET /api/...` |
+| **Authentication/Login** | ไม่มีระบบ login จริง | ใช้ role switcher ใน §5 แทน ไม่ต้องมี password จริง |
+| **อัปโหลดไฟล์** | ไม่มี server เก็บไฟล์จริง | ใช้ `FileReader` API อ่านไฟล์ที่เลือกแล้วแสดง preview ในเบราว์เซอร์ ("อัปโหลดสำเร็จ (จำลอง)") โดยไม่ต้องส่งไปไหนจริง |
 | **ส่งอีเมล/แจ้งเตือน** | ไม่มี mail server จริง | แสดง toast/banner "ส่งอีเมลแจ้งเตือนแล้ว (จำลอง)" |
-| **สร้างเอกสาร PDF/DOCX** (เช่น มคอ.2, transcript) | ไม่มี backend generate ไฟล์จริง | ใช้ library ฝั่ง client ที่ทำงานได้แบบ standalone จริง เช่น **jsPDF** (CDN) สร้าง PDF จริงจากข้อมูลใน mockup ได้ทันที หรืออย่างน้อยใช้ `window.print()` เปิด print-preview |
-| **Redis lock / real-time conflict check** | ไม่มี Redis จริง | เขียนฟังก์ชัน JS ตรวจสอบ overlap ของเวลา/ห้องจาก array ใน memory ตรงๆ (logic เดียวกัน ผลลัพธ์เหมือนกัน แค่ไม่มี distributed lock จริง) |
+| **สร้างเอกสาร PDF/DOCX** (เช่น รายงานสรุป) | ไม่มี backend generate ไฟล์จริง | ใช้ library ฝั่ง client ที่ทำงานได้แบบ standalone จริง เช่น **jsPDF** (CDN) สร้าง PDF จริงจากข้อมูลใน mockup ได้ทันที หรืออย่างน้อยใช้ `window.print()` เปิด print-preview |
+| **ตรวจสอบข้อมูลชนกัน/real-time conflict check** | ไม่มีฐานข้อมูลจริง | เขียนฟังก์ชัน JS ตรวจสอบ overlap จาก array ใน memory ตรงๆ (logic เดียวกัน ผลลัพธ์เหมือนกัน) |
 | **คำนวณ/ธุรกิจซับซ้อน** (GPA, weighted score, attainment) | — ทำได้จริง ไม่ต้อง simulate | เขียนสูตรคำนวณจริงด้วย JavaScript ตรงๆ ได้เลย เพราะเป็น pure computation ไม่พึ่ง server |
 
 > **หลักการ:** ฟังก์ชันที่เป็น **pure logic/computation** (คำนวณเกรด, ตรวจ validation, กรอง/ค้นหา) ให้เขียน**จริง**เสมอ อย่า mock เฉยๆ เพราะทำได้ไม่ยากและแสดงความเข้าใจ business logic — ที่ต้อง mock คือเฉพาะส่วนที่ต้องพึ่ง **infrastructure ภายนอก** เท่านั้น (network, storage, auth, mail)
@@ -176,7 +176,7 @@ function loginAs(role) {
 - [ ] Validation/Alternative Flow ทำงานจริง (ทดสอบ: กรอกผิด/ไม่ครบ ต้องเห็น error จริง)
 - [ ] มีปุ่มรีเซ็ตข้อมูลตัวอย่างกลับสู่สถานะเริ่มต้น
 - [ ] ฟังก์ชันคำนวณ (ถ้ามีใน module นั้น เช่น GPA, weighted score) คำนวณถูกต้องจริง ไม่ใช่ค่า hardcode
-- [ ] จุดที่ควรเรียก service อื่น มี comment ระบุ endpoint จริงกำกับไว้ (เผื่อกรรมการถามว่า "ของจริงเรียกอะไร")
+- [ ] จุดที่ระบบจริงต้องเรียก backend มี comment ระบุไว้ (เผื่อกรรมการถามว่า "ของจริงทำงานอย่างไร")
 - [ ] ทุก path (CSS/JS/รูป/ลิงก์ระหว่างหน้า) เป็น **relative path** ไม่มี absolute path ขึ้นต้นด้วย `/` เลย (จำเป็นสำหรับ GitHub Pages §11.3)
 - [ ] ทดสอบผ่าน local static server (ไม่ใช่แค่ `file://`) อย่างน้อย 1 ครั้งก่อน deploy ขึ้น GitHub Pages
 

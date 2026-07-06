@@ -1,0 +1,47 @@
+@startuml M7_activity_เรียกดูแดชบอร์ดสถิติการใช้งานระบบ
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-29 เรียกดูแดชบอร์ดสถิติการใช้งานระบบ — Activity Diagram
+
+|ผู้ดูแลระบบ|
+start
+:เปิดหน้าแดชบอร์ดสถิติระบบ;
+
+|ระบบ|
+:แสดงตัวกรองช่วงเวลา;
+
+|ผู้ดูแลระบบ|
+:เลือกช่วงเวลาที่ต้องการ;
+
+|ระบบ|
+if (มีข้อมูลในช่วงเวลาที่เลือกหรือไม่?) then (ยังไม่มี)
+  :แจ้งเตือน;
+  stop
+else (มี)
+endif
+
+:แสดงสถิติ: จำนวนสมาชิกใหม่/ที่ยังใช้งาน, จำนวนเซสชัน/เวลาโฟกัสรวม,\nอัตราสำเร็จเทียบยกเลิกกลางทาง, จำนวนอวตารที่หมดสติ/ชุบชีวิตสำเร็จ,\nและสถิติดรอปไอเทมจริงเทียบอัตราที่กำหนด (UC-26);
+
+stop
+
+@enduml

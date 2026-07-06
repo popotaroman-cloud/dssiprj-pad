@@ -1,0 +1,39 @@
+@startuml M3_activity_ใช้ไอเทมโล่เวลา
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-13 ใช้ไอเทมโล่เวลา — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดกระเป๋าและเลือกไอเทมโล่เวลา;
+:กดใช้ไอเทม;
+
+|ระบบ|
+:เปิดใช้งานสถานะป้องกัน HP/streak 24-48 ชั่วโมงตามชนิดโล่;
+:แจ้งยืนยันว่าโล่มีผลแล้วพร้อมเวลาหมดอายุ;
+:รอจนกว่าจะครบระยะเวลาที่โล่มีผล;
+:ครบเวลาโล่ กลับไปคำนวณ HP/streak ตามปกติ (Business Rules ของ UC-04);
+
+stop
+
+@enduml

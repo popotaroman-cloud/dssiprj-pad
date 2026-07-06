@@ -1,0 +1,52 @@
+@startuml M1_activity_ออกจากระบบ
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-32 ออกจากระบบ — Activity Diagram
+
+|สมาชิก|
+start
+:กดปุ่มออกจากระบบ;
+
+|ระบบ|
+if (มีเซสชันโฟกัสกำลังทำงานอยู่หรือไม่? (UC-04)) then (มี)
+  :แจ้งเตือนให้จบหรือยกเลิกเซสชันก่อนออกจากระบบ;
+  stop
+else (ไม่มี)
+endif
+
+:ขอคำยืนยันออกจากระบบ;
+
+|สมาชิก|
+if (ยืนยันหรือไม่?) then (ไม่ยืนยัน)
+  :ยังคงล็อกอินอยู่;
+  stop
+else (ยืนยัน)
+endif
+
+|ระบบ|
+:เพิกถอน token ยืนยันตัวตน;
+:พากลับไปยังหน้าล็อกอิน;
+
+stop
+
+@enduml

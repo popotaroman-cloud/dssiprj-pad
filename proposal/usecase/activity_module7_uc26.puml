@@ -1,0 +1,55 @@
+@startuml M7_activity_จัดการข้อมูลไอเทมและอัตราดรอป
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-26 จัดการข้อมูลไอเทมและอัตราดรอป — Activity Diagram
+
+|ผู้ดูแลระบบ|
+start
+:เปิดหน้าจัดการไอเทม;
+
+|ระบบ|
+:แสดงรายการไอเทมทั้งหมดพร้อมตารางอัตราดรอปปัจจุบัน;
+
+|ผู้ดูแลระบบ|
+:เพิ่ม/แก้ไข/ปิดใช้งานไอเทม หรือปรับอัตราดรอป/สูตรผสม;
+
+|ระบบ|
+:ตรวจสอบความถูกต้อง (ผลรวมอัตราดรอปต้อง = 100%);
+
+if (ผลรวมอัตราดรอปเท่ากับ 100% หรือไม่?) then (ไม่เท่ากับ 100%)
+  :แจ้งข้อผิดพลาด ไม่บันทึก;
+  stop
+else (เท่ากับ 100%)
+endif
+
+if (ปิดใช้งานไอเทมที่ถูกอ้างอิงในสูตรผสมหรือไม่?) then (ใช่)
+  :เตือนพร้อมรายการที่ได้รับผลกระทบก่อนยืนยัน;
+else (ไม่ใช่)
+endif
+
+:บันทึกการเปลี่ยนแปลงพร้อมประวัติการแก้ไข;
+note right: มีผลกับการเปิดกล่องสุ่ม/ผสมครั้งถัดไปเท่านั้น ไม่กระทบไอเทมที่สมาชิกถือครองอยู่แล้ว
+
+stop
+
+@enduml

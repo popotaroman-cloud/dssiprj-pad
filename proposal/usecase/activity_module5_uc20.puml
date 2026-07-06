@@ -1,0 +1,36 @@
+@startuml M5_activity_ดูเวลาโฟกัสของสมาชิกในห้อง
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-20 ดูเวลาโฟกัสของสมาชิกในห้อง — Activity Diagram
+
+|สมาชิกในห้อง|
+start
+:เปิดหน้าห้อง;
+
+|ระบบ|
+:ดึงข้อมูลเวลาโฟกัสสะสมของทุกคนในห้อง;
+:แสดงรายชื่อเรียงตามเวลาโฟกัสสะสม พร้อมความคืบหน้ารวมเทียบเป้าหมาย;
+
+stop
+
+@enduml

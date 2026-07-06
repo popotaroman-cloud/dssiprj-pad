@@ -1,0 +1,49 @@
+@startuml M3_activity_เปิดกล่องสุ่ม
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-10 เปิดกล่องสุ่ม — Activity Diagram
+
+|สมาชิก|
+start
+:กดเปิดกล่องสุ่มจากกระเป๋าหรือหน้าสรุปผล;
+
+|ระบบ|
+:สุ่มไอเทมตามอัตราดรอปที่อิงความยาวเซสชัน;
+
+if (เปิดกล่องสุ่มครบ 10 รอบติดต่อกันโดยไม่ได้ของหายากมาก/ตำนานหรือไม่? (Pity System)) then (ครบ 10 รอบ)
+  :การันตีดรอปของหายากมาก/ตำนานแทนผลสุ่มปกติ;
+  :รีเซ็ตตัวนับ Pity เป็น 0;
+else (ยังไม่ครบ 10 รอบ)
+  if (ได้ของหายากมาก/ตำนานจากผลสุ่มปกติหรือไม่?) then (ได้)
+    :รีเซ็ตตัวนับ Pity เป็น 0;
+  else (ไม่ได้)
+    :เพิ่มตัวนับ Pity อีก 1 รอบ;
+  endif
+endif
+
+:เพิ่มไอเทมที่ได้เข้ากระเป๋า (UC-23);
+:แสดงผลไอเทมที่ได้รับ;
+
+stop
+
+@enduml

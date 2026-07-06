@@ -1,0 +1,48 @@
+@startuml M5_activity_สร้างห้องโฟกัส
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-18 สร้างห้องโฟกัส — Activity Diagram
+
+|สมาชิก|
+start
+:กดสร้างห้อง;
+:ตั้งชื่อห้องและชื่อเป้าหมาย;
+
+if (กำหนดเป้าหมายเวลาโฟกัสรวมของห้องเองหรือไม่?) then (ไม่กำหนด)
+  |ระบบ|
+  :ใช้ค่าเป้าหมายเริ่มต้นของระบบแทน;
+else (กำหนดเอง)
+  |สมาชิก|
+  :กำหนดเป้าหมายเวลาโฟกัสรวมของห้อง;
+endif
+
+|สมาชิก|
+:กดยืนยันการสร้าง;
+
+|ระบบ|
+:สร้างห้องพร้อมลิงก์/รหัสเชิญ;
+:แสดงลิงก์/รหัสให้นำไปแชร์;
+
+stop
+
+@enduml

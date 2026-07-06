@@ -1,0 +1,76 @@
+@startuml M2_activity_เริ่มจับเวลาโฟกัส
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-04 เริ่มจับเวลาโฟกัส (ตีบอส) — Activity Diagram
+
+|สมาชิก|
+start
+:เลือกรายการที่จะโฟกัสและตั้งระยะเวลา\n(หรือใช้ค่าเริ่มต้นจาก UC-24);
+
+|ระบบ|
+:ตรวจสอบ pre-condition\n(มีรายการโฟกัส และไม่มีเซสชันอื่นทำงานอยู่);
+:คำนวณ HP ล่าสุดของอวตารแบบ lazy evaluation\nจาก last_focus_completed_at;
+
+if (HP ที่คำนวณได้ = 0?) then (ใช่ — หมดสติ)
+  :เข้าสถานะ "หมดสติ" ล็อกฟีเจอร์ที่ต้องใช้อวตารแข็งแรง;
+  |สมาชิก|
+  :ไปทำภารกิจชุบชีวิต (extend UC-30);
+  stop
+else (ไม่ — ยังไหว)
+endif
+
+|ระบบ|
+:สร้างบอส HP = เวลาที่ตั้ง × 100;
+:เริ่มจับเวลาถอยหลัง;
+
+|สมาชิก|
+repeat
+  :ดูนาฬิกาถอยหลังคู่กับแถบเลือดบอส;
+  |ระบบ|
+  :ลดค่า HP บอสตามเวลาจริง (checkpoint ทุก 5 นาที);
+repeat while (เวลาครบ หรือ กดค้างยกเลิก (extend UC-05)?) is (ยังไม่ครบ) not (ครบ/ยกเลิก)
+
+if (ยกเลิกกลางทาง?) then (ใช่)
+  :ส่งต่อ UC-05 (extend) — คำนวณรางวัลบางส่วน;
+  stop
+else (ไม่ — จบเซสชันตามเวลา)
+endif
+
+if (ระยะเวลาที่โฟกัสจริง ≥ 20 นาที?) then (ใช่)
+  :คำนวณกล่องสุ่มตามความยาวเซสชัน (อ้างอิงตาราง UC-10);
+  :เพิ่ม EXP ให้อวตาร\n(ถึงเกณฑ์เพิ่มเลเวลอัตโนมัติ);
+
+else (ไม่ — ไม่ได้ EXP/กล่องสุ่ม)
+endif
+
+:เติม HP คืนตามสัดส่วน;
+:อัพเดต Streak ไฟ;
+:บันทึกเซสชันสำเร็จลงประวัติ;
+:เริ่มนับเวลาพักอัตโนมัติ;
+
+|สมาชิก|
+:เห็นเวลาพักที่เหลือ / รอครบเวลาแล้วเริ่มเซสชันถัดไป\n(กดจบพักก่อนเวลา = extend UC-08);
+
+stop
+
+@enduml

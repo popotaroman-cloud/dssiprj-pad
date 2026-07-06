@@ -1,0 +1,39 @@
+@startuml M2_activity_กดเสร็จสิ้นช่วงพัก
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-08 กดเสร็จสิ้นช่วงพัก — Activity Diagram
+
+|สมาชิก|
+start
+:กดปุ่ม "เสร็จสิ้น" ระหว่างช่วงพัก;
+
+|ระบบ|
+:ยืนยันการจบช่วงพักก่อนเวลา;
+:จบช่วงพักทันที (ไม่นับเบรกเกิน);
+
+|สมาชิก|
+:กลับไปยัง UC-04 หากต้องการเริ่มเซสชันถัดไป;
+
+stop
+
+@enduml

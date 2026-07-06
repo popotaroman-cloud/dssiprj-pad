@@ -1,0 +1,80 @@
+@startuml M1_activity_จัดการรายการสิ่งที่โฟกัส
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-03 จัดการรายการสิ่งที่โฟกัส (เพิ่ม/แก้ไข/ลบ) — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดหน้าจัดการรายการสิ่งที่โฟกัส;
+
+if (เลือกการกระทำ?) then (เพิ่มรายการ)
+  :กดปุ่มเพิ่มรายการ;
+  |ระบบ|
+  :แสดงฟอร์มกรอกชื่อรายการ;
+  |สมาชิก|
+  if (กดยกเลิกกลางทางหรือไม่?) then (ยกเลิก)
+    :ปิดฟอร์มไม่บันทึก;
+    stop
+  else (กรอกต่อ)
+  endif
+  if (กรอกชื่อรายการครบหรือไม่?) then (ไม่กรอก)
+    |ระบบ|
+    :แจ้งเตือนให้กรอกชื่อ;
+    stop
+  else (กรอกครบ)
+  endif
+  :กดบันทึก;
+  |ระบบ|
+  :บันทึกรายการลงลิสต์;
+  :แสดงรายการที่เพิ่มใหม่;
+elseif (แก้ไขรายการ) then
+  |สมาชิก|
+  :เลือกรายการที่ต้องการแก้ไข;
+  |ระบบ|
+  :แสดงฟอร์มพร้อมชื่อเดิม;
+  |สมาชิก|
+  :แก้ไขชื่อและกดบันทึก;
+  |ระบบ|
+  :อัพเดตชื่อรายการ;
+else (ลบรายการ)
+  |สมาชิก|
+  :เลือกลบรายการ;
+  |ระบบ|
+  :ขอคำยืนยัน;
+  |สมาชิก|
+  if (ยืนยันหรือไม่?) then (ไม่ยืนยัน)
+    stop
+  else (ยืนยัน)
+  endif
+  |ระบบ|
+  :ลบรายการออกจากลิสต์;
+  note right
+    รายการที่มีประวัติเซสชันผูกอยู่ (UC-22)
+    ประวัติเดิมยังอยู่ในสถิติ แต่เลือกรายการนี้
+    เริ่มเซสชันใหม่ไม่ได้อีก
+  end note
+endif
+
+stop
+
+@enduml

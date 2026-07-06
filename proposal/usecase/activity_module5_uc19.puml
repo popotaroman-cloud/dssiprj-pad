@@ -1,0 +1,53 @@
+@startuml M5_activity_เข้าร่วมห้องโฟกัส
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-19 เข้าร่วมห้องโฟกัส — Activity Diagram
+
+|สมาชิก|
+start
+:กรอกรหัสเชิญหรือกดลิงก์เชิญ;
+
+|ระบบ|
+:ตรวจสอบความถูกต้องของรหัส/ลิงก์;
+
+if (รหัส/ลิงก์ถูกต้องและยังไม่หมดอายุหรือไม่?) then (ไม่ถูกต้อง/หมดอายุ)
+  :แจ้งเตือน พากลับหน้าหลัก;
+  stop
+else (ถูกต้อง)
+endif
+
+if (ห้องถูกปิดไปแล้วหรือไม่? (UC-25)) then (ปิดแล้ว)
+  :แจ้งเตือนว่าห้องนี้ปิดรับสมัครแล้ว พากลับหน้าหลัก;
+  stop
+else (ยังเปิดอยู่)
+endif
+
+:เพิ่มสมาชิกเข้าห้อง;
+
+|สมาชิก|
+:เริ่มจับเวลาโฟกัสภายในห้อง (include UC-04);
+note right: เวลาที่ใช้นับรวมเข้าเป้าหมายห้อง (UC-20) ด้วย
+
+stop
+
+@enduml

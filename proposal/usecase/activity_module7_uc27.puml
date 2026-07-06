@@ -1,0 +1,49 @@
+@startuml M7_activity_จัดการรูปแบบอวตาร
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-27 จัดการรูปแบบอวตาร — Activity Diagram
+
+|ผู้ดูแลระบบ|
+start
+:เปิดหน้าจัดการรูปแบบอวตาร;
+
+|ระบบ|
+:แสดงรูปแบบทั้งหมดพร้อมสถานะ;
+
+|ผู้ดูแลระบบ|
+:เพิ่ม/แก้ไข/ปิดใช้งานรูปแบบ;
+
+|ระบบ|
+if (ปิดจนเหลือน้อยกว่า 1 รูปแบบหรือไม่?) then (เหลือน้อยกว่า 1)
+  :แจ้งเตือนไม่บันทึก;
+  stop
+else (เหลืออย่างน้อย 1 รูปแบบ)
+endif
+
+:บันทึกการเปลี่ยนแปลง;
+note right: รูปแบบที่สมาชิกเดิมใช้อยู่ยังใช้ต่อได้ตามปกติ เพียงซ่อนจากบัญชีใหม่
+:อัพเดตหน้าเลือกสำหรับสมาชิกใหม่ทันที (UC-02);
+
+stop
+
+@enduml
