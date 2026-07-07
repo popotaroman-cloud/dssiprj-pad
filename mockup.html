@@ -1,0 +1,1339 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pomo RPG — Mockup</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   Pomo RPG — visual theme
+   ที่มา: mockup-promt1.md (chibi / pixel-art, pastel green-blue, cozy)
+          mockup-promt2.md (cream cards, coral accent, blue-gray secondary,
+          emerald success, pixel-art game elements + flat modern UI chrome)
+   ══════════════════════════════════════════════════════════════════ */
+:root{
+  --cream:#FFFBF5;
+  --ink:#453F54;
+  --ink-soft:#6b6478;
+  --coral-1:#FF7A59;
+  --coral-2:#FF3E6C;
+  --blue-gray:#8FA0C7;
+  --blue-gray-dark:#5E6E96;
+  --green:#4CAF82;
+  --green-dark:#2F8F63;
+  --pastel-green:#DCEEDD;
+  --pastel-blue:#DCE7F5;
+  --gold:#F0B94D;
+  --danger:#E85D5D;
+}
+*{ box-sizing:border-box; }
+body{
+  font-family:'Nunito',sans-serif;
+  color:var(--ink);
+  margin:0;
+  min-height:100vh;
+  background:linear-gradient(180deg,var(--pastel-blue) 0%, var(--pastel-green) 100%);
+  position:relative;
+  overflow-x:hidden;
+}
+.pixel-font{ font-family:'Press Start 2P', monospace; letter-spacing:0.5px; }
+.pixelated{ image-rendering:pixelated; }
+
+/* เนินหญ้าเป็นฉากหลังล่างสุด — "cozy minimal scenery", ไม่บังเนื้อหา (Bottom Negative) */
+#bg-scenery{
+  position:fixed; left:0; right:0; bottom:0; height:120px;
+  background:
+    radial-gradient(ellipse 220px 90px at 15% 100%, #BFE3C4 0%, transparent 60%),
+    radial-gradient(ellipse 260px 100px at 55% 100%, #CFE9D6 0%, transparent 60%),
+    radial-gradient(ellipse 220px 90px at 90% 100%, #BFE3C4 0%, transparent 60%);
+  z-index:0; pointer-events:none;
+}
+
+.logo-badge{
+  width:26px; height:26px; border-radius:50%; flex:none;
+  background:conic-gradient(from 210deg,#FF3E6C,#FF7A59,#8B6FF3,#FF3E6C);
+  box-shadow:0 0 0 2px #fff, 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.pixel-border{
+  border:3px solid var(--ink);
+  box-shadow:4px 4px 0 rgba(69,63,84,0.35);
+  border-radius:2px;
+}
+.card{
+  background:var(--cream);
+  border-radius:18px;
+  box-shadow:0 2px 10px rgba(69,63,84,0.08);
+  padding:16px;
+}
+.btn{
+  font-weight:800; border:none; border-radius:14px; padding:12px 18px;
+  cursor:pointer; transition:transform .05s ease; font-size:14px;
+}
+.btn:active{ transform:scale(0.97); }
+.btn-primary{ color:#fff; background:linear-gradient(135deg,var(--coral-1),var(--coral-2)); box-shadow:0 3px 0 #C23258; }
+.btn-secondary{ color:var(--blue-gray-dark); background:#EDF1FA; border:2px solid var(--blue-gray); }
+.btn-success{ color:#fff; background:var(--green); box-shadow:0 3px 0 var(--green-dark); }
+.btn-danger{ color:#fff; background:var(--danger); box-shadow:0 3px 0 #B23F3F; }
+.btn-ghost{ color:var(--ink-soft); background:transparent; }
+.btn:disabled{ opacity:0.4; cursor:not-allowed; }
+.btn-block{ width:100%; }
+
+.hpbar-track{ background:#EADFDA; border-radius:999px; height:14px; overflow:hidden; border:2px solid var(--ink); position:relative; }
+.hpbar-fill{ height:100%; background:repeating-linear-gradient(90deg,#5FD98A 0 6px,#4CC97D 6px 12px); transition:width .3s linear; }
+.hpbar-fill.low{ background:repeating-linear-gradient(90deg,#FF8A6B 0 6px,#FF6B4A 6px 12px); }
+.hpbar-fill.critical{ background:repeating-linear-gradient(90deg,#FF5D6C 0 6px,#E43C4F 6px 12px); }
+.expbar-track{ background:#EDE7F7; border-radius:999px; height:8px; overflow:hidden; }
+.expbar-fill{ height:100%; background:linear-gradient(90deg,#8B6FF3,#B98FF3); transition:width .3s linear; }
+
+.sprite-box{
+  width:88px; height:88px; border-radius:16px; display:flex; align-items:center;
+  justify-content:center; font-size:46px; flex:none;
+}
+.sprite-boss{ width:104px; height:104px; font-size:56px; }
+
+.chip{ font-size:11px; font-weight:800; padding:3px 9px; border-radius:999px; }
+.chip-green{ background:#DFF3E7; color:var(--green-dark); }
+.chip-gold{ background:#FBEBCF; color:#9A7415; }
+.chip-blue{ background:var(--pastel-blue); color:var(--blue-gray-dark); }
+.chip-red{ background:#FBE1E1; color:#B23F3F; }
+
+#phone-wrap{ position:relative; z-index:1; display:flex; justify-content:center; padding:28px 12px 140px; }
+#phone{
+  width:100%; max-width:400px; min-height:760px;
+  background:var(--cream); border-radius:36px; border:8px solid var(--ink);
+  box-shadow:0 20px 40px rgba(69,63,84,0.25);
+  position:relative; overflow:hidden; display:flex; flex-direction:column;
+}
+#phone-notch{ position:absolute; top:0; left:50%; transform:translateX(-50%); width:120px; height:20px; background:var(--ink); border-radius:0 0 14px 14px; z-index:5; }
+#screen-root{ flex:1; overflow-y:auto; padding:22px 18px 18px; }
+.screen-enter{ animation:fadeIn .18s ease; }
+@keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+
+.appbar{ display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+.appbar .back{ font-size:20px; cursor:pointer; color:var(--ink-soft); }
+.appbar h1{ font-size:15px; font-weight:800; margin:0; }
+
+.bottom-nav{ display:flex; border-top:2px solid #EFE6DC; padding:10px 6px 16px; gap:4px; background:var(--cream); }
+.bottom-nav button{ flex:1; background:none; border:none; font-size:10px; font-weight:700; color:var(--ink-soft); padding:8px 2px; border-radius:12px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:3px;}
+.bottom-nav button.active{ color:var(--coral-2); background:#FFF0EC; }
+.bottom-nav button span.ic{ font-size:18px; }
+
+.field label{ font-size:12px; font-weight:700; color:var(--ink-soft); display:block; margin-bottom:4px; }
+.field input, .field select{
+  width:100%; border:2px solid #EFE6DC; border-radius:12px; padding:10px 12px;
+  font-family:'Nunito',sans-serif; font-size:16px; background:#fff; color:var(--ink);
+}
+/* font-size 16px ป้องกัน iOS Safari ซูมอัตโนมัติเมื่อแตะช่องกรอกข้อมูล */
+.field input:focus, .field select:focus{ outline:none; border-color:var(--coral-1); }
+.field-error{ color:var(--danger); font-size:12px; font-weight:700; margin-top:4px; }
+
+.toast{ position:fixed; left:50%; bottom:26px; transform:translateX(-50%); background:var(--ink); color:#fff;
+  padding:10px 18px; border-radius:999px; font-size:13px; font-weight:700; z-index:100; box-shadow:0 6px 16px rgba(0,0,0,0.25);
+  opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; }
+.toast.show{ opacity:1; transform:translateX(-50%) translateY(-6px); }
+
+.holdbar-track{ background:#F3E9E4; border-radius:14px; height:46px; overflow:hidden; position:relative; border:2px solid var(--ink); }
+.holdbar-fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--danger),#B23F3F); }
+.holdbar-label{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; color:var(--ink); }
+
+.dev-bar{ position:fixed; top:0; right:0; z-index:50; display:flex; gap:6px; padding:8px; flex-wrap:wrap; max-width:260px; }
+.dev-bar button{ font-size:10px; font-weight:700; background:#fff; border:2px solid var(--ink); border-radius:10px; padding:5px 8px; cursor:pointer; }
+.dev-bar .dev-panel{ background:#fff; border:2px solid var(--ink); border-radius:12px; padding:8px; font-size:11px; display:none; flex-direction:column; gap:6px; width:220px; }
+.dev-bar .dev-panel.open{ display:flex; }
+
+.list-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:12px 0; border-bottom:1px solid #F1E9E1; }
+.list-row:last-child{ border-bottom:none; }
+
+.avatar-locked-banner{ background:#FBE1E1; border:2px dashed var(--danger); border-radius:16px; padding:14px; text-align:center; margin-bottom:14px; }
+
+/* ═════════ มือถือจริง: ถอดกรอบ "โทรศัพท์จำลอง" ออก ให้เต็มจอเหมือนแอปจริง ═════════ */
+@media (max-width: 480px){
+  #phone-wrap{ padding:0 0 130px; }
+  #phone{
+    max-width:none; min-height:100vh; border:none; border-radius:0;
+    box-shadow:none;
+  }
+  #phone-notch{ display:none; }
+  #bg-scenery{ height:90px; }
+  .dev-bar{ max-width:140px; }
+  .dev-bar .dev-panel{ width:170px; }
+}
+</style>
+</head>
+<body>
+<div id="bg-scenery"></div>
+
+<div class="dev-bar">
+  <button onclick="toggleDevPanel()">⚙ Dev</button>
+  <div class="dev-panel" id="devPanel">
+    <strong style="font-size:11px;">โหมดสาธิต (ไม่ใช่ของจริง)</strong>
+    <button onclick="resetAllData()">🔄 รีเซ็ตข้อมูลตัวอย่าง</button>
+    <button onclick="toggleDemoSpeed()" id="btnDemoSpeed">⏩ เร่งเวลา: ปิด</button>
+    <span style="color:#6b6478;">จำลองเวลาผ่านไป (ผลต่อ HP อวตาร):</span>
+    <div style="display:flex; gap:4px;">
+      <button onclick="simulateTimePass(1)">+1 วัน</button>
+      <button onclick="simulateTimePass(2)">+2 วัน</button>
+      <button onclick="simulateTimePass(4)">+4 วัน</button>
+    </div>
+    <button onclick="quickLogin('admin')">🔑 ล็อกอินเป็น Admin</button>
+    <button onclick="quickLogin('nan')">🔑 ล็อกอินเป็นสมาชิก (nan)</button>
+  </div>
+</div>
+
+<div id="phone-wrap">
+  <div id="phone">
+    <div id="phone-notch"></div>
+    <div style="padding:14px 18px 0; display:flex; align-items:center; gap:8px;">
+      <div class="logo-badge"></div>
+      <span class="pixel-font" style="font-size:11px;">POMO RPG</span>
+    </div>
+    <div id="screen-root"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════
+   1. MOCK DATA + PERSISTENCE (localStorage แทนฐานข้อมูลจริง)
+   อ้างอิง Business Rules จาก usecase_description_2.md (UC-04, UC-10)
+   และผังหน้าจอจาก ui_state_diagram.puml / activity_module*.puml
+   ══════════════════════════════════════════════════════════════════ */
+const DB_KEY = 'pomorpg_db_v1';
+const UI_KEY = 'pomorpg_ui_v1';
+
+function seedDB(){
+  const now = Date.now();
+  return {
+    users: [
+      { id:1, username:'nan', email:'nan@example.com', password:'1234', role:'member', suspended:false, suspendReason:null },
+      { id:2, username:'ploy', email:'ploy@example.com', password:'1234', role:'member', suspended:false, suspendReason:null },
+      { id:3, username:'admin', email:'admin@example.com', password:'admin', role:'admin', suspended:false, suspendReason:null },
+      { id:4, username:'gun', email:'gun@example.com', password:'1234', role:'member', suspended:true, suspendReason:'สแปมข้อความในห้องโฟกัส' }
+    ],
+    nextUserId:5,
+    avatarSkins: [
+      { id:1, name:'นักผจญภัย', emoji:'🧑‍🚀', active:true },
+      { id:2, name:'นักปราชญ์', emoji:'🧙‍♂️', active:true },
+      { id:3, name:'นินจา', emoji:'🥷', active:true },
+      { id:4, name:'อัศวินสาว', emoji:'🦸‍♀️', active:true },
+      { id:5, name:'เอลฟ์', emoji:'🧝‍♀️', active:false }
+    ],
+    avatars: {
+      1: { skinId:1, level:5, exp:120, hpBaseline:100, lastFocusCompletedAt: now - 3*3600000, streak:4, shieldActiveUntil:null, shieldHpSnapshot:null },
+      2: { skinId:4, level:2, exp:40, hpBaseline:100, lastFocusCompletedAt: now - 26*3600000, streak:1, shieldActiveUntil:null, shieldHpSnapshot:null }
+    },
+    focusItems: {
+      1: [ {id:1,name:'อ่านหนังสือสอบ'}, {id:2,name:'ทำโปรเจกต์จบ'} ],
+      2: [ {id:1,name:'ทบทวนบทเรียน'} ]
+    },
+    settingsByUser: {
+      1: { focusMin:25, breakMin:5 },
+      2: { focusMin:25, breakMin:5 }
+    },
+    inventory: {
+      1: [ {itemId:1, qty:2}, {itemId:3, qty:1} ],
+      2: [ {itemId:1, qty:1} ]
+    },
+    pity: { 1:3, 2:0 },
+    sessionsHistory: {
+      1: [
+        { id:1, itemName:'อ่านหนังสือสอบ', dateLabel:'6 ก.ค.', focusMin:25, breakMin:5, overrunMin:0, status:'completed', roomId:null },
+        { id:2, itemName:'ทำโปรเจกต์จบ', dateLabel:'5 ก.ค.', focusMin:15, breakMin:0, overrunMin:0, status:'cancelled', roomId:null }
+      ],
+      2: []
+    },
+    itemCatalog: [
+      { id:1, name:'ยาต้มสมุนไพร', rarity:'common', emoji:'🧪', dropRate:60, active:true },
+      { id:2, name:'อัญมณีเจียระไน', rarity:'rare', emoji:'💎', dropRate:25, active:true },
+      { id:3, name:'โล่เวลา (24ชม.)', rarity:'epic', emoji:'🛡️', dropRate:12, active:true },
+      { id:4, name:'มงกุฎตำนาน', rarity:'legendary', emoji:'👑', dropRate:3, active:true }
+    ],
+    craftRecipes: [
+      { id:1, name:'ผสมอัญมณี → โล่เวลา', ingredients:[{itemId:2, qty:3}], resultItemId:3 }
+    ],
+    rooms: [
+      { id:1, code:'FOCUS88', name:'ห้องติวสอบ', goalName:'อ่านหนังสือให้ครบ 10 ชม.', targetMin:600, ownerId:2, members:[ {userId:2, focusMin:180}, {userId:1, focusMin:90} ], closed:false }
+    ],
+    friends: {
+      1: { friends:[2], outgoing:[], incoming:[] },
+      2: { friends:[1], outgoing:[], incoming:[] }
+    },
+    adminStatsSeed: { newMembersRange:[3,4,6,8], sessionCount:142, totalFocusMin:3260, successRate:78, cancelRate:22, unconsciousCount:9, revivedCount:7 }
+  };
+}
+
+function loadDB(){
+  const raw = localStorage.getItem(DB_KEY);
+  if(raw) return JSON.parse(raw);
+  const seeded = seedDB();
+  localStorage.setItem(DB_KEY, JSON.stringify(seeded));
+  return seeded;
+}
+function saveDB(){ localStorage.setItem(DB_KEY, JSON.stringify(db)); }
+
+function loadUI(){
+  const raw = localStorage.getItem(UI_KEY);
+  if(raw) return JSON.parse(raw);
+  return { screen:'welcome', currentUserId:null, demoSpeed:false, session:null, breakState:null, revivalMode:false, tempRoomId:null };
+}
+function saveUI(){ localStorage.setItem(UI_KEY, JSON.stringify(ui)); }
+
+function resetAllData(){
+  localStorage.removeItem(DB_KEY);
+  localStorage.removeItem(UI_KEY);
+  db = loadDB();
+  ui = loadUI();
+  stopAllTimers();
+  render();
+  showToast('รีเซ็ตข้อมูลตัวอย่างเรียบร้อย');
+}
+
+let db = loadDB();
+let ui = loadUI();
+
+/* ══════════════════════════════════════════════════════════════════
+   2. BUSINESS LOGIC (pure computation — ทำจริงตาม Business Rules ของ UC-04/UC-10)
+   ══════════════════════════════════════════════════════════════════ */
+function currentUser(){ return db.users.find(u=>u.id===ui.currentUserId) || null; }
+function currentAvatar(){ return db.avatars[ui.currentUserId]; }
+
+function lerp(a,b,t){ return a + (b-a)*Math.min(Math.max(t,0),1); }
+
+// HP อวตารแบบ lazy evaluation ตามเวลาที่ผ่านไปจาก last_focus_completed_at (UC-04 Business Rules)
+function computeAvatarHP(av){
+  if(!av) return 100;
+  if(av.shieldActiveUntil && Date.now() < av.shieldActiveUntil){
+    return av.shieldHpSnapshot ?? 100;
+  }
+  const hrs = (Date.now() - av.lastFocusCompletedAt) / 3600000;
+  let pct;
+  if(hrs <= 24) pct = 100;
+  else if(hrs <= 48) pct = lerp(85, 70, (hrs-24)/24);
+  else if(hrs <= 72) pct = lerp(35, 15, (hrs-48)/24);
+  else if(hrs <= 96) pct = lerp(15, 0, (hrs-72)/24);
+  else pct = 0;
+  return Math.round(pct);
+}
+function isUnconscious(av){ return computeAvatarHP(av) <= 0; }
+
+function levelThreshold(level){ return 100 + (level-1)*40; } // เกณฑ์ EXP ต่อเลเวลเพิ่มขึ้นตามลำดับเลเวล
+function grantEXP(av, amount){
+  av.exp += amount;
+  while(av.exp >= levelThreshold(av.level)){
+    av.exp -= levelThreshold(av.level);
+    av.level += 1;
+  }
+}
+
+// จำนวนกล่องสุ่มตามความยาวเซสชัน (สมมติฐานอ้างอิงตาราง UC-10 — ยังไม่ระบุตัวเลขแน่นอนในเอกสาร)
+function lootBoxesForDuration(min){
+  if(min < 20) return 0;
+  if(min < 40) return 1;
+  if(min < 60) return 2;
+  return 3;
+}
+function expForDuration(min){ return min < 20 ? 0 : Math.round(min * 1.5); }
+
+// Pity System: ครบ 10 รอบไม่ได้ epic/legendary → การันตีรอบถัดไป (UC-10 Business Rules)
+function rollLootItem(userId){
+  const active = db.itemCatalog.filter(i=>i.active);
+  let pityCount = db.pity[userId] || 0;
+  let picked;
+  if(pityCount >= 10){
+    const rarePool = active.filter(i=>i.rarity==='epic'||i.rarity==='legendary');
+    picked = rarePool[Math.floor(Math.random()*rarePool.length)] || active[active.length-1];
+    db.pity[userId] = 0;
+  } else {
+    const roll = Math.random()*100;
+    let acc = 0;
+    picked = active[0];
+    for(const it of active){ acc += it.dropRate; if(roll <= acc){ picked = it; break; } }
+    if(picked.rarity==='epic' || picked.rarity==='legendary'){ db.pity[userId] = 0; }
+    else { db.pity[userId] = pityCount + 1; }
+  }
+  addToInventory(userId, picked.id, 1);
+  saveDB();
+  return picked;
+}
+function addToInventory(userId, itemId, qty){
+  const inv = db.inventory[userId] || (db.inventory[userId]=[]);
+  const row = inv.find(r=>r.itemId===itemId);
+  if(row) row.qty += qty; else inv.push({itemId, qty});
+}
+function removeFromInventory(userId, itemId, qty){
+  const inv = db.inventory[userId] || [];
+  const row = inv.find(r=>r.itemId===itemId);
+  if(row){ row.qty -= qty; if(row.qty<=0) db.inventory[userId]=inv.filter(r=>r!==row); }
+}
+function invQty(userId, itemId){ const row=(db.inventory[userId]||[]).find(r=>r.itemId===itemId); return row?row.qty:0; }
+function itemById(id){ return db.itemCatalog.find(i=>i.id===id); }
+
+/* ══════════════════════════════════════════════════════════════════
+   3. NAVIGATION + SMALL UI HELPERS
+   ══════════════════════════════════════════════════════════════════ */
+function nav(screen){ ui.screen = screen; saveUI(); render(); window.scrollTo(0,0); }
+let toastTimer=null;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'), 2400);
+}
+function toggleDevPanel(){ document.getElementById('devPanel').classList.toggle('open'); }
+function toggleDemoSpeed(){
+  ui.demoSpeed = !ui.demoSpeed; saveUI();
+  document.getElementById('btnDemoSpeed').textContent = '⏩ เร่งเวลา: ' + (ui.demoSpeed?'เปิด (1นาที=1วิ)':'ปิด');
+}
+function simulateTimePass(days){
+  const av = currentAvatar();
+  if(!av){ showToast('ต้องล็อกอินก่อน'); return; }
+  av.lastFocusCompletedAt -= days*24*3600000;
+  saveDB(); render();
+  showToast('จำลองเวลาผ่านไป ' + days + ' วัน — HP อวตารคำนวณใหม่แล้ว');
+}
+function quickLogin(username){
+  const u = db.users.find(x=>x.username===username);
+  if(!u) return;
+  ui.currentUserId = u.id; saveUI();
+  nav(u.role==='admin' ? 'adminDash' : (isUnconscious(currentAvatar())?'revival':'home'));
+}
+
+function appbar(title, backScreen){
+  return `<div class="appbar">
+    ${backScreen? `<span class="back" onclick="nav('${backScreen}')">←</span>` : ''}
+    <h1>${title}</h1>
+  </div>`;
+}
+function fieldError(msg){ return msg? `<div class="field-error">${msg}</div>` : ''; }
+
+function bottomNav(active){
+  const items = [
+    {k:'home', ic:'🏠', label:'หน้าหลัก'},
+    {k:'inventory', ic:'🎒', label:'กระเป๋า'},
+    {k:'roomList', ic:'🚪', label:'ห้อง'},
+    {k:'friends', ic:'👥', label:'เพื่อน'},
+    {k:'history', ic:'📊', label:'ประวัติ'}
+  ];
+  return `<div class="bottom-nav">${items.map(i=>`
+    <button class="${active===i.k?'active':''}" onclick="nav('${i.k}')">
+      <span class="ic">${i.ic}</span>${i.label}
+    </button>`).join('')}</div>`;
+}
+function adminNav(active){
+  const items = [
+    {k:'adminDash', ic:'📈', label:'แดชบอร์ด'},
+    {k:'itemMgmt', ic:'🧪', label:'ไอเทม'},
+    {k:'avatarMgmt', ic:'🧑‍🚀', label:'อวตาร'},
+    {k:'userMgmt', ic:'🛠️', label:'ผู้ใช้'}
+  ];
+  return `<div class="bottom-nav">${items.map(i=>`
+    <button class="${active===i.k?'active':''}" onclick="nav('${i.k}')">
+      <span class="ic">${i.ic}</span>${i.label}
+    </button>`).join('')}</div>`;
+}
+function hpBarHTML(pct){
+  const cls = pct<=20?'critical':(pct<=50?'low':'');
+  return `<div class="hpbar-track"><div class="hpbar-fill ${cls}" style="width:${pct}%"></div></div>`;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   4. SCREENS — โซนยังไม่เข้าสู่ระบบ (Welcome / Register / Login / CreateAvatar)
+   ══════════════════════════════════════════════════════════════════ */
+function renderWelcome(){
+  return `
+  <div style="text-align:center; padding-top:40px;">
+    <div style="font-size:70px;">🧝‍♀️🐲</div>
+    <h1 class="pixel-font" style="font-size:18px; margin:18px 0 6px;">POMO RPG</h1>
+    <p style="color:var(--ink-soft); font-size:13px; margin-bottom:36px;">โฟกัสของจริง ตีบอสให้แตก เก็บเลเวลอวตารในตัว</p>
+    <button class="btn btn-primary btn-block" onclick="nav('register')">สมัครสมาชิก</button>
+    <div style="height:10px;"></div>
+    <button class="btn btn-secondary btn-block" onclick="nav('login')">เข้าสู่ระบบ</button>
+  </div>`;
+}
+
+function renderRegister(){
+  return `
+  ${appbar('สมัครสมาชิก','welcome')}
+  <div class="card">
+    <div class="field"><label>อีเมล</label><input id="regEmail" type="email" placeholder="you@example.com"></div>
+    <div style="height:10px;"></div>
+    <div class="field"><label>ชื่อผู้ใช้</label><input id="regUsername" type="text" placeholder="username"></div>
+    <div style="height:10px;"></div>
+    <div class="field"><label>รหัสผ่าน</label><input id="regPassword" type="password" placeholder="อย่างน้อย 4 ตัวอักษร"></div>
+    <div id="regError">${fieldError('')}</div>
+    <div style="height:16px;"></div>
+    <button class="btn btn-primary btn-block" onclick="submitRegister()">ยืนยันสมัครสมาชิก</button>
+    <div style="height:8px;"></div>
+    <button class="btn btn-ghost btn-block" onclick="nav('welcome')">ยกเลิก</button>
+  </div>`;
+}
+function submitRegister(){
+  const email = document.getElementById('regEmail').value.trim();
+  const username = document.getElementById('regUsername').value.trim();
+  const password = document.getElementById('regPassword').value;
+  let err = '';
+  if(!email || !username || !password) err = 'กรุณากรอกข้อมูลให้ครบทุกช่อง';
+  else if(password.length < 4) err = 'รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร';
+  else if(db.users.some(u=>u.email===email || u.username===username)) err = 'อีเมลหรือชื่อผู้ใช้นี้ถูกใช้แล้ว';
+  if(err){ document.getElementById('regError').innerHTML = fieldError(err); return; }
+  const newUser = { id: db.nextUserId++, username, email, password, role:'member', suspended:false, suspendReason:null };
+  db.users.push(newUser);
+  db.avatars[newUser.id] = null; // ยังไม่มีอวตาร จนกว่าจะทำ UC-02
+  db.focusItems[newUser.id] = [];
+  db.settingsByUser[newUser.id] = { focusMin:25, breakMin:5 };
+  db.inventory[newUser.id] = [];
+  db.pity[newUser.id] = 0;
+  db.sessionsHistory[newUser.id] = [];
+  db.friends[newUser.id] = { friends:[], outgoing:[], incoming:[] };
+  saveDB();
+  ui.currentUserId = newUser.id; saveUI();
+  showToast('สมัครสมาชิกสำเร็จ! เลือกอวตารของคุณ');
+  nav('createAvatar');
+}
+
+function renderLogin(){
+  return `
+  ${appbar('เข้าสู่ระบบ','welcome')}
+  <div class="card">
+    <div class="field"><label>อีเมล / ชื่อผู้ใช้</label><input id="loginId" type="text" placeholder="username หรือ อีเมล"></div>
+    <div style="height:10px;"></div>
+    <div class="field"><label>รหัสผ่าน</label><input id="loginPw" type="password" placeholder="รหัสผ่าน"></div>
+    <div id="loginError">${fieldError('')}</div>
+    <div style="height:16px;"></div>
+    <button class="btn btn-primary btn-block" onclick="submitLogin()">เข้าสู่ระบบ</button>
+  </div>
+  <p style="text-align:center; font-size:11px; color:var(--ink-soft); margin-top:14px;">
+    ทดลอง: nan/1234 (สมาชิก) · admin/admin (ผู้ดูแล) · gun/1234 (บัญชีถูกระงับ)
+  </p>`;
+}
+function submitLogin(){
+  const idVal = document.getElementById('loginId').value.trim();
+  const pw = document.getElementById('loginPw').value;
+  const u = db.users.find(x=>x.username===idVal || x.email===idVal);
+  if(!u || u.password !== pw){
+    document.getElementById('loginError').innerHTML = fieldError('อีเมล/ชื่อผู้ใช้ หรือรหัสผ่านไม่ถูกต้อง');
+    return;
+  }
+  if(u.suspended){
+    document.getElementById('loginError').innerHTML = fieldError('บัญชีนี้ถูกระงับ: ' + u.suspendReason);
+    return;
+  }
+  ui.currentUserId = u.id; saveUI();
+  if(u.role==='admin'){ nav('adminDash'); return; }
+  if(!db.avatars[u.id]){ nav('createAvatar'); return; }
+  nav(isUnconscious(db.avatars[u.id]) ? 'revival' : 'home');
+}
+
+function renderCreateAvatar(){
+  const skins = db.avatarSkins.filter(s=>s.active);
+  return `
+  ${appbar('สร้างอวตารของคุณ')}
+  <p style="color:var(--ink-soft); font-size:13px; margin-bottom:14px;">เลือกรูปแบบเริ่มต้น — เปลี่ยนไอเทมแต่งได้ทีหลังในกระเป๋า</p>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+    ${skins.map(s=>`
+      <div class="card pixel-border" style="text-align:center; cursor:pointer; ${ui._pickedSkin===s.id?'outline:3px solid var(--coral-1);':''}" onclick="pickSkin(${s.id})">
+        <div style="font-size:40px;">${s.emoji}</div>
+        <div style="font-size:12px; font-weight:700; margin-top:6px;">${s.name}</div>
+      </div>`).join('')}
+  </div>
+  <div style="height:16px;"></div>
+  <button class="btn btn-primary btn-block" ${ui._pickedSkin?'':'disabled'} onclick="confirmCreateAvatar()">ยืนยันการสร้าง</button>`;
+}
+function pickSkin(id){ ui._pickedSkin = id; render(); }
+function confirmCreateAvatar(){
+  const uid = ui.currentUserId;
+  db.avatars[uid] = { skinId: ui._pickedSkin, level:1, exp:0, hpBaseline:100, lastFocusCompletedAt: Date.now(), streak:0, shieldActiveUntil:null, shieldHpSnapshot:null };
+  saveDB();
+  ui._pickedSkin = null; saveUI();
+  showToast('สร้างอวตารสำเร็จ! HP เต็ม เลเวล 1');
+  nav('home');
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   5. SCREENS — โซนสมาชิก: หน้าหลัก / รายการโฟกัส / ตั้งค่า
+   ══════════════════════════════════════════════════════════════════ */
+function renderHome(){
+  const av = currentAvatar();
+  const skin = db.avatarSkins.find(s=>s.id===av.skinId);
+  const hp = computeAvatarHP(av);
+  const unconscious = hp<=0;
+  if(unconscious){ nav('revival'); return ''; }
+  const expNeed = levelThreshold(av.level);
+  const items = db.focusItems[ui.currentUserId];
+  return `
+  ${appbar('หน้าหลัก')}
+  <div class="card" style="display:flex; gap:14px; align-items:center;">
+    <div class="sprite-box pixel-border" style="background:var(--pastel-blue);">${skin.emoji}</div>
+    <div style="flex:1;">
+      <div style="display:flex; justify-content:space-between; align-items:baseline;">
+        <span style="font-weight:800;">Lv.${av.level} ${skin.name}</span>
+        <span class="chip chip-gold">🔥 streak ${av.streak}</span>
+      </div>
+      <div style="height:6px;"></div>
+      <div style="font-size:10px; color:var(--ink-soft);">HP ${hp}%</div>
+      ${hpBarHTML(hp)}
+      <div style="height:6px;"></div>
+      <div style="font-size:10px; color:var(--ink-soft);">EXP ${av.exp}/${expNeed}</div>
+      <div class="expbar-track"><div class="expbar-fill" style="width:${Math.min(100, av.exp/expNeed*100)}%"></div></div>
+    </div>
+  </div>
+  <div style="height:14px;"></div>
+  <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:10px;">เริ่มเซสชันโฟกัส</div>
+    ${items.length===0? `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่มีรายการที่จะโฟกัส — <a style="color:var(--coral-2); cursor:pointer;" onclick="nav('focusList')">เพิ่มรายการก่อน</a></p>` : `
+    <div class="field"><label>เลือกรายการ</label>
+      <select id="sessionItem">${items.map(i=>`<option value="${i.id}">${i.name}</option>`).join('')}</select>
+    </div>
+    <div style="height:10px;"></div>
+    <div class="field"><label>ระยะเวลา (นาที)</label>
+      <input id="sessionMin" type="number" value="${db.settingsByUser[ui.currentUserId].focusMin}" min="5" max="120">
+    </div>
+    <div style="height:12px;"></div>
+    <button class="btn btn-primary btn-block" onclick="startSession(false)">⚔️ เริ่มจับเวลา ตีบอส!</button>
+    `}
+  </div>
+  <div style="height:14px;"></div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+    <button class="btn btn-secondary" onclick="nav('focusList')">📝 จัดการรายการ</button>
+    <button class="btn btn-secondary" onclick="nav('settings')">⚙️ ตั้งค่าเวลา</button>
+  </div>
+  <div style="height:10px;"></div>
+  <button class="btn btn-ghost btn-block" onclick="logout()">ออกจากระบบ</button>
+  ${bottomNav('home')}`;
+}
+
+function renderFocusList(){
+  const items = db.focusItems[ui.currentUserId];
+  return `
+  ${appbar('รายการสิ่งที่โฟกัส','home')}
+  <div class="card">
+    ${items.map(it=>`
+      <div class="list-row">
+        <span>${it.name}</span>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-secondary" style="padding:6px 10px;" onclick="editFocusItem(${it.id})">แก้ไข</button>
+          <button class="btn btn-danger" style="padding:6px 10px;" onclick="deleteFocusItem(${it.id})">ลบ</button>
+        </div>
+      </div>`).join('') || `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่มีรายการ</p>`}
+  </div>
+  <div style="height:14px;"></div>
+  <div class="card">
+    <div class="field"><label>ชื่อรายการใหม่</label><input id="newItemName" type="text" placeholder="เช่น อ่านหนังสือสอบ"></div>
+    <div id="itemErr"></div>
+    <div style="height:10px;"></div>
+    <button class="btn btn-primary btn-block" onclick="addFocusItem()">+ เพิ่มรายการ</button>
+  </div>`;
+}
+function addFocusItem(){
+  const input = document.getElementById('newItemName');
+  const name = input.value.trim();
+  if(!name){ document.getElementById('itemErr').innerHTML = fieldError('กรุณากรอกชื่อรายการ'); return; }
+  const list = db.focusItems[ui.currentUserId];
+  const nextId = list.length? Math.max(...list.map(i=>i.id))+1 : 1;
+  list.push({id:nextId, name});
+  saveDB(); showToast('เพิ่มรายการแล้ว'); render();
+}
+function editFocusItem(id){
+  const list = db.focusItems[ui.currentUserId];
+  const it = list.find(i=>i.id===id);
+  const name = prompt('แก้ไขชื่อรายการ', it.name);
+  if(name===null) return;
+  if(!name.trim()){ showToast('ชื่อรายการห้ามว่าง'); return; }
+  it.name = name.trim(); saveDB(); render();
+}
+function deleteFocusItem(id){
+  if(!confirm('ยืนยันลบรายการนี้? ประวัติเซสชันเดิมจะยังอยู่ในสถิติ')) return;
+  db.focusItems[ui.currentUserId] = db.focusItems[ui.currentUserId].filter(i=>i.id!==id);
+  saveDB(); render();
+}
+
+function renderSettings(){
+  const s = db.settingsByUser[ui.currentUserId];
+  return `
+  ${appbar('ตั้งค่าระยะเวลา','home')}
+  <div class="card">
+    <div class="field"><label>ระยะเวลาโฟกัส (นาที) — ต่ำสุด 5, สูงสุด 120</label><input id="setFocus" type="number" value="${s.focusMin}"></div>
+    <div style="height:10px;"></div>
+    <div class="field"><label>ระยะเวลาพัก (นาที) — ต่ำสุด 1, สูงสุด 30</label><input id="setBreak" type="number" value="${s.breakMin}"></div>
+    <div style="height:14px;"></div>
+    <button class="btn btn-primary btn-block" onclick="saveSettings()">บันทึก</button>
+  </div>`;
+}
+function saveSettings(){
+  let f = parseInt(document.getElementById('setFocus').value)||25;
+  let b = parseInt(document.getElementById('setBreak').value)||5;
+  let msg='';
+  if(f<5){ f=5; msg+='ปรับเวลาโฟกัสเป็นค่าต่ำสุด 5 นาที '; }
+  if(f>120){ f=120; msg+='ปรับเวลาโฟกัสเป็นค่าสูงสุด 120 นาที '; }
+  if(b<1){ b=1; msg+='ปรับเวลาพักเป็นค่าต่ำสุด 1 นาที '; }
+  if(b>30){ b=30; msg+='ปรับเวลาพักเป็นค่าสูงสุด 30 นาที '; }
+  db.settingsByUser[ui.currentUserId] = { focusMin:f, breakMin:b };
+  saveDB();
+  showToast(msg || 'บันทึกค่าเรียบร้อย');
+  nav('home');
+}
+function logout(){
+  if(ui.session){ showToast('มีเซสชันโฟกัสกำลังทำงานอยู่ — จบหรือยกเลิกก่อนออกจากระบบ'); return; }
+  if(!confirm('ยืนยันออกจากระบบ?')) return;
+  ui.currentUserId = null; saveUI();
+  nav('login');
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   6. SCREENS — วงจรเซสชันโฟกัส (UC-04 ตีบอส / UC-05 ยกเลิก / Summary / UC-08 พัก)
+   ══════════════════════════════════════════════════════════════════ */
+let sessionTicker=null, breakTicker=null, holdTimer=null;
+function stopAllTimers(){ clearInterval(sessionTicker); clearInterval(breakTicker); clearTimeout(holdTimer); }
+
+function startSession(isRevival){
+  const itemSel = document.getElementById('sessionItem');
+  const minInput = document.getElementById('sessionMin');
+  const itemId = itemSel? parseInt(itemSel.value) : 0;
+  const minutes = isRevival ? 20 : (parseInt(minInput.value)||25);
+  const item = isRevival? {name:'ภารกิจชุบชีวิต'} : db.focusItems[ui.currentUserId].find(i=>i.id===itemId);
+  ui.session = {
+    itemName: item.name, durationMin: minutes, startedAt: Date.now(),
+    isRevival: !!isRevival, roomId: ui.tempRoomId || null
+  };
+  saveUI();
+  nav('session');
+}
+function bossElapsedMin(){
+  const speed = ui.demoSpeed ? 60 : 1; // โหมดสาธิต: 1 นาทีจริง = 1 วินาที
+  return (Date.now() - ui.session.startedAt) / 60000 * speed;
+}
+function renderSession(){
+  const s = ui.session;
+  const elapsed = Math.min(bossElapsedMin(), s.durationMin);
+  const bossHpPct = Math.max(0, 100 - (elapsed/s.durationMin*100));
+  const remainMin = Math.max(0, s.durationMin - elapsed);
+  const mm = String(Math.floor(remainMin)).padStart(2,'0');
+  const ss = String(Math.floor((remainMin%1)*60)).padStart(2,'0');
+  setTimeout(()=>{
+    clearInterval(sessionTicker);
+    sessionTicker = setInterval(tickSession, 250);
+  },0);
+  return `
+  <div style="text-align:center;">
+    <div style="font-size:12px; color:var(--ink-soft); margin-bottom:6px;">${s.isRevival?'ภารกิจชุบชีวิต':'กำลังโฟกัส'}: ${s.itemName}</div>
+    <div class="sprite-box sprite-boss pixel-border" style="margin:0 auto; background:var(--pastel-blue);">👹</div>
+    <div style="height:10px;"></div>
+    <div style="font-size:11px; color:var(--ink-soft);">Boss HP</div>
+    ${hpBarHTML(Math.round(bossHpPct))}
+    <div style="height:18px;"></div>
+    <div class="pixel-font" id="sessionClock" style="font-size:30px;">${mm}:${ss}</div>
+    <div style="height:22px;"></div>
+    <div class="holdbar-track" id="holdBar"
+      onmousedown="startHoldCancel()" onmouseup="cancelHold()" onmouseleave="cancelHold()"
+      ontouchstart="startHoldCancel()" ontouchend="cancelHold()">
+      <div class="holdbar-fill" id="holdFill"></div>
+      <div class="holdbar-label">กดค้าง 2 วิ เพื่อยกเลิกเซสชัน</div>
+    </div>
+  </div>`;
+}
+function tickSession(){
+  const s = ui.session; if(!s) return;
+  const elapsed = bossElapsedMin();
+  if(elapsed >= s.durationMin){ clearInterval(sessionTicker); completeSession(); return; }
+  const bossHpPct = Math.max(0, 100 - (elapsed/s.durationMin*100));
+  const remainMin = Math.max(0, s.durationMin - elapsed);
+  const mm = String(Math.floor(remainMin)).padStart(2,'0');
+  const ss = String(Math.floor((remainMin%1)*60)).padStart(2,'0');
+  const clockEl = document.getElementById('sessionClock');
+  if(clockEl) clockEl.textContent = mm+':'+ss;
+  const fillEl = document.querySelector('#screen-root .hpbar-fill');
+  if(fillEl){ fillEl.style.width = bossHpPct+'%'; fillEl.className='hpbar-fill '+(bossHpPct<=20?'critical':(bossHpPct<=50?'low':'')); }
+}
+function startHoldCancel(){
+  const fill = document.getElementById('holdFill');
+  fill.style.transition = 'width 2s linear';
+  requestAnimationFrame(()=>{ fill.style.width='100%'; });
+  holdTimer = setTimeout(()=>{ cancelSessionMidway(); }, 2000);
+}
+function cancelHold(){
+  clearTimeout(holdTimer);
+  const fill = document.getElementById('holdFill');
+  if(!fill) return;
+  fill.style.transition = 'width .15s ease';
+  fill.style.width='0%';
+}
+function cancelSessionMidway(){
+  clearInterval(sessionTicker);
+  const s = ui.session;
+  const elapsed = Math.min(bossElapsedMin(), s.durationMin);
+  const ratio = elapsed / s.durationMin;
+  const av = currentAvatar();
+  const partialExp = Math.round(expForDuration(elapsed) * ratio);
+  if(!s.isRevival){
+    grantEXP(av, partialExp);
+    av.lastFocusCompletedAt = Date.now();
+    saveDB();
+    db.sessionsHistory[ui.currentUserId].unshift({ id:Date.now(), itemName:s.itemName, dateLabel:'วันนี้', focusMin:Math.round(elapsed), breakMin:0, overrunMin:0, status:'cancelled', roomId:s.roomId });
+    saveDB();
+  }
+  ui.session = null; saveUI();
+  showToast('ยกเลิกเซสชัน — ได้รับ EXP บางส่วนตามเวลาที่โฟกัสจริง ('+Math.round(elapsed)+' นาที)');
+  nav(s.isRevival ? 'revival' : 'home');
+}
+function completeSession(){
+  const s = ui.session;
+  const av = currentAvatar();
+  if(s.isRevival){
+    av.hpBaseline = 100; av.lastFocusCompletedAt = Date.now();
+    av.level = 1; av.exp = 0; av.shieldActiveUntil=null;
+    saveDB();
+    db.sessionsHistory[ui.currentUserId].unshift({ id:Date.now(), itemName:'ภารกิจชุบชีวิต', dateLabel:'วันนี้', focusMin:s.durationMin, breakMin:0, overrunMin:0, status:'completed', roomId:null });
+    saveDB();
+    ui.session=null; saveUI();
+    showToast('ชุบชีวิตสำเร็จ! HP เต็ม 100% เลเวล/EXP ถูกรีเซ็ต');
+    nav('home');
+    return;
+  }
+  const exp = expForDuration(s.durationMin);
+  const boxes = lootBoxesForDuration(s.durationMin);
+  grantEXP(av, exp);
+  av.lastFocusCompletedAt = Date.now();
+  av.streak += 1;
+  saveDB();
+  if(s.roomId){
+    const room = db.rooms.find(r=>r.id===s.roomId);
+    if(room){ const m = room.members.find(m=>m.userId===ui.currentUserId); if(m) m.focusMin += s.durationMin; saveDB(); }
+  }
+  db.sessionsHistory[ui.currentUserId].unshift({ id:Date.now(), itemName:s.itemName, dateLabel:'วันนี้', focusMin:s.durationMin, breakMin:db.settingsByUser[ui.currentUserId].breakMin, overrunMin:0, status:'completed', roomId:s.roomId });
+  saveDB();
+  ui._lastReward = { exp, boxes };
+  ui.session = null;
+  ui.breakState = { startedAt: Date.now(), durationMin: db.settingsByUser[ui.currentUserId].breakMin };
+  saveUI();
+  nav('summary');
+}
+
+function renderSummary(){
+  const r = ui._lastReward || {exp:0, boxes:0};
+  return `
+  <div style="text-align:center; padding-top:20px;">
+    <div style="font-size:54px;">🏆</div>
+    <h1 class="pixel-font" style="font-size:15px; margin:12px 0;">ชนะบอสแล้ว!</h1>
+    <div class="card" style="text-align:left;">
+      <div class="list-row"><span>EXP ที่ได้รับ</span><span class="chip chip-blue">+${r.exp} EXP</span></div>
+      <div class="list-row"><span>กล่องสุ่มที่ได้</span><span class="chip chip-gold">🎁 x${r.boxes}</span></div>
+      <div class="list-row"><span>HP อวตาร</span><span class="chip chip-green">เติมคืนแล้ว</span></div>
+      <div class="list-row"><span>Streak ไฟ</span><span class="chip chip-gold">🔥 ${currentAvatar().streak}</span></div>
+    </div>
+    <div style="height:16px;"></div>
+    <button class="btn btn-primary btn-block" onclick="nav('break')">ไปช่วงพัก →</button>
+  </div>`;
+}
+
+function renderBreak(){
+  const b = ui.breakState;
+  const speed = ui.demoSpeed ? 60 : 1;
+  const elapsedMin = (Date.now()-b.startedAt)/60000*speed;
+  const remain = Math.max(0, b.durationMin - elapsedMin);
+  setTimeout(()=>{ clearInterval(breakTicker); breakTicker = setInterval(tickBreak, 250); },0);
+  return `
+  <div style="text-align:center; padding-top:30px;">
+    <div style="font-size:50px;">☕</div>
+    <h1 class="pixel-font" style="font-size:14px; margin:14px 0;">ช่วงพัก</h1>
+    <div class="pixel-font" id="breakClock" style="font-size:26px;">${fmtMin(remain)}</div>
+    <div style="height:20px;"></div>
+    <button class="btn btn-secondary btn-block" onclick="endBreakEarly()">เสร็จสิ้นช่วงพัก (จบก่อนเวลา)</button>
+  </div>`;
+}
+function fmtMin(min){ const m=Math.floor(min), s=Math.floor((min%1)*60); return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); }
+function tickBreak(){
+  const b = ui.breakState; if(!b) return;
+  const speed = ui.demoSpeed?60:1;
+  const elapsedMin = (Date.now()-b.startedAt)/60000*speed;
+  const remain = b.durationMin - elapsedMin;
+  if(remain<=0){ clearInterval(breakTicker); ui.breakState=null; saveUI(); showToast('พักครบเวลาแล้ว! เริ่มเซสชันถัดไปได้เลย'); nav('home'); return; }
+  const el = document.getElementById('breakClock'); if(el) el.textContent = fmtMin(remain);
+}
+function endBreakEarly(){
+  clearInterval(breakTicker);
+  ui.breakState = null; saveUI();
+  showToast('จบช่วงพักทันที ไม่มีการนับเบรกเกิน');
+  nav('home');
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   7. SCREENS — UC-30 ระบบชุบชีวิต
+   ══════════════════════════════════════════════════════════════════ */
+function renderRevival(){
+  return `
+  <div style="text-align:center; padding-top:20px;">
+    <div style="font-size:56px; filter:grayscale(1); opacity:0.6;">💀</div>
+    <h1 class="pixel-font" style="font-size:14px; margin:14px 0;">อวตารหมดสติ</h1>
+    <p style="font-size:12px; color:var(--ink-soft);">ทำภารกิจโฟกัส 20 นาทีให้สำเร็จในเซสชันเดียว เพื่อชุบชีวิตอวตารกลับมา (HP เต็ม 100% แต่เลเวล/EXP จะถูกรีเซ็ต)</p>
+    <div style="height:18px;"></div>
+    <button class="btn btn-primary btn-block" onclick="startSession(true)">🕯️ เริ่มภารกิจชุบชีวิต (20 นาที)</button>
+    <div style="height:8px;"></div>
+    <p style="font-size:11px; color:var(--ink-soft);">ลองใหม่ได้ไม่จำกัดจำนวนครั้งหากยกเลิกกลางทาง</p>
+  </div>`;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   8. SCREENS — ไอเทม: กระเป๋า (UC-23) / กล่องสุ่ม (UC-10) / ผสม (UC-12)
+   ══════════════════════════════════════════════════════════════════ */
+function renderInventory(){
+  const inv = db.inventory[ui.currentUserId] || [];
+  return `
+  ${appbar('กระเป๋าไอเทม','home')}
+  <div class="card">
+    ${inv.length===0? `<p style="font-size:12px; color:var(--ink-soft);">กระเป๋ายังว่างเปล่า — ลองเริ่มโฟกัสดูสิ!</p>` :
+    inv.map(row=>{ const it=itemById(row.itemId); return `
+      <div class="list-row">
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:22px;">${it.emoji}</span>
+          <div><div style="font-weight:700; font-size:13px;">${it.name}</div><span class="chip ${rarityChip(it.rarity)}">${it.rarity}</span></div>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:12px; color:var(--ink-soft);">x${row.qty}</span>
+          ${it.id===3? `<button class="btn btn-success" style="padding:6px 10px;" onclick="useShieldItem(${it.id})">ใช้</button>` : ''}
+        </div>
+      </div>`;}).join('')}
+  </div>
+  <div style="height:14px;"></div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+    <button class="btn btn-primary" onclick="nav('lootbox')">🎁 เปิดกล่องสุ่ม</button>
+    <button class="btn btn-secondary" onclick="nav('crafting')">⚗️ ผสมไอเทม</button>
+  </div>`;
+}
+function rarityChip(r){ return {common:'chip-blue',rare:'chip-green',epic:'chip-gold',legendary:'chip-red'}[r] || 'chip-blue'; }
+function useShieldItem(itemId){
+  if(invQty(ui.currentUserId, itemId) <= 0){ showToast('ไม่มีไอเทมนี้ในกระเป๋า'); return; }
+  removeFromInventory(ui.currentUserId, itemId, 1);
+  const av = currentAvatar();
+  const hpNow = computeAvatarHP(av);
+  av.shieldActiveUntil = Date.now() + 24*3600000;
+  av.shieldHpSnapshot = hpNow;
+  saveDB();
+  showToast('ใช้โล่เวลาแล้ว — HP/Streak จะไม่ลดเป็นเวลา 24 ชั่วโมง');
+  render();
+}
+
+function renderLootbox(){
+  const pity = db.pity[ui.currentUserId] || 0;
+  const canOpen = invQty(ui.currentUserId, 999) >= 0; // ไม่มีข้อจำกัดจำนวนกล่องในสาธิตนี้ เปิดได้เรื่อย ๆ เพื่อสาธิต Pity System
+  return `
+  ${appbar('เปิดกล่องสุ่ม','inventory')}
+  <div style="text-align:center;">
+    <div id="lootSprite" class="sprite-box pixel-border" style="margin:20px auto; background:var(--pastel-blue); font-size:50px;">🎁</div>
+    <p style="font-size:11px; color:var(--ink-soft);">ตัวนับ Pity: ${pity}/10 (ครบ 10 การันตีของหายากมาก/ตำนาน)</p>
+    <div id="lootResult"></div>
+    <div style="height:14px;"></div>
+    <button class="btn btn-primary btn-block" onclick="openLootBox()">เปิดกล่องสุ่ม</button>
+  </div>`;
+}
+function openLootBox(){
+  const picked = rollLootItem(ui.currentUserId);
+  document.getElementById('lootSprite').textContent = picked.emoji;
+  document.getElementById('lootResult').innerHTML = `
+    <div style="height:10px;"></div>
+    <div class="chip ${rarityChip(picked.rarity)}" style="font-size:13px;">ได้รับ: ${picked.name} (${picked.rarity})</div>`;
+  showToast('ได้รับ ' + picked.name + '!');
+}
+
+function renderCrafting(){
+  const recipe = db.craftRecipes[0];
+  const have = invQty(ui.currentUserId, recipe.ingredients[0].itemId);
+  const need = recipe.ingredients[0].qty;
+  const ok = have >= need;
+  const ing = itemById(recipe.ingredients[0].itemId);
+  const result = itemById(recipe.resultItemId);
+  return `
+  ${appbar('ผสมไอเทม','inventory')}
+  <div class="card" style="text-align:center;">
+    <div style="font-weight:800; font-size:13px; margin-bottom:10px;">${recipe.name}</div>
+    <div style="display:flex; align-items:center; justify-content:center; gap:14px;">
+      <div><div style="font-size:34px;">${ing.emoji}</div><div style="font-size:11px;">${ing.name} (${have}/${need})</div></div>
+      <div style="font-size:22px;">➜</div>
+      <div><div style="font-size:34px;">${result.emoji}</div><div style="font-size:11px;">${result.name}</div></div>
+    </div>
+    <div style="height:14px;"></div>
+    <button class="btn btn-primary btn-block" ${ok?'':'disabled'} onclick="doCraft(${recipe.id})">${ok?'ยืนยันการผสม':'ไอเทมไม่ครบตามสูตร'}</button>
+  </div>`;
+}
+function doCraft(recipeId){
+  const recipe = db.craftRecipes.find(r=>r.id===recipeId);
+  for(const ing of recipe.ingredients) removeFromInventory(ui.currentUserId, ing.itemId, ing.qty);
+  addToInventory(ui.currentUserId, recipe.resultItemId, 1);
+  saveDB();
+  showToast('ผสมไอเทมสำเร็จ!');
+  nav('inventory');
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   9. SCREENS — ห้องโฟกัส (UC-18,19,20,25,34)
+   ══════════════════════════════════════════════════════════════════ */
+function renderRoomList(){
+  const myRooms = db.rooms.filter(r=>r.members.some(m=>m.userId===ui.currentUserId));
+  return `
+  ${appbar('ห้องโฟกัส','home')}
+  <div class="card">
+    ${myRooms.map(r=>`
+      <div class="list-row" style="cursor:pointer;" onclick="openRoom(${r.id})">
+        <div><div style="font-weight:700; font-size:13px;">${r.name} ${r.closed?'<span class=\"chip chip-red\">ปิดแล้ว</span>':''}</div>
+        <div style="font-size:11px; color:var(--ink-soft);">รหัส ${r.code} · เป้าหมาย ${r.goalName}</div></div>
+        <span style="font-size:18px;">›</span>
+      </div>`).join('') || `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่ได้อยู่ในห้องไหน</p>`}
+  </div>
+  <div style="height:14px;"></div>
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+    <button class="btn btn-primary" onclick="nav('createRoom')">+ สร้างห้อง</button>
+    <button class="btn btn-secondary" onclick="nav('joinRoom')">🔑 เข้าร่วมห้อง</button>
+  </div>`;
+}
+function openRoom(id){ ui.tempRoomId = id; saveUI(); nav('roomView'); }
+
+function renderCreateRoom(){
+  return `
+  ${appbar('สร้างห้องโฟกัส','roomList')}
+  <div class="card">
+    <div class="field"><label>ชื่อห้อง</label><input id="roomName" type="text" placeholder="เช่น ห้องติวสอบ Final"></div>
+    <div style="height:10px;"></div>
+    <div class="field"><label>ชื่อเป้าหมาย</label><input id="roomGoal" type="text" placeholder="เช่น อ่านหนังสือให้ครบ 10 ชม."></div>
+    <div style="height:10px;"></div>
+    <div class="field"><label>เป้าหมายเวลารวม (นาที) — เว้นว่างใช้ค่าเริ่มต้น 300</label><input id="roomTarget" type="number" placeholder="300"></div>
+    <div style="height:14px;"></div>
+    <button class="btn btn-primary btn-block" onclick="submitCreateRoom()">สร้างห้อง</button>
+  </div>`;
+}
+function submitCreateRoom(){
+  const name = document.getElementById('roomName').value.trim() || 'ห้องโฟกัส';
+  const goal = document.getElementById('roomGoal').value.trim() || 'โฟกัสร่วมกัน';
+  const target = parseInt(document.getElementById('roomTarget').value) || 300;
+  const code = 'ROOM' + Math.floor(1000+Math.random()*9000);
+  const newRoom = { id: Date.now(), code, name, goalName:goal, targetMin:target, ownerId:ui.currentUserId, members:[{userId:ui.currentUserId, focusMin:0}], closed:false };
+  db.rooms.push(newRoom);
+  saveDB();
+  ui.tempRoomId = newRoom.id; saveUI();
+  showToast('สร้างห้องสำเร็จ! รหัสเชิญ: ' + code);
+  nav('roomView');
+}
+
+function renderJoinRoom(){
+  return `
+  ${appbar('เข้าร่วมห้องโฟกัส','roomList')}
+  <div class="card">
+    <div class="field"><label>รหัสเชิญ</label><input id="joinCode" type="text" placeholder="เช่น FOCUS88"></div>
+    <div id="joinErr"></div>
+    <div style="height:14px;"></div>
+    <button class="btn btn-primary btn-block" onclick="submitJoinRoom()">เข้าร่วม</button>
+  </div>`;
+}
+function submitJoinRoom(){
+  const code = document.getElementById('joinCode').value.trim().toUpperCase();
+  const room = db.rooms.find(r=>r.code===code);
+  if(!room){ document.getElementById('joinErr').innerHTML = fieldError('รหัสไม่ถูกต้องหรือหมดอายุ'); return; }
+  if(room.closed){ document.getElementById('joinErr').innerHTML = fieldError('ห้องนี้ปิดรับสมัครแล้ว'); return; }
+  if(!room.members.some(m=>m.userId===ui.currentUserId)) room.members.push({userId:ui.currentUserId, focusMin:0});
+  saveDB();
+  ui.tempRoomId = room.id; saveUI();
+  showToast('เข้าร่วมห้องสำเร็จ!');
+  nav('roomView');
+}
+
+function renderRoomView(){
+  const room = db.rooms.find(r=>r.id===ui.tempRoomId);
+  const isOwner = room.ownerId === ui.currentUserId;
+  const totalMin = room.members.reduce((a,m)=>a+m.focusMin,0);
+  const pct = Math.min(100, Math.round(totalMin/room.targetMin*100));
+  const sorted = [...room.members].sort((a,b)=>b.focusMin-a.focusMin);
+  return `
+  ${appbar(room.name,'roomList')}
+  <div class="card">
+    <div style="font-size:12px; color:var(--ink-soft);">เป้าหมาย: ${room.goalName}</div>
+    <div style="font-size:11px; margin:6px 0;">${totalMin}/${room.targetMin} นาที (${pct}%)</div>
+    <div class="expbar-track" style="height:12px;"><div class="expbar-fill" style="width:${pct}%"></div></div>
+    <div style="height:6px;"></div>
+    <div style="font-size:11px; color:var(--ink-soft);">รหัสเชิญ: <b>${room.code}</b></div>
+  </div>
+  <div style="height:14px;"></div>
+  <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">อันดับสมาชิกในห้อง</div>
+    ${sorted.map((m,idx)=>{ const u=db.users.find(x=>x.id===m.userId); return `
+      <div class="list-row"><span>${idx+1}. ${u.username} ${m.userId===room.ownerId?'👑':''}</span><span class="chip chip-blue">${m.focusMin} นาที</span></div>`;}).join('')}
+  </div>
+  <div style="height:14px;"></div>
+  ${room.closed? `<p style="text-align:center; font-size:12px; color:var(--ink-soft);">ห้องนี้ปิดแล้ว</p>` : `
+  <button class="btn btn-primary btn-block" onclick="startSessionInRoom()">⚔️ เริ่มโฟกัสในห้องนี้</button>
+  <div style="height:10px;"></div>
+  ${isOwner
+    ? `<button class="btn btn-success btn-block" onclick="closeRoomGoal(${room.id})">🏁 สำเร็จเป้าหมาย (ปิดห้อง)</button>`
+    : `<button class="btn btn-danger btn-block" onclick="leaveRoom(${room.id})">ออกจากห้อง</button>`}
+  `}`;
+}
+function startSessionInRoom(){
+  const items = db.focusItems[ui.currentUserId];
+  if(items.length===0){ showToast('เพิ่มรายการที่จะโฟกัสก่อน'); nav('focusList'); return; }
+  const room = db.rooms.find(r=>r.id===ui.tempRoomId);
+  ui.session = { itemName: items[0].name, durationMin: db.settingsByUser[ui.currentUserId].focusMin, startedAt: Date.now(), isRevival:false, roomId: room.id };
+  saveUI();
+  nav('session');
+}
+function closeRoomGoal(roomId){
+  if(!confirm('ยืนยันปิดเป้าหมายห้องนี้? จะไม่สามารถเพิ่มเวลาต่อได้อีก')) return;
+  const room = db.rooms.find(r=>r.id===roomId);
+  room.closed = true;
+  room.members.forEach(m=>{
+    db.sessionsHistory[m.userId] = db.sessionsHistory[m.userId] || [];
+    db.sessionsHistory[m.userId].unshift({ id:Date.now()+m.userId, itemName:'สรุปห้อง: '+room.name, dateLabel:'วันนี้', focusMin:m.focusMin, breakMin:0, overrunMin:0, status:'completed', roomId:room.id });
+  });
+  saveDB();
+  showToast('ปิดห้องและบันทึกสรุปสถิติให้ทุกคนแล้ว');
+  nav('roomSummary');
+}
+function leaveRoom(roomId){
+  const room = db.rooms.find(r=>r.id===roomId);
+  if(room.ownerId===ui.currentUserId){ showToast('เจ้าของห้องต้องกด "สำเร็จเป้าหมาย" แทนการออกจากห้อง'); return; }
+  if(!confirm('ยืนยันออกจากห้องนี้?')) return;
+  room.members = room.members.filter(m=>m.userId!==ui.currentUserId);
+  saveDB();
+  showToast('ออกจากห้องแล้ว — สถิติเดิมยังอยู่ในประวัติส่วนตัว');
+  nav('roomList');
+}
+function renderRoomSummary(){
+  const room = db.rooms.find(r=>r.id===ui.tempRoomId);
+  const sorted = [...room.members].sort((a,b)=>b.focusMin-a.focusMin);
+  return `
+  ${appbar('สรุปผลห้อง','roomList')}
+  <div style="text-align:center; font-size:44px;">🎉</div>
+  <div class="card">
+    ${sorted.map((m,idx)=>{ const u=db.users.find(x=>x.id===m.userId); return `
+      <div class="list-row"><span>${idx+1}. ${u.username}</span><span class="chip chip-green">${m.focusMin} นาที</span></div>`;}).join('')}
+  </div>
+  <div style="height:14px;"></div>
+  <button class="btn btn-primary btn-block" onclick="nav('roomList')">กลับหน้ารายการห้อง</button>`;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   10. SCREENS — เพื่อน (UC-21, UC-35)
+   ══════════════════════════════════════════════════════════════════ */
+function renderFriends(){
+  const f = db.friends[ui.currentUserId];
+  return `
+  ${appbar('เพื่อน','home')}
+  <div class="card">
+    <div class="field"><label>ค้นหาผู้ใช้ (ชื่อ/รหัส)</label><input id="friendSearch" type="text" placeholder="เช่น ploy"></div>
+    <div id="friendSearchResult"></div>
+    <div style="height:10px;"></div>
+    <button class="btn btn-primary btn-block" onclick="searchFriend()">ค้นหา</button>
+  </div>
+  <div style="height:14px;"></div>
+  <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">รายชื่อเพื่อน</div>
+    ${f.friends.map(fid=>{ const u=db.users.find(x=>x.id===fid); const av=db.avatars[fid]; return `
+      <div class="list-row">
+        <span>${u.username} <span class="chip chip-gold">🔥 ${av?av.streak:0}</span></span>
+        <button class="btn btn-danger" style="padding:5px 10px;" onclick="removeFriend(${fid})">ลบ</button>
+      </div>`;}).join('') || `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่มีเพื่อน</p>`}
+  </div>`;
+}
+function searchFriend(){
+  const q = document.getElementById('friendSearch').value.trim().toLowerCase();
+  const found = db.users.find(u=>u.username.toLowerCase()===q && u.id!==ui.currentUserId);
+  const box = document.getElementById('friendSearchResult');
+  if(!q){ box.innerHTML=''; return; }
+  if(!found){ box.innerHTML = fieldError('ไม่พบผู้ใช้ที่ค้นหา'); return; }
+  const f = db.friends[ui.currentUserId];
+  if(f.friends.includes(found.id)){ box.innerHTML = `<p style="font-size:12px; color:var(--ink-soft); margin-top:6px;">เป็นเพื่อนกันอยู่แล้ว</p>`; return; }
+  box.innerHTML = `<div class="list-row" style="margin-top:6px;"><span>${found.username}</span><button class="btn btn-primary" style="padding:6px 10px;" onclick="sendFriendRequest(${found.id})">ส่งคำขอ</button></div>`;
+}
+function sendFriendRequest(targetId){
+  db.friends[ui.currentUserId].friends.push(targetId);
+  db.friends[targetId] = db.friends[targetId] || {friends:[],outgoing:[],incoming:[]};
+  db.friends[targetId].friends.push(ui.currentUserId);
+  saveDB();
+  showToast('ส่งคำขอเป็นเพื่อนแล้ว (จำลอง: อีกฝ่ายรับอัตโนมัติ)');
+  render();
+}
+function removeFriend(fid){
+  if(!confirm('ยืนยันลบเพื่อนคนนี้?')) return;
+  db.friends[ui.currentUserId].friends = db.friends[ui.currentUserId].friends.filter(x=>x!==fid);
+  saveDB(); render();
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   11. SCREENS — ประวัติ/สถิติ (UC-22)
+   ══════════════════════════════════════════════════════════════════ */
+function renderHistory(){
+  const hist = db.sessionsHistory[ui.currentUserId] || [];
+  const totalFocus = hist.reduce((a,s)=>a+s.focusMin,0);
+  const totalBreak = hist.reduce((a,s)=>a+s.breakMin,0);
+  const totalOverrun = hist.reduce((a,s)=>a+s.overrunMin,0);
+  return `
+  ${appbar('ประวัติ / สถิติ','home')}
+  <div class="card" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; text-align:center;">
+    <div><div style="font-size:18px; font-weight:800;">${totalFocus}</div><div style="font-size:10px; color:var(--ink-soft);">โฟกัส (นาที)</div></div>
+    <div><div style="font-size:18px; font-weight:800;">${totalBreak}</div><div style="font-size:10px; color:var(--ink-soft);">พัก (นาที)</div></div>
+    <div><div style="font-size:18px; font-weight:800;">${totalOverrun}</div><div style="font-size:10px; color:var(--ink-soft);">เบรกเกิน (นาที)</div></div>
+  </div>
+  <div style="height:14px;"></div>
+  <div class="card">
+    ${hist.length===0? `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่มีข้อมูลในช่วงเวลานี้</p>` :
+    hist.map(s=>`
+      <div class="list-row">
+        <div><div style="font-weight:700; font-size:13px;">${s.itemName}</div><div style="font-size:11px; color:var(--ink-soft);">${s.dateLabel} · ${s.focusMin} นาที</div></div>
+        <span class="chip ${s.status==='completed'?'chip-green':'chip-red'}">${s.status==='completed'?'สำเร็จ':'ยกเลิกกลางทาง'}</span>
+      </div>`).join('')}
+  </div>
+  ${bottomNav('history')}`;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   12. SCREENS — ผู้ดูแลระบบ (UC-26,27,28,29)
+   ══════════════════════════════════════════════════════════════════ */
+function renderAdminDash(){
+  const s = db.adminStatsSeed;
+  return `
+  ${appbar('แดชบอร์ดสถิติระบบ')}
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+    <div class="card"><div style="font-size:20px; font-weight:800;">${s.sessionCount}</div><div style="font-size:11px; color:var(--ink-soft);">เซสชันทั้งหมด</div></div>
+    <div class="card"><div style="font-size:20px; font-weight:800;">${s.totalFocusMin}</div><div style="font-size:11px; color:var(--ink-soft);">นาทีโฟกัสรวม</div></div>
+    <div class="card"><div style="font-size:20px; font-weight:800;">${s.successRate}% / ${s.cancelRate}%</div><div style="font-size:11px; color:var(--ink-soft);">สำเร็จ / ยกเลิกกลางทาง</div></div>
+    <div class="card"><div style="font-size:20px; font-weight:800;">${s.unconsciousCount} / ${s.revivedCount}</div><div style="font-size:11px; color:var(--ink-soft);">หมดสติ / ชุบชีวิตสำเร็จ</div></div>
+  </div>
+  <div style="height:14px;"></div>
+  <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">สมาชิกใหม่ (4 สัปดาห์ล่าสุด)</div>
+    <div style="display:flex; align-items:flex-end; gap:8px; height:70px;">
+      ${s.newMembersRange.map(v=>`<div style="flex:1; background:linear-gradient(180deg,var(--coral-1),var(--coral-2)); border-radius:6px 6px 0 0; height:${v*8}px;"></div>`).join('')}
+    </div>
+  </div>
+  <div style="height:14px;"></div>
+  <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">อัตราดรอปจริง เทียบกับที่กำหนด (UC-26)</div>
+    ${db.itemCatalog.map(it=>`<div class="list-row"><span>${it.emoji} ${it.name}</span><span style="font-size:11px;">กำหนด ${it.dropRate}%</span></div>`).join('')}
+  </div>
+  ${adminNav('adminDash')}`;
+}
+
+function renderItemMgmt(){
+  const sum = db.itemCatalog.filter(i=>i.active).reduce((a,i)=>a+i.dropRate,0);
+  return `
+  ${appbar('จัดการไอเทม / อัตราดรอป')}
+  <div class="card">
+    ${db.itemCatalog.map(it=>`
+      <div class="list-row">
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:20px;">${it.emoji}</span>
+          <div><div style="font-weight:700; font-size:13px;">${it.name}</div><span class="chip ${rarityChip(it.rarity)}">${it.rarity}</span></div></div>
+        <div style="display:flex; align-items:center; gap:6px;">
+          <input type="number" value="${it.dropRate}" style="width:56px; border:2px solid #EFE6DC; border-radius:8px; padding:4px 6px;" onchange="updateDropRate(${it.id}, this.value)">
+          <label style="font-size:10px;"><input type="checkbox" ${it.active?'checked':''} onchange="toggleItemActive(${it.id})"> เปิดใช้</label>
+        </div>
+      </div>`).join('')}
+  </div>
+  <div style="height:10px;"></div>
+  <div style="font-size:12px; ${sum===100?'color:var(--green-dark);':'color:var(--danger); font-weight:800;'}">ผลรวมอัตราดรอป (ไอเทมที่เปิดใช้): ${sum}%${sum===100?' ✓':' — ต้องเท่ากับ 100%'}</div>
+  <div style="height:12px;"></div>
+  <button class="btn btn-primary btn-block" ${sum===100?'':'disabled'} onclick="saveItemCatalog()">บันทึกการเปลี่ยนแปลง</button>
+  ${adminNav('itemMgmt')}`;
+}
+function updateDropRate(id, val){ const it=itemById(id); it.dropRate = parseInt(val)||0; saveDB(); render(); }
+function toggleItemActive(id){
+  const it = itemById(id);
+  const usedInRecipe = db.craftRecipes.some(r=>r.ingredients.some(ing=>ing.itemId===id) || r.resultItemId===id);
+  if(it.active && usedInRecipe){ if(!confirm('ไอเทมนี้ถูกอ้างอิงในสูตรผสม — ปิดใช้งานต่อไหม?')) { render(); return; } }
+  it.active = !it.active; saveDB(); render();
+}
+function saveItemCatalog(){ saveDB(); showToast('บันทึกข้อมูลไอเทม/อัตราดรอปแล้ว — มีผลกับการเปิดกล่อง/ผสมครั้งถัดไป'); }
+
+function renderAvatarMgmt(){
+  const activeCount = db.avatarSkins.filter(s=>s.active).length;
+  return `
+  ${appbar('จัดการรูปแบบอวตาร')}
+  <div class="card">
+    ${db.avatarSkins.map(s=>`
+      <div class="list-row">
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:24px;">${s.emoji}</span><span style="font-weight:700; font-size:13px;">${s.name}</span></div>
+        <label style="font-size:11px;"><input type="checkbox" ${s.active?'checked':''} onchange="toggleSkinActive(${s.id})"> เปิดใช้</label>
+      </div>`).join('')}
+  </div>
+  <div style="height:10px;"></div>
+  <p style="font-size:11px; color:var(--ink-soft);">ปิดใช้งานจะซ่อนจากบัญชีใหม่เท่านั้น สมาชิกเดิมที่ใช้อยู่ไม่ได้รับผลกระทบ</p>
+  ${adminNav('avatarMgmt')}`;
+}
+function toggleSkinActive(id){
+  const s = db.avatarSkins.find(x=>x.id===id);
+  const activeCount = db.avatarSkins.filter(x=>x.active).length;
+  if(s.active && activeCount<=1){ showToast('ต้องเหลืออย่างน้อย 1 รูปแบบที่เปิดใช้งาน'); return; }
+  s.active = !s.active; saveDB(); render();
+}
+
+function renderUserMgmt(){
+  return `
+  ${appbar('จัดการบัญชีผู้ใช้')}
+  <div class="card">
+    <div class="field"><label>ค้นหาผู้ใช้ (username/อีเมล)</label><input id="userSearch" type="text" placeholder="เช่น gun"></div>
+    <div style="height:10px;"></div>
+    <button class="btn btn-primary btn-block" onclick="searchUser()">ค้นหา</button>
+  </div>
+  <div id="userMgmtResult" style="margin-top:14px;"></div>
+  ${adminNav('userMgmt')}`;
+}
+function searchUser(){
+  const q = document.getElementById('userSearch').value.trim().toLowerCase();
+  const u = db.users.find(x=>x.username.toLowerCase()===q || x.email.toLowerCase()===q);
+  const box = document.getElementById('userMgmtResult');
+  if(!u){ box.innerHTML = `<div class="card">${fieldError('ไม่พบบัญชีที่ค้นหา')}</div>`; return; }
+  box.innerHTML = `
+  <div class="card">
+    <div style="font-weight:800;">${u.username}</div>
+    <div style="font-size:12px; color:var(--ink-soft);">${u.email}</div>
+    <div style="height:6px;"></div>
+    <span class="chip ${u.suspended?'chip-red':'chip-green'}">${u.suspended? 'ถูกระงับ: '+u.suspendReason : 'ใช้งานได้ปกติ'}</span>
+    <div style="height:12px;"></div>
+    ${u.suspended
+      ? `<button class="btn btn-success btn-block" onclick="unsuspendUser(${u.id})">ปลดระงับบัญชี</button>`
+      : `<div class="field"><label>เหตุผลการระงับ</label><input id="suspendReason" type="text" placeholder="เช่น สแปม / ละเมิดเงื่อนไข"></div>
+         <div style="height:8px;"></div>
+         <button class="btn btn-danger btn-block" onclick="suspendUser(${u.id})">ระงับบัญชี</button>`}
+  </div>`;
+}
+function suspendUser(id){
+  const reason = document.getElementById('suspendReason').value.trim();
+  if(!reason){ showToast('กรุณากรอกเหตุผล'); return; }
+  if(!confirm('ยืนยันระงับบัญชีนี้?')) return;
+  const u = db.users.find(x=>x.id===id);
+  u.suspended = true; u.suspendReason = reason;
+  saveDB();
+  showToast('ระงับบัญชีแล้ว — ส่งอีเมลแจ้งเจ้าของบัญชี (จำลอง)');
+  searchUser();
+}
+function unsuspendUser(id){
+  const u = db.users.find(x=>x.id===id);
+  u.suspended = false; u.suspendReason = null;
+  saveDB();
+  showToast('ปลดระงับบัญชีแล้ว');
+  searchUser();
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   13. ROUTER
+   ══════════════════════════════════════════════════════════════════ */
+const renderers = {
+  welcome: renderWelcome, register: renderRegister, login: renderLogin, createAvatar: renderCreateAvatar,
+  home: renderHome, focusList: renderFocusList, settings: renderSettings,
+  session: renderSession, summary: renderSummary, break: renderBreak, revival: renderRevival,
+  inventory: renderInventory, lootbox: renderLootbox, crafting: renderCrafting,
+  roomList: renderRoomList, createRoom: renderCreateRoom, joinRoom: renderJoinRoom, roomView: renderRoomView, roomSummary: renderRoomSummary,
+  friends: renderFriends, history: renderHistory,
+  adminDash: renderAdminDash, itemMgmt: renderItemMgmt, avatarMgmt: renderAvatarMgmt, userMgmt: renderUserMgmt
+};
+function render(){
+  if(ui.screen!=='session') clearInterval(sessionTicker);
+  if(ui.screen!=='break') clearInterval(breakTicker);
+  const html = renderers[ui.screen] ? renderers[ui.screen]() : renderWelcome();
+  const root = document.getElementById('screen-root');
+  root.innerHTML = html;
+  root.classList.remove('screen-enter'); void root.offsetWidth; root.classList.add('screen-enter');
+}
+render();
+</script>
+</body>
+</html>
