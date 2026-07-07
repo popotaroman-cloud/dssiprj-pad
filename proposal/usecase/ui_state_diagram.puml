@@ -47,35 +47,35 @@ state "ยังไม่เข้าสู่ระบบ" as PreAuth {
 state "สมาชิก (เข้าสู่ระบบแล้ว)" as Member {
   state "หน้าหลัก\n(อวตาร / HP / streak)" as Home
   state "จัดการรายการโฟกัส\n(UC-03)" as FocusList
-  state "ตั้งค่าเวลาโฟกัส/พัก\n(UC-24)" as Settings
-  state "เซสชันโฟกัส · ตีบอส\n(UC-04, ยกเลิก UC-05)" as Session
-  state "สรุปผลเซสชัน\n(EXP / กล่องสุ่ม)" as Summary
-  state "ช่วงพัก\n(เสร็จสิ้นก่อนเวลา UC-08)" as Break
+  state "เซสชันโฟกัส · ตีบอส\n(UC-04 — HP บอสหักทุก 5 นาที)" as Session
+  state "สรุปผลเซสชัน\n(EXP / กล่องสุ่ม หากเซสชัน ≥ 20 นาที)" as Summary
+  state "ช่วงพัก\n(นับเวลาพักอัตโนมัติ)" as Break
+  state "พักเกินกำหนด\n(ระบบนับสถิติ Over-rest)" as OverRest
   state "ภารกิจชุบชีวิต\n(UC-30)" as Revival
-  state "กระเป๋าไอเทม\n(UC-23, ใช้โล่ UC-13)" as Inventory
+  state "กระเป๋าไอเทม\n(ใช้โล่ UC-13 / ผสม UC-12)" as Inventory
   state "เปิดกล่องสุ่ม\n(UC-10)" as LootBox
   state "ผสมไอเทม\n(UC-12)" as Crafting
   state "รายการห้องโฟกัส" as RoomList
-  state "สร้างห้อง\n(UC-18)" as CreateRoom
-  state "เข้าร่วมห้อง\n(UC-19)" as JoinRoom
-  state "หน้าห้อง / อันดับ\n(UC-20, UC-25, UC-34)" as RoomView
-  state "สรุปผลห้อง" as RoomSummary
+  state "สร้างห้อง / เข้าร่วมห้อง\n(UC-18)" as RoomEntry
+  state "หน้าห้อง · Ranking Real-time\n(UC-20 — Focus / Rest / Over-rest)" as RoomView
+  state "สรุปผลห้อง · Ranking สุดท้าย\n(UC-18 ปิดห้อง + บันทึก UC-22)" as RoomSummary
   state "เพื่อน\n(UC-21, UC-35)" as Friends
   state "ประวัติ / สถิติ\n(UC-22)" as History
 
   ' --- เตรียมพร้อม ---
   Home --> FocusList : จัดการรายการ
   FocusList --> Home : กลับ
-  Home --> Settings : ตั้งค่า
-  Settings --> Home : บันทึก / กลับ
 
   ' --- วงจรเซสชันโฟกัส (core loop) ---
-  Home --> Session : เลือกรายการ + เริ่มโฟกัส
+  Home --> Session : เลือกรายการ (UC-03) + ตั้งเวลา + เริ่มโฟกัส (UC-04)
   Session --> Summary : เวลาครบ (สำเร็จ)
-  Session --> Home : กดค้างยกเลิก (UC-05)
-  Summary --> Break : เริ่มพักอัตโนมัติ
-  Break --> Session : เริ่มเซสชันถัดไป
-  Break --> Home : พักครบ / กด "เสร็จสิ้น" (UC-08)
+  Session --> Home : กดค้างยกเลิก\n(คืน HP สัดส่วน ไม่ได้กล่องสุ่ม)
+  Summary --> Break : เริ่มนับเวลาพักอัตโนมัติ
+  Break --> Session : กดข้ามพัก / เริ่มเซสชันใหม่
+  Break --> OverRest : หมดเวลาพักแต่ยังไม่เริ่มใหม่
+  OverRest --> Session : เริ่มเซสชันใหม่
+  OverRest --> Home : กลับหน้าหลัก (ออกจากโหมดพัก)
+  Break --> Home : กลับหน้าหลัก (ออกจากโหมดพัก)
 
   ' --- ชุบชีวิต ---
   Home --> Revival : อวตารหมดสติ (HP = 0)
@@ -88,18 +88,18 @@ state "สมาชิก (เข้าสู่ระบบแล้ว)" as Me
   LootBox --> Inventory : รับไอเทมแล้ว
   Inventory --> Crafting : ผสมไอเทม
   Crafting --> Inventory : ผสมสำเร็จ / กลับ
+  Summary --> LootBox : เปิดกล่องสุ่มจากหน้าสรุปผล
 
   ' --- ห้องโฟกัส ---
   Home --> RoomList : เมนูห้องโฟกัส
   RoomList --> Home : กลับ
-  RoomList --> CreateRoom : สร้างห้อง
-  CreateRoom --> RoomView : สร้างสำเร็จ\n(ได้ลิงก์/รหัสเชิญ)
-  RoomList --> JoinRoom : กรอกรหัส / กดลิงก์เชิญ
-  JoinRoom --> RoomView : เข้าร่วมสำเร็จ
-  JoinRoom --> RoomList : รหัสผิด / ห้องปิดแล้ว
-  RoomView --> Session : เริ่มโฟกัสในห้อง\n(นับรวมเป้าหมายห้อง)
-  RoomView --> RoomSummary : เจ้าของห้องปิดเป้าหมาย\n(UC-25)
-  RoomView --> Home : ออกจากห้อง (UC-34)
+  RoomList --> RoomEntry : กดสร้างห้อง / กรอกรหัสเชิญ (UC-18)
+  RoomEntry --> RoomView : สร้าง / เข้าร่วมสำเร็จ
+  RoomEntry --> RoomList : รหัสผิด / ห้องปิดแล้ว
+  RoomView --> Session : เริ่มโฟกัสในห้อง\n(นับรวม HP บอสกลุ่ม)
+  Session --> RoomView : กลับหน้าห้องหลังพัก\n(สำหรับโหมดห้อง)
+  RoomView --> RoomSummary : เจ้าของห้องปิดห้อง /\nบรรลุเป้าหมายห้อง (UC-18)
+  RoomView --> Home : ออกจากห้อง (UC-18)\n(สมาชิกที่ไม่ใช่เจ้าของ)
   RoomSummary --> RoomList : กลับ
 
   ' --- สังคม / ประวัติ ---
@@ -126,8 +126,8 @@ state "ผู้ดูแลระบบ" as Admin {
 
 ' ═════════ ข้ามโซน ═════════
 CreateAvatar --> Home : สร้างอวตารสำเร็จ\n(HP เต็ม เลเวล 1)
-Login --> Home : ล็อกอินสำเร็จ (สมาชิก)
-Login --> Revival : ล็อกอินสำเร็จ\nแต่อวตารหมดสติ
+Login --> Home : ล็อกอินสำเร็จ (สมาชิก)\n+เพิ่ม Streak ไฟ 1 ระดับ (ล็อกอินครั้งแรกของวัน)
+Login --> Revival : ล็อกอินสำเร็จ\nแต่อวตารหมดสติ\n+เพิ่ม Streak ไฟ 1 ระดับ (ล็อกอินครั้งแรกของวัน)
 Login --> AdminDash : ล็อกอินสำเร็จ (ผู้ดูแล)
 Home --> Login : ออกจากระบบ (UC-32)\n(ห้ามออกระหว่างมีเซสชันทำงาน)
 AdminDash --> Login : ออกจากระบบ

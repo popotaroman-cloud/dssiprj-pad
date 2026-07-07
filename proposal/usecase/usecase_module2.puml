@@ -1,51 +1,33 @@
-' โมดูล 2: เซสชันโฟกัส Core Loop (UC-04, UC-05, UC-08)
-' UC-06/07/09 (จบเซสชัน/พัก/เบรกเกิน) และ UC-14/15/16 (เลเวลอัพ/HP Decay/Streak)
-' ถูกยุบรวมเป็น business rules ของ UC-04 แล้ว — ดู usecase_description.md
-' ไม่มีความสัมพันธ์ข้ามโมดูลเหลืออยู่ในระดับไดอะแกรม
+' โมดูล 2: เซสชันโฟกัส (Core Loop)
 @startuml usecase_module2
 !theme plain
 skinparam defaultFontName TH Sarabun New
 skinparam defaultFontSize 14
-skinparam roundcorner 10
 
 skinparam usecase {
   BackgroundColor #FFFDE7
   BorderColor #795548
+  FontName TH Sarabun New
+  FontSize 15
 }
 skinparam actor {
   BackgroundColor #E3F2FD
   BorderColor #1565C0
 }
-skinparam package {
-  BackgroundColor #F5F5F5
-  BorderColor #757575
-  FontStyle bold
-}
-skinparam rectangle {
-  BackgroundColor #FCFCFC
-  BorderColor #9E9E9E
-}
 skinparam ArrowColor #424242
 
-title <b>แอปพลิเคชัน Focus</b>\n(Use Case Diagram — โมดูล 2 · เซสชันโฟกัส (Core Loop))
+title <b>แอปพลิเคชัน Focus</b>\n(Use Case Diagram — โมดูล 2 · เซสชันโฟกัส)
 
 left to right direction
 
 actor "สมาชิก\n(Member)" as Member
 
 rectangle "โมดูล 2 · เซสชันโฟกัส (Core Loop)" {
-  package "เซสชันโฟกัส" {
-    usecase "UC-04\nเริ่มจับเวลาโฟกัส (ตีบอส)\n(ครอบคลุมจบเซสชัน/พัก/รางวัล)" as UC04
-    usecase "UC-05\nยกเลิกเซสชันกลางทาง\n(กดค้าง 2 วินาที)" as UC05
-    usecase "UC-08\nกดเสร็จสิ้นช่วงพัก" as UC08
+  package "วงจรเซสชันโฟกัส" {
+    usecase "UC-04\nเริ่มจับเวลาโฟกัส\n(ตีบอส)" as UC04
   }
 }
 
 Member -- UC04
-Member -- UC05
-Member -- UC08
-
-UC05 ..> UC04 : <<extend>>
-UC08 ..> UC04 : <<extend>>
 
 @enduml

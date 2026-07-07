@@ -24,7 +24,6 @@ left to right direction
 
 actor "ผู้ใช้ทั่วไป\n(Guest)" as Guest
 actor "สมาชิก\n(Member)" as Member
-actor "สมาชิกในห้อง\n(Room Member)" as RoomMember
 actor "ผู้ดูแลระบบ\n(Admin)" as Admin
 
 rectangle "แอปพลิเคชัน Focus" {
@@ -38,17 +37,14 @@ rectangle "แอปพลิเคชัน Focus" {
 }
 
 ' ===== Actor generalization: Room Member เป็นสมาชิกที่กำลังอยู่ในห้อง =====
-RoomMember --|> Member
 
 ' ===== ความสัมพันธ์ actor–use case (เส้นธรรมดา) =====
 Guest -- M1
-Member -- M1
 Member -- M2
 Member -- M3
 Member -- M4
 Member -- M5
 Member -- M6
-RoomMember -- M5
 Admin -- M7
 
 ' ===== ความสัมพันธ์ระหว่างโมดูล =====
