@@ -43,10 +43,10 @@ rectangle "โมดูล 1 · บัญชีและการเริ่ม
   }
 }
 
-Member --|> Admin
-
 Guest -- UC01
 Member -- UC03
+Member -- UC31
+Member -- UC32
 Admin -- UC31
 Admin -- UC32
 

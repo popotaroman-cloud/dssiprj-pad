@@ -36,10 +36,10 @@ rectangle "แอปพลิเคชัน Focus" {
   usecase "โมดูล 7\nAdmin — การจัดการระบบ" as M7
 }
 
-' ===== Actor generalization: Room Member เป็นสมาชิกที่กำลังอยู่ในห้อง =====
-
 ' ===== ความสัมพันธ์ actor–use case (เส้นธรรมดา) =====
 Guest -- M1
+Member -- M1
+Admin -- M1
 Member -- M2
 Member -- M3
 Member -- M4

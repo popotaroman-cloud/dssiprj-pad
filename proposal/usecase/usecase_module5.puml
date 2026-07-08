@@ -1,5 +1,4 @@
 ' โมดูล 5: ห้องโฟกัสและสังคม (UC-18, UC-20, UC-21, UC-35)
-' Room Member เป็นสมาชิกที่กำลังอยู่ในห้อง จึงใช้ actor generalization (RoomMember --|> Member)
 ' ความสัมพันธ์ข้ามโมดูล (ออกจากโมดูลนี้): UC-18 include UC-22 (โมดูล 6)
 @startuml usecase_module5
 !theme plain
@@ -54,10 +53,9 @@ rectangle "โมดูล 5 · ห้องโฟกัสและสังค
 }
 
 Member -- UC18
+Member -- UC20
 Member -- UC21
 Member -- UC35
-Member -- UC18
-Member -- UC20
 
 UC18 ..> UC22 : <<include>>
 @enduml

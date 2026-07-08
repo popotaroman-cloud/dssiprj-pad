@@ -22,71 +22,60 @@ skinparam rectangle {
   BorderColor #9E9E9E
 }
 skinparam ArrowColor #424242
-skinparam noteBackgroundColor #FFF8E1
-skinparam noteBorderColor #FF8F00
 
-title <b>แอปพลิเคชันจับเวลาโฟกัสในรูปแบบเกม (Focus)</b>\n(Use Case Diagram — อ้างอิง Use Case Specification UC-01 ถึง UC-29)
+title <b>แอปพลิเคชันจับเวลาโฟกัสในรูปแบบเกม (Focus)</b>\n(Use Case Diagram — ฉบับละเอียด อ้างอิง Use Case Specification ครบทุกโมดูล)
 
 left to right direction
 
-actor "ผู้ใช้ทั่วไป\n(Guest)" as Guest #E3F2FD
-actor "สมาชิก\n(Member)" as Member #E8F5E9
-actor "สมาชิกในห้อง\n(Room Member)" as RoomMember #FFF3E0
-actor "ผู้ดูแลระบบ\n(Admin)" as Admin #F3E5F5
+actor "ผู้ใช้ทั่วไป\n(Guest)" as Guest
+actor "สมาชิก\n(Member)" as Member
+actor "ผู้ดูแลระบบ\n(Admin)" as Admin
 
 rectangle "แอปพลิเคชัน Focus" {
 
-  ' ===== บัญชีและการเริ่มต้น =====
+  ' ===== โมดูล 1: บัญชีและการเริ่มต้นใช้งาน =====
   package "บัญชีและการเริ่มต้นใช้งาน" {
     usecase "UC-01\nสมัครสมาชิก" as UC01
     usecase "UC-02\nสร้างอวตาร" as UC02
-    usecase "UC-03\nเพิ่มรายการสิ่งที่โฟกัส" as UC03
-    usecase "UC-24\nตั้งค่าระยะเวลาโฟกัส\nและพักส่วนตัว" as UC24
+    usecase "UC-03\nจัดการรายการสิ่งที่โฟกัส" as UC03
+    usecase "UC-31\nเข้าสู่ระบบ" as UC31
+    usecase "UC-32\nออกจากระบบ" as UC32
   }
 
-  ' ===== เซสชันโฟกัส =====
+  ' ===== โมดูล 2: เซสชันโฟกัส (Core Loop) =====
   package "เซสชันโฟกัส (Core Loop)" {
-    usecase "UC-04\nเริ่มจับเวลาโฟกัส (ตีบอส)\n(1 นาที = 100 HP บอส)" as UC04
-    usecase "UC-05\nยกเลิกเซสชันกลางทาง\n(กดค้าง 2 วินาที)" as UC05
-    usecase "UC-06\nจบเซสชันสำเร็จ\n(≥ 20 นาทีจึงได้รางวัล)" as UC06
-    usecase "UC-07\nเข้าสู่ช่วงพัก" as UC07
-    usecase "UC-08\nกดเสร็จสิ้นช่วงพัก" as UC08
-    usecase "UC-09\nตรวจจับเบรกเกินเวลา\n(บันทึกเป็นสถิติ)" as UC09
+    usecase "UC-04\nเริ่มจับเวลาโฟกัส\n(ตีบอส)" as UC04
   }
 
-  ' ===== ไอเทมและกล่องสุ่ม =====
+  ' ===== โมดูล 3: ไอเทมและกล่องสุ่ม =====
   package "ไอเทมและกล่องสุ่ม" {
-    usecase "UC-10\nเปิดกล่องสุ่ม\n(อัตราดรอปตามความยาวเซสชัน)" as UC10
-    usecase "UC-11\nตรวจสอบ Pity System\n(การันตีของหายากทุก 10 รอบ)" as UC11
+    usecase "UC-10\nเปิดกล่องสุ่ม\n(รวม Pity System)" as UC10
     usecase "UC-12\nผสมไอเทม (Crafting)" as UC12
     usecase "UC-13\nใช้ไอเทมโล่เวลา\n(ป้องกัน HP/Streak 24-48 ชม.)" as UC13
-    usecase "UC-23\nดูกระเป๋าไอเทม" as UC23
   }
 
-  ' ===== อวตาร =====
+  ' ===== โมดูล 4: อวตารและความต่อเนื่อง (ระบบชุบชีวิต) =====
   package "อวตารและความต่อเนื่อง" {
-    usecase "UC-14\nอวตารเลเวลอัพ" as UC14
-    usecase "UC-15\nคำนวณพลังชีวิต\n(HP Decay)" as UC15
-    usecase "UC-16\nอัพเดต Streak ไฟ" as UC16
-    usecase "UC-17\nอวตารหมดสติ\n(HP = 0)" as UC17
-    usecase "UC-17.1\nระบบชุบชีวิต\n(Revival System)" as UC171
+    usecase "UC-30\nระบบชุบชีวิต\n(Revival System)" as UC30
   }
 
-  ' ===== ห้องโฟกัสและสังคม =====
-  package "ห้องโฟกัสและสังคม" {
-    usecase "UC-18\nสร้างห้องโฟกัส" as UC18
-    usecase "UC-19\nเข้าร่วมห้องโฟกัส" as UC19
+  ' ===== โมดูล 5: ห้องโฟกัสและสังคม =====
+  package "ห้องโฟกัส" {
+    usecase "UC-18\nจัดการห้องโฟกัส" as UC18
     usecase "UC-20\nดูเวลาโฟกัสของ\nสมาชิกในห้อง" as UC20
-    usecase "UC-25\nทำเครื่องหมาย\nเป้าหมายห้องสำเร็จ" as UC25
-    usecase "UC-21\nเพิ่มเพื่อน" as UC21
   }
 
-  ' ===== สถิติ =====
+  package "ระบบเพื่อน" {
+    usecase "UC-21\nเพิ่มเพื่อน" as UC21
+    usecase "UC-35\nยกเลิกคำขอเป็นเพื่อน / ลบเพื่อน" as UC35
+  }
+
+  ' ===== โมดูล 6: ประวัติและสถิติ =====
   package "ประวัติและสถิติ" {
     usecase "UC-22\nดูประวัติและสถิติการโฟกัส\n(โฟกัส/พัก/เบรกเกิน แยกกัน)" as UC22
   }
 
-  ' ===== Admin =====
+  ' ===== โมดูล 7: Admin — การจัดการระบบ =====
   package "Admin — การจัดการระบบ" {
     usecase "UC-26\nจัดการข้อมูลไอเทม\nและอัตราดรอป" as UC26
     usecase "UC-27\nจัดการรูปแบบอวตาร" as UC27
@@ -99,51 +88,31 @@ rectangle "แอปพลิเคชัน Focus" {
 Guest -- UC01
 
 ' ===== Member =====
-Member -- UC02
 Member -- UC03
-Member -- UC24
+Member -- UC31
+Member -- UC32
 Member -- UC04
-Member -- UC05
-Member -- UC08
 Member -- UC10
 Member -- UC12
 Member -- UC13
-Member -- UC23
-Member -- UC171
+Member -- UC30
 Member -- UC18
-Member -- UC19
+Member -- UC20
 Member -- UC21
+Member -- UC35
 Member -- UC22
 
-' ===== Room Member =====
-RoomMember -- UC20
-RoomMember -- UC25
-
 ' ===== Admin =====
+Admin -- UC31
+Admin -- UC32
 Admin -- UC26
 Admin -- UC27
 Admin -- UC28
 Admin -- UC29
 
-' ===== ความสัมพันธ์หลักของ Core Loop =====
-UC01 ..> UC02 : <<include>>\nบัญชีใหม่ต้องสร้างอวตาร
-UC05 ..> UC04 : <<extend>>
-UC04 ..> UC15 : <<include>>\nตรวจสอบ/คำนวณ HP ล่าสุดก่อนเริ่มเซสชัน
-UC04 ..> UC06 : <<include>>\nเวลาครบ (บอส HP = 0)
-UC06 ..> UC16 : <<include>>
-UC14 ..> UC06 : <<extend>>\nEXP ถึงเกณฑ์
-UC06 ..> UC07 : <<include>>\nเข้าสู่ช่วงพัก
-UC08 ..> UC07 : <<extend>>
-UC09 ..> UC07 : <<extend>>\nพักเกินกำหนด
-
-' ===== ไอเทม =====
-UC10 ..> UC11 : <<include>>
-UC17 ..> UC15 : <<extend>>\nHP = 0
-UC17 ..> UC171 : <<include>>\nรอชุบชีวิต
-UC171 ..> UC04 : <<include>>\nภารกิจโฟกัสเซสชันเดียว
-
-' ===== สังคม =====
-UC19 ..> UC18 : ต้องมีลิงก์/รหัสเชิญ
-UC25 ..> UC22 : <<include>>\nบันทึกสรุปลงประวัติทุกคน
+' ===== ความสัมพันธ์ระหว่าง use case =====
+UC01 ..> UC02 : <<include>>
+UC30 ..> UC04 : <<include>>
+UC18 ..> UC22 : <<include>>
 
 @enduml
