@@ -1,4 +1,6 @@
-' โมดูล 1: บัญชีและการเริ่มต้นใช้งาน (UC-01, UC-02, UC-03, UC-31, UC-32)
+' โมดูล 1: บัญชีและการเริ่มต้นใช้งาน (UC-01, UC-02, UC-03, UC-33, UC-38, UC-37)
+' UC-31 (เข้าสู่ระบบ) และ UC-32 (ออกจากระบบ) ย้ายไปอยู่โมดูล 2 (usecase_module2.puml)
+' ตามรหัส FN-SES-002/003 — ดูหมายเหตุข้อ 8(ข) ใน usecase_description.md
 ' ไม่มีความสัมพันธ์ข้ามโมดูล — เป็นจุดเริ่มต้นของทุกโมดูลอื่น
 @startuml usecase_module1
 !theme plain
@@ -31,24 +33,29 @@ left to right direction
 
 actor "ผู้ใช้ทั่วไป\n(Guest)" as Guest
 actor "สมาชิก\n(Member)" as Member
-actor "ผู้ดูแลระบบ\n(Admin)" as Admin
 
 rectangle "โมดูล 1 · บัญชีและการเริ่มต้นใช้งาน" {
-  package "บัญชีและการเริ่มต้นใช้งาน" {
+  package "E1 · การสมัครสมาชิกและสร้างอวตาร" {
     usecase "UC-01\nสมัครสมาชิก" as UC01
     usecase "UC-02\nสร้างอวตาร" as UC02
-    usecase "UC-03\nจัดการรายการสิ่งที่โฟกัส" as UC03
-    usecase "UC-31\nเข้าสู่ระบบ" as UC31
-    usecase "UC-32\nออกจากระบบ" as UC32
+  }
+
+  package "E2 · การเตรียมพร้อมก่อนเริ่มโฟกัส" {
+    usecase "UC-03\nจัดการรายการสิ่งที่โฟกัส\n(เพิ่ม/แก้ไข/ลบ)" as UC03
+  }
+
+  package "E3 · การจัดการบัญชีและการตั้งค่า" {
+    usecase "UC-33\nแก้ไขโปรไฟล์และ\nเปลี่ยนรหัสผ่าน" as UC33
+    usecase "UC-38\nลืมรหัสผ่าน\n(Forgot Password)" as UC38
+    usecase "UC-37\nตั้งค่าระยะเวลาเริ่มต้น\nของโฟกัส/พัก" as UC37
   }
 }
 
 Guest -- UC01
+Guest -- UC38
 Member -- UC03
-Member -- UC31
-Member -- UC32
-Admin -- UC31
-Admin -- UC32
+Member -- UC33
+Member -- UC37
 
 UC01 ..> UC02 : <<include>>
 

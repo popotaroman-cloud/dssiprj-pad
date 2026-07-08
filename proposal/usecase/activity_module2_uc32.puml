@@ -1,4 +1,4 @@
-@startuml M1_activity_ออกจากระบบ
+@startuml M2_activity_ออกจากระบบ
 !pragma layout smetana
 skinparam defaultFontName "TH Sarabun New"
 skinparam defaultFontSize 14
@@ -23,9 +23,9 @@ skinparam activity {
 
 title UC-32 ออกจากระบบ — Activity Diagram
 
-|สมาชิก|
+|สมาชิก / ผู้ดูแลระบบ|
 start
-:กดปุ่มออกจากระบบ;
+:เปิดหน้าตั้งค่า กดปุ่ม "ออกจากระบบ";
 
 |ระบบ|
 if (มีเซสชันโฟกัสกำลังทำงานอยู่หรือไม่? (UC-04)) then (มี)
@@ -36,7 +36,7 @@ endif
 
 :ขอคำยืนยันออกจากระบบ;
 
-|สมาชิก|
+|สมาชิก / ผู้ดูแลระบบ|
 if (ยืนยันหรือไม่?) then (ไม่ยืนยัน)
   :ยังคงล็อกอินอยู่;
   stop

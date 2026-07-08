@@ -1,0 +1,73 @@
+@startuml M3_activity_สวมใส่ถอดไอเทมแต่งตัวอวตาร
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-24 สวมใส่/ถอดไอเทมแต่งตัวอวตาร (Equip/Unequip) — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดหน้าแต่งตัวอวตาร;
+
+|ระบบ|
+:แสดงช่องสวมใส่ 4 ช่อง (หัว, ลำตัว, ขา, อาวุธ);
+
+|สมาชิก|
+if (เลือกการกระทำ?) then (สวมใส่ Equip)
+
+  repeat
+    :เลือกช่องที่ต้องการแต่ง;
+    |ระบบ|
+    if (มีไอเทมแต่งตัวประเภทที่ตรงกับช่องนั้นในกระเป๋าหรือไม่?) then (ไม่มี)
+      :ช่องนั้นแสดงเป็นว่าง กดเลือกไม่ได้;
+    else (มี)
+      |สมาชิก|
+      :เลือกไอเทมแต่งตัวจากกระเป๋าที่ตรงกับประเภทของช่องนั้น;
+      |ระบบ|
+      if (ไอเทมที่เลือกตรงประเภทกับช่องหรือไม่?) then (ไม่ตรง เช่น ไอเทมอาวุธไปใส่ช่องหัว)
+        :ระบบปฏิเสธ ไม่ให้สวมใส่;
+      else (ตรงประเภท)
+        :แสดงตัวอย่างอวตารทันที;
+      endif
+    endif
+    |สมาชิก|
+  repeat while (ต้องการเลือกช่องอื่นต่อก่อนยืนยันหรือไม่?) is (เลือกช่องอื่นต่อ) not (พร้อมยืนยัน)
+
+  :กดยืนยัน;
+  |ระบบ|
+  :ไอเทมที่เลือกถูกสวมใส่จริง;
+
+else (ถอด Unequip)
+
+  |สมาชิก|
+  :เลือกช่องที่มีไอเทมสวมอยู่;
+  :กดถอด;
+  |ระบบ|
+  :ไอเทมกลับเข้ากระเป๋าทันที ช่องนั้นว่างลง (ไม่ต้องกดยืนยันซ้ำ);
+
+endif
+
+|ระบบ|
+:อวตารแสดงผลไอเทมที่สวมใส่ล่าสุดในทุกหน้าจอที่แสดงอวตาร\n(หน้าหลัก, ห้องโฟกัส, โปรไฟล์);
+
+stop
+
+@enduml

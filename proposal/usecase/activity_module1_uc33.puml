@@ -1,0 +1,69 @@
+@startuml M1_activity_แก้ไขโปรไฟล์และเปลี่ยนรหัสผ่าน
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-33 แก้ไขโปรไฟล์และเปลี่ยนรหัสผ่าน — Activity Diagram
+
+|สมาชิก|
+start
+if (เลือกการกระทำ?) then (แก้ไขโปรไฟล์)
+
+  :เปิดหน้าตั้งค่าบัญชี;
+  :แก้ไขชื่อผู้ใช้แสดงผลหรือรูปประจำตัว;
+  :กดบันทึก;
+
+  |ระบบ|
+  if (ชื่อผู้ใช้ถูกใช้แล้วหรือไม่?) then (ถูกใช้แล้ว)
+    :แจ้งเตือนให้แก้ไข;
+    stop
+  else (ยังไม่ถูกใช้)
+  endif
+  :บันทึกข้อมูลโปรไฟล์;
+
+else (เปลี่ยนรหัสผ่าน)
+
+  |สมาชิก|
+  :เปิดหน้าเปลี่ยนรหัสผ่าน;
+  :กรอกรหัสผ่านเดิม รหัสผ่านใหม่ และยืนยันรหัสผ่านใหม่;
+  :กดยืนยัน;
+
+  |ระบบ|
+  if (รหัสผ่านเดิมถูกต้องหรือไม่?) then (ไม่ถูกต้อง)
+    :แจ้งเตือน ไม่บันทึก;
+    stop
+  else (ถูกต้อง)
+  endif
+
+  if (รหัสผ่านใหม่ตรงกับช่องยืนยันหรือไม่?) then (ไม่ตรงกัน)
+    :แจ้งเตือน;
+    stop
+  else (ตรงกัน)
+  endif
+
+  :บันทึกรหัสผ่านใหม่;
+  :เพิกถอน token เดิมในอุปกรณ์อื่นทั้งหมด\n(ต้องล็อกอินใหม่ตาม UC-31);
+
+endif
+
+stop
+
+@enduml

@@ -1,5 +1,6 @@
-' โมดูล 3: ไอเทมและกล่องสุ่ม (UC-10, UC-12, UC-13)
+' โมดูล 3: ไอเทมและกล่องสุ่ม (UC-10, UC-12, UC-23, UC-13, UC-24)
 ' UC-11 (ตรวจสอบ Pity System) ถูกยุบรวมเป็น business rule ของ UC-10 แล้ว — ดู usecase_description.md
+' UC-23 (ดูกระเป๋าไอเทม) เพิ่มเข้ามาเพราะถูกอ้างอิงจาก UC-10/UC-12/UC-13/UC-24 มาตั้งแต่ต้นแต่ไม่เคยถูกวาด
 ' ไม่มีความสัมพันธ์ข้ามโมดูล
 @startuml usecase_module3
 !theme plain
@@ -33,15 +34,26 @@ left to right direction
 actor "สมาชิก\n(Member)" as Member
 
 rectangle "โมดูล 3 · ไอเทมและกล่องสุ่ม" {
-  package "ไอเทมและกล่องสุ่ม" {
+  package "E1 · กล่องสุ่มและการผสมไอเทม" {
     usecase "UC-10\nเปิดกล่องสุ่ม\n(รวม Pity System)" as UC10
     usecase "UC-12\nผสมไอเทม (Crafting)" as UC12
+  }
+
+  package "E2 · การจัดการกระเป๋าไอเทม" {
+    usecase "UC-23\nดูกระเป๋าไอเทม\n(Inventory)" as UC23
     usecase "UC-13\nใช้ไอเทมโล่เวลา\n(ป้องกัน HP/Streak 24-48 ชม.)" as UC13
+    usecase "UC-24\nสวมใส่/ถอดไอเทม\nแต่งตัวอวตาร" as UC24
   }
 }
 
 Member -- UC10
 Member -- UC12
+Member -- UC23
 Member -- UC13
+Member -- UC24
+
+' หมายเหตุ: UC-10/UC-12/UC-13/UC-24 อ้างอิง UC-23 เป็นแหล่งข้อมูลไอเทมร่วม (pre-condition)
+' ไม่ใช่ความสัมพันธ์ <<include>>/<<extend>> เชิง flow ตามที่ระบุใน usecase_description.md
+' จึงไม่วาดเส้นความสัมพันธ์ระหว่าง use case เหล่านี้กับ UC-23
 
 @enduml

@@ -39,7 +39,7 @@ left to right direction
 actor "สมาชิก\n(Member)" as Member
 
 rectangle "โมดูล 4 · อวตารและความต่อเนื่อง" {
-  package "ระบบชุบชีวิต" {
+  package "E1 · ระบบชุบชีวิต" {
     usecase "UC-30\nระบบชุบชีวิต\n(Revival System)" as UC30
   }
 

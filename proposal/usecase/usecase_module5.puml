@@ -1,5 +1,9 @@
-' โมดูล 5: ห้องโฟกัสและสังคม (UC-18, UC-20, UC-21, UC-35)
+' โมดูล 5: ห้องโฟกัสและสังคม (UC-18, UC-20, UC-34, UC-36, UC-21, UC-35, UC-39)
 ' ความสัมพันธ์ข้ามโมดูล (ออกจากโมดูลนี้): UC-18 include UC-22 (โมดูล 6)
+' UC-39 (ดูโปรไฟล์และสถิติเพื่อน) เพิ่มเข้ามาเพราะ UC-21 สัญญาไว้ตั้งแต่ต้นว่าเห็นสถิติ/streak ของเพื่อนได้
+' แต่ไม่เคยมี use case จริงรองรับ — เพิ่มตามรอบตรวจรีวิวที่ 20 ของ usecase_description.md
+' UC-39 อ้างอิงข้อมูลจาก UC-24/UC-31/UC-22 เชิงข้อมูลเท่านั้น ไม่ใช่ include/extend เชิง flow
+' จึงไม่วาดเส้นความสัมพันธ์ข้ามโมดูลเพิ่มจากที่มีอยู่แล้ว (เหมือนกรณี UC-23 ในโมดูล 3)
 @startuml usecase_module5
 !theme plain
 skinparam defaultFontName TH Sarabun New
@@ -37,14 +41,17 @@ left to right direction
 actor "สมาชิก\n(Member)" as Member
 
 rectangle "โมดูล 5 · ห้องโฟกัสและสังคม" {
-  package "ห้องโฟกัส" {
+  package "E1 · ห้องโฟกัส" {
     usecase "UC-18\nจัดการห้องโฟกัส" as UC18
     usecase "UC-20\nดูเวลาโฟกัสของ\nสมาชิกในห้อง" as UC20
+    usecase "UC-34\nออกจากห้องโฟกัส" as UC34
+    usecase "UC-36\nเตะสมาชิกออกจาก\nห้องโฟกัส" as UC36
   }
 
-  package "ระบบเพื่อน" {
+  package "E2 · ระบบเพื่อน" {
     usecase "UC-21\nเพิ่มเพื่อน" as UC21
     usecase "UC-35\nยกเลิกคำขอเป็นเพื่อน / ลบเพื่อน" as UC35
+    usecase "UC-39\nดูโปรไฟล์และ\nสถิติเพื่อน" as UC39
   }
 
   package "อ้างอิงจากโมดูลอื่น" {
@@ -54,8 +61,13 @@ rectangle "โมดูล 5 · ห้องโฟกัสและสังค
 
 Member -- UC18
 Member -- UC20
+Member -- UC34
+Member -- UC36
 Member -- UC21
 Member -- UC35
+Member -- UC39
 
 UC18 ..> UC22 : <<include>>
+' หมายเหตุ: UC-34/UC-36 เกี่ยวข้องกับ UC-18 เชิงผลกระทบต่อจำนวนสมาชิกในห้องเท่านั้น
+' ไม่ใช่ <<include>>/<<extend>> เชิง flow (ดู usecase_description.md) จึงไม่วาดเส้นความสัมพันธ์
 @enduml

@@ -1,0 +1,58 @@
+@startuml M5_activity_เตะสมาชิกออกจากห้องโฟกัส
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-36 เตะสมาชิกออกจากห้องโฟกัส — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดรายชื่อสมาชิกในห้อง;
+
+|ระบบ|
+if (ผู้ดำเนินการเป็นเจ้าของห้องหรือไม่?) then (ไม่ใช่เจ้าของห้อง)
+  :ไม่แสดงตัวเลือกนี้;
+  stop
+else (เป็นเจ้าของห้อง)
+endif
+
+|สมาชิก|
+:เลือกสมาชิกที่ต้องการเตะออก;
+
+|ระบบ|
+:ขอคำยืนยัน;
+
+|สมาชิก|
+if (ยืนยันหรือไม่?) then (ไม่ยืนยัน)
+  :สมาชิกยังอยู่ในห้อง;
+  stop
+else (ยืนยัน)
+endif
+
+|ระบบ|
+:นำสมาชิกที่ถูกเลือกออกจากห้อง;
+:แจ้งเตือนสมาชิกที่ถูกเตะ;
+:บันทึกสถิติที่สมาชิกคนนั้นทำไปแล้วในห้อง\nลงประวัติส่วนตัวของเขา (UC-22);
+:ปิดกั้นไม่ให้เข้าร่วมห้องเดิมซ้ำด้วยลิงก์เชิญเดิม\nในเซสชันห้องนั้น;
+
+stop
+
+@enduml

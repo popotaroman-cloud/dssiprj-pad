@@ -5,10 +5,31 @@
 ' 2. ถ้า render ผ่าน CLI (plantuml.jar) ต้องระบุ flag encoding ด้วย:
 '      java -Dfile.encoding=UTF-8 -jar plantuml.jar -charset UTF-8 ui_state_diagram.puml
 ' 3. บังคับใช้ Smetana (pure-Java layout engine) แทน Graphviz/dot
+'
+' ปรับปรุงให้ตรงกับ 3 เอกสารอ้างอิงล่าสุด (ครบทุก use case ที่มีจริง):
+'   - usecase_description.md  (รอบตรวจรีวิวที่ 16 — ปิดค่าตั้งต้นทั้งหมดเป็นค่ายืนยันแล้ว)
+'   - usecase_module1.puml ... usecase_module7.puml + usecase_overview.puml (Use Case Diagram)
+'   - activity_module*_uc*.puml (Activity Diagram รายทัพ use case)
+' การแก้ไขหลักจากเวอร์ชันก่อนหน้า:
+'   1) เพิ่ม UC-38 (ลืมรหัสผ่าน) เป็น state ใหม่ในโซนก่อนเข้าสู่ระบบ
+'   2) เพิ่ม state "ตั้งค่า" (Settings) เป็นจุดรวม UC-37 (ระยะเวลาเริ่มต้น) + ทางเข้าสู่ UC-33
+'      (แก้ไขโปรไฟล์/รหัสผ่าน) — ปุ่ม "ออกจากระบบ" (UC-32) คงไว้ที่ Home ตรงๆ ตามที่ผู้ใช้ยืนยัน
+'      ให้กลับไปแบบเดิม (หมายเหตุ: activity_module2_uc32.puml เขียนว่าปุ่มนี้อยู่ในหน้าตั้งค่า —
+'      ถ้าจะให้ตรงกันทั้งหมด ต้องแก้ activity diagram นั้นด้วย ยังไม่ได้แก้ในรอบนี้)
+'   3) เพิ่ม state "แต่งตัวอวตาร" (UC-24 สวมใส่/ถอดไอเทม)
+'   4) ระบุ UC-13 (ใช้ไอเทมโล่เวลา) เป็น self-transition ในกระเป๋าไอเทม (ไม่ใช่หน้าจอแยก
+'      ตาม activity diagram ของ UC-13 ที่ทำทุกอย่างในหน้ากระเป๋าเดียว)
+'   5) แก้ RoomView ให้ออกจากห้อง (UC-34) กลับไป RoomList แทน Home และเพิ่ม self-transition
+'      เตะสมาชิก (UC-36) — เดิม label เขียนผิดว่าเป็น "UC-18" ทั้งที่ UC-34/36 แยกรหัสแล้ว
+'   6) แก้ช่วงพัก/พักเกินกำหนด ให้กลับไป RoomView ได้ (โหมดห้อง) แทนที่จะกลับ RoomView
+'      ได้แค่จาก Session โดยตรงเท่านั้น (ของเดิมไม่สอดคล้องกับลำดับ state จริง)
+'   7) ตัดป้ายกำกับ "(UC-29)" ออกจากแดชบอร์ดผู้ดูแล เพราะ UC-29 ไม่มีอยู่จริงในเอกสารทั้ง 3
+'      ฉบับ (ดูหมายเหตุใน usecase_module7.puml และ activity_module7_uc29.puml — เป็น backlog
+'      ที่ยังไม่ได้เขียน use case รองรับจริง)
+' ══════════════════════════════════════════════════════════════════
 !pragma layout smetana
 skinparam defaultFontName "TH Sarabun New"
 skinparam defaultFontSize 14
-' ══════════════════════════════════════════════════════════════════
 
 !theme plain
 skinparam titleFontName "TH Sarabun New"
@@ -28,11 +49,12 @@ skinparam state {
 
 title Focus App — UI State Transition Diagram (การนำทางระหว่างหน้าจอ)
 
-' ═════════ โซนก่อนเข้าสู่ระบบ ═════════
+' ═════════ โซนก่อนเข้าสู่ระบบ (Guest — M1/E1, M2/E3) ═════════
 state "ยังไม่เข้าสู่ระบบ" as PreAuth {
   state "หน้าแรก (Welcome)" as Welcome
   state "สมัครสมาชิก\n(UC-01)" as Register
   state "เข้าสู่ระบบ\n(UC-31)" as Login
+  state "ลืมรหัสผ่าน\n(UC-38)" as ForgotPassword
   state "สร้างอวตาร\n(UC-02)" as CreateAvatar
 
   [*] --> Welcome
@@ -41,20 +63,25 @@ state "ยังไม่เข้าสู่ระบบ" as PreAuth {
   Register --> Welcome : ยกเลิกกลางคัน
   Register --> CreateAvatar : สมัครสำเร็จ\n(include UC-02)
   Login --> Login : ข้อมูลผิด /\nบัญชีถูกระงับ (UC-28)
+  Login --> ForgotPassword : กด "ลืมรหัสผ่าน" (UC-38)
+  ForgotPassword --> Login : รีเซ็ตรหัสผ่านสำเร็จ /\nยกเลิกกลางทาง /\nบัญชีถูกระงับ (UC-28)
 }
 
-' ═════════ โซนสมาชิก ═════════
+' ═════════ โซนสมาชิก (M2–M6) ═════════
 state "สมาชิก (เข้าสู่ระบบแล้ว)" as Member {
   state "หน้าหลัก\n(อวตาร / HP / streak)" as Home
   state "จัดการรายการโฟกัส\n(UC-03)" as FocusList
+  state "ตั้งค่า\n(UC-37 ระยะเวลาเริ่มต้น +\nทางเข้า UC-33)" as Settings
+  state "แก้ไขโปรไฟล์ /\nเปลี่ยนรหัสผ่าน\n(UC-33)" as EditProfile
   state "เซสชันโฟกัส · ตีบอส\n(UC-04 — HP บอสหักทุก 5 นาที)" as Session
   state "สรุปผลเซสชัน\n(EXP / กล่องสุ่ม หากเซสชัน ≥ 20 นาที)" as Summary
   state "ช่วงพัก\n(นับเวลาพักอัตโนมัติ)" as Break
   state "พักเกินกำหนด\n(ระบบนับสถิติ Over-rest)" as OverRest
   state "ภารกิจชุบชีวิต\n(UC-30)" as Revival
-  state "กระเป๋าไอเทม\n(ใช้โล่ UC-13 / ผสม UC-12)" as Inventory
+  state "กระเป๋าไอเทม\n(UC-23 — ใช้โล่เวลา UC-13 ในหน้านี้)" as Inventory
   state "เปิดกล่องสุ่ม\n(UC-10)" as LootBox
   state "ผสมไอเทม\n(UC-12)" as Crafting
+  state "แต่งตัวอวตาร\n(สวมใส่/ถอด UC-24)" as AvatarEquip
   state "รายการห้องโฟกัส" as RoomList
   state "สร้างห้อง / เข้าร่วมห้อง\n(UC-18)" as RoomEntry
   state "หน้าห้อง · Ranking Real-time\n(UC-20 — Focus / Rest / Over-rest)" as RoomView
@@ -66,40 +93,51 @@ state "สมาชิก (เข้าสู่ระบบแล้ว)" as Me
   Home --> FocusList : จัดการรายการ
   FocusList --> Home : กลับ
 
+  ' --- ตั้งค่าบัญชี (UC-33, UC-37) และออกจากระบบ (UC-32) ---
+  Home --> Settings : เมนูตั้งค่า
+  Settings --> Home : กลับ
+  Settings --> EditProfile : แก้ไขโปรไฟล์ /\nเปลี่ยนรหัสผ่าน (UC-33)
+  EditProfile --> Settings : บันทึกสำเร็จ / กลับ
+
   ' --- วงจรเซสชันโฟกัส (core loop) ---
-  Home --> Session : เลือกรายการ (UC-03) + ตั้งเวลา + เริ่มโฟกัส (UC-04)
+  Home --> Session : เลือกรายการ (UC-03) + ตั้งเวลา\n(pre-fill จาก UC-37) + เริ่มโฟกัส (UC-04)
   Session --> Summary : เวลาครบ (สำเร็จ)
-  Session --> Home : กดค้างยกเลิก\n(คืน HP สัดส่วน ไม่ได้กล่องสุ่ม)
+  Session --> Home : กดค้างยกเลิก (โหมดเดี่ยว)\n(คืน HP สัดส่วน ไม่ได้กล่องสุ่ม)
+  Session --> RoomView : กดค้างยกเลิก (โหมดห้อง)\n(คืน HP สัดส่วน ไม่ได้กล่องสุ่ม)
   Summary --> Break : เริ่มนับเวลาพักอัตโนมัติ
   Break --> Session : กดข้ามพัก / เริ่มเซสชันใหม่
   Break --> OverRest : หมดเวลาพักแต่ยังไม่เริ่มใหม่
   OverRest --> Session : เริ่มเซสชันใหม่
-  OverRest --> Home : กลับหน้าหลัก (ออกจากโหมดพัก)
-  Break --> Home : กลับหน้าหลัก (ออกจากโหมดพัก)
+  OverRest --> Home : กลับหน้าหลัก (ออกจากโหมดพัก — โหมดเดี่ยว)
+  OverRest --> RoomView : กลับหน้าห้อง (ออกจากโหมดพัก — โหมดห้อง)
+  Break --> Home : กลับหน้าหลัก (ออกจากโหมดพัก — โหมดเดี่ยว)
+  Break --> RoomView : กลับหน้าห้อง (ออกจากโหมดพัก — โหมดห้อง)
 
   ' --- ชุบชีวิต ---
   Home --> Revival : อวตารหมดสติ (HP = 0)
-  Revival --> Session : เริ่มภารกิจ\n(ใช้กลไก UC-04)
+  Revival --> Session : เริ่มภารกิจ 20 นาที\n(ใช้กลไก UC-04 — ไม่ได้ EXP/กล่องสุ่มระหว่างนี้)
 
   ' --- ไอเทม ---
   Home --> Inventory : เปิดกระเป๋า
   Inventory --> Home : กลับ
-  Inventory --> LootBox : เปิดกล่องสุ่ม
+  Inventory --> Inventory : ใช้ไอเทมโล่เวลา (UC-13)\n(ป้องกัน HP/Streak 24-48 ชม.)
+  Inventory --> LootBox : เปิดกล่องสุ่ม\n(เฉพาะทางเข้านี้ตาม UC-10)
   LootBox --> Inventory : รับไอเทมแล้ว
   Inventory --> Crafting : ผสมไอเทม
   Crafting --> Inventory : ผสมสำเร็จ / กลับ
-  Summary --> LootBox : เปิดกล่องสุ่มจากหน้าสรุปผล
+  Home --> AvatarEquip : แตะอวตาร / แต่งตัว (UC-24)
+  AvatarEquip --> Home : สวมใส่/ถอดสำเร็จ / กลับ
 
   ' --- ห้องโฟกัส ---
   Home --> RoomList : เมนูห้องโฟกัส
   RoomList --> Home : กลับ
   RoomList --> RoomEntry : กดสร้างห้อง / กรอกรหัสเชิญ (UC-18)
   RoomEntry --> RoomView : สร้าง / เข้าร่วมสำเร็จ
-  RoomEntry --> RoomList : รหัสผิด / ห้องปิดแล้ว
+  RoomEntry --> RoomList : รหัสผิด / ห้องปิดแล้ว / ห้องเต็ม 8 คน
   RoomView --> Session : เริ่มโฟกัสในห้อง\n(นับรวม HP บอสกลุ่ม)
-  Session --> RoomView : กลับหน้าห้องหลังพัก\n(สำหรับโหมดห้อง)
+  RoomView --> RoomView : เตะสมาชิกออกจากห้อง (UC-36)\n(เฉพาะเจ้าของห้อง)
   RoomView --> RoomSummary : เจ้าของห้องปิดห้อง /\nบรรลุเป้าหมายห้อง (UC-18)
-  RoomView --> Home : ออกจากห้อง (UC-18)\n(สมาชิกที่ไม่ใช่เจ้าของ)
+  RoomView --> RoomList : ออกจากห้อง (UC-34)\n(โอนสิทธิ์เจ้าของอัตโนมัติถ้ายังมีสมาชิกเหลือ /\nปิดห้องอัตโนมัติไม่สรุป Ranking ถ้าเป็นคนสุดท้าย)
   RoomSummary --> RoomList : กลับ
 
   ' --- สังคม / ประวัติ ---
@@ -109,9 +147,9 @@ state "สมาชิก (เข้าสู่ระบบแล้ว)" as Me
   History --> Home : กลับ
 }
 
-' ═════════ โซนผู้ดูแลระบบ ═════════
+' ═════════ โซนผู้ดูแลระบบ (M7) ═════════
 state "ผู้ดูแลระบบ" as Admin {
-  state "แดชบอร์ดสถิติระบบ\n(UC-29)" as AdminDash
+  state "แดชบอร์ดสถิติระบบ" as AdminDash
   state "จัดการไอเทม / อัตราดรอป\n(UC-26)" as ItemMgmt
   state "จัดการรูปแบบอวตาร\n(UC-27)" as AvatarMgmt
   state "จัดการบัญชีผู้ใช้\n(UC-28)" as UserMgmt
@@ -130,11 +168,18 @@ Login --> Home : ล็อกอินสำเร็จ (สมาชิก)\n+
 Login --> Revival : ล็อกอินสำเร็จ\nแต่อวตารหมดสติ\n+เพิ่ม Streak ไฟ 1 ระดับ (ล็อกอินครั้งแรกของวัน)
 Login --> AdminDash : ล็อกอินสำเร็จ (ผู้ดูแล)
 Home --> Login : ออกจากระบบ (UC-32)\n(ห้ามออกระหว่างมีเซสชันทำงาน)
-AdminDash --> Login : ออกจากระบบ
+AdminDash --> Login : ออกจากระบบ (UC-32)
 
 note bottom of Member
   แสดงเฉพาะหน้าจอหลัก — dialog ยืนยัน, popup แจ้งเตือน,
   และ bottom sheet ไม่นับเป็น state แยก
+end note
+
+note bottom of AdminDash
+  ยังไม่มี use case รองรับหน้านี้อย่างเป็นทางการ
+  (เดิมเคยติดป้าย "UC-29" แต่ไม่มีอยู่จริงในเอกสาร —
+  ดู usecase_module7.puml / activity_module7_uc29.puml)
+  จึงถือเป็น backlog รอเขียน use case จริงก่อนใช้ยื่นงาน
 end note
 
 @enduml

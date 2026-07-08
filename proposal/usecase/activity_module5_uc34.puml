@@ -1,0 +1,57 @@
+@startuml M5_activity_ออกจากห้องโฟกัส
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-34 ออกจากห้องโฟกัส — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดหน้าห้อง กดออกจากห้อง;
+
+|ระบบ|
+:ขอคำยืนยัน;
+
+|สมาชิก|
+if (ยืนยันหรือไม่?) then (ไม่ยืนยัน)
+  :ยังอยู่ในห้องตามเดิม;
+  stop
+else (ยืนยัน)
+endif
+
+|ระบบ|
+:นำสมาชิกออกจากรายชื่อห้อง;
+:บันทึกสถิติที่ทำไปแล้วในห้องระหว่างที่ยังอยู่\nลงประวัติส่วนตัว (UC-22);
+
+if (ผู้ที่ออกเป็นเจ้าของห้องหรือไม่?) then (เป็นเจ้าของห้อง)
+  if (ยังมีสมาชิกคนอื่นเหลืออยู่ในห้องหรือไม่?) then (มีเหลือ)
+    :โอนสิทธิ์เจ้าของห้องให้สมาชิก\nที่เข้าร่วมนานที่สุดในห้องโดยอัตโนมัติ;
+  else (เป็นคนสุดท้าย)
+    :ปิดห้องอัตโนมัติ\nโดยไม่มีการสรุป Ranking (ไม่มีผู้ร่วมเหลือ);
+  endif
+else (ไม่ใช่เจ้าของ)
+endif
+
+:สมาชิกไม่เห็นความคืบหน้าห้องแบบเรียลไทม์ (UC-20)\nของห้องนั้นอีกต่อไป;
+
+stop
+
+@enduml

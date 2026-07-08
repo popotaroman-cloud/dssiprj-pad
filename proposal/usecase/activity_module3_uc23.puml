@@ -1,0 +1,54 @@
+@startuml M3_activity_ดูกระเป๋าไอเทม
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-23 ดูกระเป๋าไอเทม (Inventory) — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดหน้ากระเป๋าไอเทม;
+
+|ระบบ|
+if (มีไอเทมในกระเป๋าหรือไม่?) then (ยังไม่มี)
+  :แสดงข้อความแนะนำให้ไปโฟกัสเพื่อรับกล่องสุ่ม (ลิงก์ไป UC-04);
+  stop
+else (มี)
+endif
+
+:แสดงไอเทมทั้งหมดพร้อมจำนวน แยกตามประเภท\n(กล่องสุ่มที่ยังไม่เปิด — แยกย่อยตามชนิด ต้น/กลาง/สูง,\nแต่งตัว — ระบุช่อง หัว/ลำตัว/ขา/อาวุธ, โล่เวลา, วัตถุดิบผสม)\nและระดับความหายาก;
+
+|สมาชิก|
+if (ต้องการกรอง/เรียงลำดับหรือไม่?) then (ต้องการ)
+  :กรอง/เรียงลำดับไอเทมตามประเภท ช่องสวมใส่ หรือความหายาก;
+else (ไม่ต้องการ)
+endif
+
+:เลือกดูรายละเอียดไอเทมแต่ละชิ้น;
+
+if (ไอเทมที่เลือกดูเป็นกล่องสุ่มหรือไม่?) then (ใช่)
+  :กดเปิดต่อได้ทันทีผ่าน UC-10;
+else (ไม่ใช่)
+endif
+
+stop
+
+@enduml

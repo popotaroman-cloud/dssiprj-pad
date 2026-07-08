@@ -1,0 +1,48 @@
+@startuml M1_activity_ตั้งค่าระยะเวลาเริ่มต้นของโฟกัสพัก
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-37 ตั้งค่าระยะเวลาเริ่มต้นของโฟกัส/พัก (Default Duration) — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดหน้าตั้งค่า เลือกเมนู "ระยะเวลาเริ่มต้น";
+:กำหนดระยะเวลาโฟกัสเริ่มต้นและเวลาพักเริ่มต้น;
+:กดบันทึก;
+
+|ระบบ|
+if (ค่าที่กรอกอยู่ในช่วงที่ระบบกำหนดหรือไม่?\n(เช่น ไม่ต่ำกว่า 1 นาที และไม่เกินเพดานสูงสุด)) then (นอกช่วง)
+  :แจ้งเตือน ไม่บันทึก;
+  stop
+else (อยู่ในช่วง)
+endif
+
+:บันทึกค่าระยะเวลาเริ่มต้น;
+note right
+  ค่านี้จะถูกดึงมา pre-fill ให้อัตโนมัติ
+  ในขั้นตอนที่ 1 ของ UC-04 ครั้งถัดไป
+  (สมาชิกยังแก้ไขเป็นรายเซสชันได้ตามปกติ)
+end note
+
+stop
+
+@enduml

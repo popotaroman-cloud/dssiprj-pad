@@ -6,13 +6,13 @@
 <title>Pomo RPG — Mockup</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 /* ══════════════════════════════════════════════════════════════════
-   Pomo RPG — visual theme
-   ที่มา: mockup-promt1.md (chibi / pixel-art, pastel green-blue, cozy)
-          mockup-promt2.md (cream cards, coral accent, blue-gray secondary,
-          emerald success, pixel-art game elements + flat modern UI chrome)
+   Pomo RPG — visual theme (Soft Companion)
+   ปรับจากธีมเดิม (chibi/pixel-art) ให้เป็นโทน "เพื่อนคู่ใจ" นุ่มนวลขึ้น:
+   ตัด pixel font + เส้นขอบหนักออกทั้งหมด, ใช้ Nunito rounded ล้วน,
+   การ์ด/ปุ่ม/แถบสถานะโค้งมนและใช้เงานุ่มแทนเส้นขอบ/เงาแข็งแบบเกมพิกเซล
    ══════════════════════════════════════════════════════════════════ */
 :root{
   --cream:#FFFBF5;
@@ -39,8 +39,8 @@ body{
   position:relative;
   overflow-x:hidden;
 }
-.pixel-font{ font-family:'Press Start 2P', monospace; letter-spacing:0.5px; }
-.pixelated{ image-rendering:pixelated; }
+.pixel-font{ font-family:'Nunito',sans-serif; font-weight:900; letter-spacing:0.2px; }
+.pixelated{ image-rendering:auto; }
 
 /* เนินหญ้าเป็นฉากหลังล่างสุด — "cozy minimal scenery", ไม่บังเนื้อหา (Bottom Negative) */
 #bg-scenery{
@@ -59,13 +59,13 @@ body{
 }
 
 .pixel-border{
-  border:3px solid var(--ink);
-  box-shadow:4px 4px 0 rgba(69,63,84,0.35);
-  border-radius:2px;
+  border:none;
+  border-radius:20px;
+  box-shadow:0 6px 16px rgba(69,63,84,0.14);
 }
 .card{
   background:var(--cream);
-  border-radius:18px;
+  border-radius:20px;
   box-shadow:0 2px 10px rgba(69,63,84,0.08);
   padding:16px;
 }
@@ -74,15 +74,15 @@ body{
   cursor:pointer; transition:transform .05s ease; font-size:14px;
 }
 .btn:active{ transform:scale(0.97); }
-.btn-primary{ color:#fff; background:linear-gradient(135deg,var(--coral-1),var(--coral-2)); box-shadow:0 3px 0 #C23258; }
+.btn-primary{ color:#fff; background:linear-gradient(135deg,var(--coral-1),var(--coral-2)); box-shadow:0 4px 12px rgba(255,62,108,0.35); }
 .btn-secondary{ color:var(--blue-gray-dark); background:#EDF1FA; border:2px solid var(--blue-gray); }
-.btn-success{ color:#fff; background:var(--green); box-shadow:0 3px 0 var(--green-dark); }
-.btn-danger{ color:#fff; background:var(--danger); box-shadow:0 3px 0 #B23F3F; }
+.btn-success{ color:#fff; background:var(--green); box-shadow:0 4px 12px rgba(47,143,99,0.32); }
+.btn-danger{ color:#fff; background:var(--danger); box-shadow:0 4px 12px rgba(178,63,63,0.3); }
 .btn-ghost{ color:var(--ink-soft); background:transparent; }
 .btn:disabled{ opacity:0.4; cursor:not-allowed; }
 .btn-block{ width:100%; }
 
-.hpbar-track{ background:#EADFDA; border-radius:999px; height:14px; overflow:hidden; border:2px solid var(--ink); position:relative; }
+.hpbar-track{ background:#EADFDA; border-radius:999px; height:14px; overflow:hidden; box-shadow:inset 0 1px 3px rgba(69,63,84,0.15); position:relative; }
 .hpbar-fill{ height:100%; background:repeating-linear-gradient(90deg,#5FD98A 0 6px,#4CC97D 6px 12px); transition:width .3s linear; }
 .hpbar-fill.low{ background:repeating-linear-gradient(90deg,#FF8A6B 0 6px,#FF6B4A 6px 12px); }
 .hpbar-fill.critical{ background:repeating-linear-gradient(90deg,#FF5D6C 0 6px,#E43C4F 6px 12px); }
@@ -104,11 +104,11 @@ body{
 #phone-wrap{ position:relative; z-index:1; display:flex; justify-content:center; padding:28px 12px 140px; }
 #phone{
   width:100%; max-width:400px; min-height:760px;
-  background:var(--cream); border-radius:36px; border:8px solid var(--ink);
-  box-shadow:0 20px 40px rgba(69,63,84,0.25);
+  background:var(--cream); border-radius:36px; border:1px solid rgba(69,63,84,0.08);
+  box-shadow:0 20px 45px rgba(69,63,84,0.18);
   position:relative; overflow:hidden; display:flex; flex-direction:column;
 }
-#phone-notch{ position:absolute; top:0; left:50%; transform:translateX(-50%); width:120px; height:20px; background:var(--ink); border-radius:0 0 14px 14px; z-index:5; }
+#phone-notch{ position:absolute; top:0; left:50%; transform:translateX(-50%); width:120px; height:20px; background:var(--ink-soft); opacity:0.5; border-radius:0 0 14px 14px; z-index:5; }
 #screen-root{ flex:1; overflow-y:auto; padding:22px 18px 18px; }
 .screen-enter{ animation:fadeIn .18s ease; }
 @keyframes fadeIn{ from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
@@ -136,13 +136,13 @@ body{
   opacity:0; pointer-events:none; transition:opacity .2s ease, transform .2s ease; }
 .toast.show{ opacity:1; transform:translateX(-50%) translateY(-6px); }
 
-.holdbar-track{ background:#F3E9E4; border-radius:14px; height:46px; overflow:hidden; position:relative; border:2px solid var(--ink); }
+.holdbar-track{ background:#F3E9E4; border-radius:14px; height:46px; overflow:hidden; position:relative; box-shadow:inset 0 1px 4px rgba(69,63,84,0.15); }
 .holdbar-fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--danger),#B23F3F); }
 .holdbar-label{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:13px; color:var(--ink); }
 
 .dev-bar{ position:fixed; top:0; right:0; z-index:50; display:flex; gap:6px; padding:8px; flex-wrap:wrap; max-width:260px; }
-.dev-bar button{ font-size:10px; font-weight:700; background:#fff; border:2px solid var(--ink); border-radius:10px; padding:5px 8px; cursor:pointer; }
-.dev-bar .dev-panel{ background:#fff; border:2px solid var(--ink); border-radius:12px; padding:8px; font-size:11px; display:none; flex-direction:column; gap:6px; width:220px; }
+.dev-bar button{ font-size:10px; font-weight:700; background:#fff; border:none; box-shadow:0 2px 8px rgba(69,63,84,0.18); border-radius:10px; padding:5px 8px; cursor:pointer; }
+.dev-bar .dev-panel{ background:#fff; border:none; box-shadow:0 4px 14px rgba(69,63,84,0.18); border-radius:14px; padding:8px; font-size:11px; display:none; flex-direction:column; gap:6px; width:220px; }
 .dev-bar .dev-panel.open{ display:flex; }
 
 .list-row{ display:flex; align-items:center; justify-content:space-between; gap:8px; padding:12px 0; border-bottom:1px solid #F1E9E1; }
@@ -200,20 +200,65 @@ body{
 <script>
 /* ══════════════════════════════════════════════════════════════════
    1. MOCK DATA + PERSISTENCE (localStorage แทนฐานข้อมูลจริง)
-   อ้างอิง Business Rules จาก usecase_description_2.md (UC-04, UC-10)
-   และผังหน้าจอจาก ui_state_diagram.puml / activity_module*.puml
+   ปรับให้ตรงกับ proposal/usecase/usecase_description.md ฉบับล่าสุด
+   (ผ่านรอบตรวจรีวิวที่ 1-11 — ค่าทั้งหมดด้านล่างคือค่ายืนยันสุดท้าย ไม่ใช่ค่าตั้งต้นแล้ว)
    ══════════════════════════════════════════════════════════════════ */
-const DB_KEY = 'pomorpg_db_v1';
-const UI_KEY = 'pomorpg_ui_v1';
+const DB_KEY = 'pomorpg_db_v2';
+const UI_KEY = 'pomorpg_ui_v2';
+
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+
+// ── แคตตาล็อกไอเทม: 6 หมวด × 4 ระดับความหายาก (UC-23/UC-24) ──
+const RARITIES = ['common','rare','epic','legendary'];
+const RARITY_LABEL = { common:'สามัญ', rare:'หายาก', epic:'หายากมาก', legendary:'ตำนาน' };
+const RARITY_CHIP  = { common:'chip-blue', rare:'chip-green', epic:'chip-gold', legendary:'chip-red' };
+const CATEGORY_DEF = [
+  { key:'material', label:'วัตถุดิบผสม',   slot:null,     emoji:{common:'🌿',rare:'💎',epic:'🔮',legendary:'⭐'} },
+  { key:'head',     label:'หมวก/หัว',      slot:'head',   emoji:{common:'🧢',rare:'🎩',epic:'👑',legendary:'🪖'} },
+  { key:'body',     label:'เกราะ/ลำตัว',   slot:'body',   emoji:{common:'👕',rare:'🥋',epic:'🦺',legendary:'🎽'} },
+  { key:'legs',     label:'กางเกง/ขา',     slot:'legs',   emoji:{common:'👖',rare:'🩳',epic:'🥾',legendary:'👢'} },
+  { key:'weapon',   label:'อาวุธ',         slot:'weapon', emoji:{common:'🗡️',rare:'⚔️',epic:'🔱',legendary:'🏹'} },
+  { key:'shield',   label:'โล่เวลา',       slot:null,     emoji:{common:'🛡️',rare:'🛡️',epic:'🛡️',legendary:'🛡️'} }
+];
+function buildItemCatalog(){
+  let id = 1; const list = [];
+  for(const cat of CATEGORY_DEF){
+    for(const rarity of RARITIES){
+      list.push({ id:id++, category:cat.key, slot:cat.slot, rarity,
+        name:`${cat.label} (${RARITY_LABEL[rarity]})`, emoji:cat.emoji[rarity], active:true });
+    }
+  }
+  return list;
+}
+function itemsByCategoryRarity(category, rarity){ return db.itemCatalog.filter(i=>i.category===category && i.rarity===rarity && i.active); }
+function nextRarity(r){ const i = RARITIES.indexOf(r); return (i>=0 && i<RARITIES.length-1) ? RARITIES[i+1] : null; }
+
+// ── ชนิดกล่องสุ่มตามความยาวเซสชัน (UC-10, ยืนยันแล้ว) ──
+const BOX_TIERS = ['bronze','silver','gold'];
+const BOX_LABEL = { bronze:'กล่องระดับต้น (Bronze)', silver:'กล่องระดับกลาง (Silver)', gold:'กล่องระดับสูง (Gold)' };
+const DROP_TABLES_DEFAULT = {
+  bronze: { common:85, rare:13, epic:2,  legendary:0 },
+  silver: { common:55, rare:30, epic:12, legendary:3 },
+  gold:   { common:35, rare:35, epic:22, legendary:8 }
+};
+// Pity System: การันตีต่อชนิดกล่องเมื่อครบ 10 รอบไม่ได้ของถึงเกณฑ์ (แยกตัวนับต่อชนิดโดยสิ้นเชิง)
+const PITY_GUARANTEE = { bronze:'rare', silver:'epic', gold:'legendary' };
+function boxTierForDuration(min){
+  if(min < 20) return null;       // ต่ำกว่า 20 นาที ไม่ได้กล่องสุ่มเลย
+  if(min < 45) return 'bronze';   // 20-44 นาที
+  if(min < 90) return 'silver';   // 45-89 นาที
+  return 'gold';                  // 90 นาทีขึ้นไป
+}
 
 function seedDB(){
   const now = Date.now();
+  const day = 24*3600000;
   return {
     users: [
-      { id:1, username:'nan', email:'nan@example.com', password:'1234', role:'member', suspended:false, suspendReason:null },
-      { id:2, username:'ploy', email:'ploy@example.com', password:'1234', role:'member', suspended:false, suspendReason:null },
-      { id:3, username:'admin', email:'admin@example.com', password:'admin', role:'admin', suspended:false, suspendReason:null },
-      { id:4, username:'gun', email:'gun@example.com', password:'1234', role:'member', suspended:true, suspendReason:'สแปมข้อความในห้องโฟกัส' }
+      { id:1, username:'nan', email:'nan@example.com', password:'1234', role:'member', suspended:false, suspendReason:null, suspendUntil:null },
+      { id:2, username:'ploy', email:'ploy@example.com', password:'1234', role:'member', suspended:false, suspendReason:null, suspendUntil:null },
+      { id:3, username:'admin', email:'admin@example.com', password:'admin', role:'admin', suspended:false, suspendReason:null, suspendUntil:null },
+      { id:4, username:'gun', email:'gun@example.com', password:'1234', role:'member', suspended:true, suspendReason:'สแปมข้อความในห้องโฟกัส', suspendUntil:null }
     ],
     nextUserId:5,
     avatarSkins: [
@@ -223,42 +268,58 @@ function seedDB(){
       { id:4, name:'อัศวินสาว', emoji:'🦸‍♀️', active:true },
       { id:5, name:'เอลฟ์', emoji:'🧝‍♀️', active:false }
     ],
+    // avatar: Max HP = 100 + (level-1)*5 (Level Scaling, ยืนยันแล้ว) — HP เป็น lazy-eval จาก lastFocusCompletedAt + HP Decay 2 หน่วย/ชม.
+    // เลเวล N ต้องใช้ N×100 EXP สะสม, streak เพิ่มเฉพาะตอนล็อกอินครั้งแรกของวัน (UC-31) ไม่ใช่ตอนจบเซสชันอีกต่อไป
     avatars: {
-      1: { skinId:1, level:5, exp:120, hpBaseline:100, lastFocusCompletedAt: now - 3*3600000, streak:4, shieldActiveUntil:null, shieldHpSnapshot:null },
-      2: { skinId:4, level:2, exp:40, hpBaseline:100, lastFocusCompletedAt: now - 26*3600000, streak:1, shieldActiveUntil:null, shieldHpSnapshot:null }
+      1: { skinId:1, level:5, exp:120, lastFocusCompletedAt: now - 3*3600000, streak:4, lastLoginDate: todayStr(),
+           equipped:{head:5, body:null, legs:null, weapon:17}, shieldActiveUntil:null, shieldHpSnapshot:null },
+      2: { skinId:4, level:2, exp:40, lastFocusCompletedAt: now - 26*3600000, streak:1, lastLoginDate: todayStr(),
+           equipped:{head:null, body:null, legs:null, weapon:null}, shieldActiveUntil:null, shieldHpSnapshot:null }
     },
     focusItems: {
       1: [ {id:1,name:'อ่านหนังสือสอบ'}, {id:2,name:'ทำโปรเจกต์จบ'} ],
       2: [ {id:1,name:'ทบทวนบทเรียน'} ]
     },
+    // ระยะเวลาเริ่มต้นของโฟกัส/พัก (UC-37) — ใช้ pre-fill ให้ UC-04 อัตโนมัติ (แก้ไขได้รายเซสชันเสมอ)
     settingsByUser: {
       1: { focusMin:25, breakMin:5 },
       2: { focusMin:25, breakMin:5 }
     },
+    itemCatalog: buildItemCatalog(),
+    dropTables: JSON.parse(JSON.stringify(DROP_TABLES_DEFAULT)),
+    // กล่องสุ่มที่ยังไม่เปิด แยกตามชนิด (UC-23) — เปิดได้จากกระเป๋าเท่านั้นผ่าน UC-10
+    boxes: {
+      1: { bronze:2, silver:1, gold:0 },
+      2: { bronze:1, silver:0, gold:0 }
+    },
     inventory: {
-      1: [ {itemId:1, qty:2}, {itemId:3, qty:1} ],
+      1: [ {itemId:5, qty:1}, {itemId:17, qty:1}, {itemId:1, qty:2}, {itemId:21, qty:1} ],
       2: [ {itemId:1, qty:1} ]
     },
-    pity: { 1:3, 2:0 },
+    // ตัวนับ Pity แยกต่างหากตามชนิดกล่องโดยสิ้นเชิง ไม่นับรวม (ยืนยันแล้ว)
+    pity: { 1:{bronze:3,silver:0,gold:0}, 2:{bronze:0,silver:0,gold:0} },
     sessionsHistory: {
       1: [
-        { id:1, itemName:'อ่านหนังสือสอบ', dateLabel:'6 ก.ค.', focusMin:25, breakMin:5, overrunMin:0, status:'completed', roomId:null },
-        { id:2, itemName:'ทำโปรเจกต์จบ', dateLabel:'5 ก.ค.', focusMin:15, breakMin:0, overrunMin:0, status:'cancelled', roomId:null }
+        { id:1, itemName:'อ่านหนังสือสอบ', dateLabel:'6 ก.ค.', ts: now-2*day, focusMin:25, breakMin:5, overrunMin:0, status:'completed', roomId:null },
+        { id:2, itemName:'ทำโปรเจกต์จบ', dateLabel:'5 ก.ค.', ts: now-3*day, focusMin:15, breakMin:0, overrunMin:0, status:'cancelled', roomId:null }
       ],
       2: []
     },
-    itemCatalog: [
-      { id:1, name:'ยาต้มสมุนไพร', rarity:'common', emoji:'🧪', dropRate:60, active:true },
-      { id:2, name:'อัญมณีเจียระไน', rarity:'rare', emoji:'💎', dropRate:25, active:true },
-      { id:3, name:'โล่เวลา (24ชม.)', rarity:'epic', emoji:'🛡️', dropRate:12, active:true },
-      { id:4, name:'มงกุฎตำนาน', rarity:'legendary', emoji:'👑', dropRate:3, active:true }
-    ],
+    // สูตรผสม (Recipe Table) — ยืนยันแล้ว (UC-12, หมายเหตุข้อ 16)
     craftRecipes: [
-      { id:1, name:'ผสมอัญมณี → โล่เวลา', ingredients:[{itemId:2, qty:3}], resultItemId:3 }
+      { id:'upgrade', name:'อัพเกรดไอเทมแต่งตัว', kind:'upgrade',
+        desc:'ไอเทมแต่งตัวช่องเดียวกัน ระดับเดียวกัน 5 ชิ้น → ระดับถัดไป 1 ชิ้น (ตำนานคือระดับสูงสุด ผสมต่อไม่ได้)' },
+      { id:'shield24', name:'ผสมโล่เวลา 24 ชม.', kind:'shield', resultRarity:'rare', hours:24, need:['common','rare'], qty:3,
+        desc:'วัตถุดิบผสม ระดับสามัญ/หายาก รวมกัน 3 ชิ้น → โล่เวลา 24 ชม. 1 ชิ้น' },
+      { id:'shield48', name:'ผสมโล่เวลา 48 ชม.', kind:'shield', resultRarity:'legendary', hours:48, need:['epic','legendary'], qty:3,
+        desc:'วัตถุดิบผสม ระดับหายากมาก/ตำนาน รวมกัน 3 ชิ้น → โล่เวลา 48 ชม. 1 ชิ้น' }
     ],
     rooms: [
-      { id:1, code:'FOCUS88', name:'ห้องติวสอบ', goalName:'อ่านหนังสือให้ครบ 10 ชม.', targetMin:600, ownerId:2, members:[ {userId:2, focusMin:180}, {userId:1, focusMin:90} ], closed:false }
+      { id:1, code:'FOCUS88', name:'ห้องติวสอบ', goalName:'อ่านหนังสือให้ครบ 10 ชม.', targetMin:600, ownerId:2,
+        members:[ {userId:2, focusMin:180, restMin:30, overrunMin:5, joinedAt: now-2*day}, {userId:1, focusMin:90, restMin:15, overrunMin:0, joinedAt: now-day} ],
+        bossMaxHp: 600*100*2, kickedUserIds:[], closed:false }
     ],
+    // ระบบเพื่อน: friends = เพื่อนแล้ว, outgoing = คำขอที่ส่งไป(รอตอบรับ), incoming = คำขอที่ได้รับ(รอเรา) — UC-21/UC-35
     friends: {
       1: { friends:[2], outgoing:[], incoming:[] },
       2: { friends:[1], outgoing:[], incoming:[] }
@@ -297,31 +358,29 @@ let db = loadDB();
 let ui = loadUI();
 
 /* ══════════════════════════════════════════════════════════════════
-   2. BUSINESS LOGIC (pure computation — ทำจริงตาม Business Rules ของ UC-04/UC-10)
+   2. BUSINESS LOGIC (pure computation — ตรงตาม Business Rules ของ usecase_description.md)
    ══════════════════════════════════════════════════════════════════ */
 function currentUser(){ return db.users.find(u=>u.id===ui.currentUserId) || null; }
 function currentAvatar(){ return db.avatars[ui.currentUserId]; }
 
-function lerp(a,b,t){ return a + (b-a)*Math.min(Math.max(t,0),1); }
+// Level Scaling (UC-04, ยืนยันแล้ว): Max HP = 100 ที่เลเวล 1, +5 หน่วยทุกเลเวล
+function maxHpForLevel(level){ return 100 + (level-1)*5; }
 
-// HP อวตารแบบ lazy evaluation ตามเวลาที่ผ่านไปจาก last_focus_completed_at (UC-04 Business Rules)
+// HP แบบ lazy evaluation: HP Decay 2 หน่วย/ชม. นับจาก lastFocusCompletedAt (ยืนยันแล้ว แทนสูตรขั้นบันไดเดิม)
 function computeAvatarHP(av){
-  if(!av) return 100;
+  if(!av) return { hp:0, maxHp:100 };
+  const maxHp = maxHpForLevel(av.level);
   if(av.shieldActiveUntil && Date.now() < av.shieldActiveUntil){
-    return av.shieldHpSnapshot ?? 100;
+    return { hp: (av.shieldHpSnapshot ?? maxHp), maxHp };
   }
-  const hrs = (Date.now() - av.lastFocusCompletedAt) / 3600000;
-  let pct;
-  if(hrs <= 24) pct = 100;
-  else if(hrs <= 48) pct = lerp(85, 70, (hrs-24)/24);
-  else if(hrs <= 72) pct = lerp(35, 15, (hrs-48)/24);
-  else if(hrs <= 96) pct = lerp(15, 0, (hrs-72)/24);
-  else pct = 0;
-  return Math.round(pct);
+  const hrs = Math.max(0, (Date.now() - av.lastFocusCompletedAt) / 3600000);
+  const hp = Math.max(0, Math.round(maxHp - hrs*2));
+  return { hp, maxHp };
 }
-function isUnconscious(av){ return computeAvatarHP(av) <= 0; }
+function isUnconscious(av){ return computeAvatarHP(av).hp <= 0; }
 
-function levelThreshold(level){ return 100 + (level-1)*40; } // เกณฑ์ EXP ต่อเลเวลเพิ่มขึ้นตามลำดับเลเวล
+// เลเวล N ต้องใช้ N × 100 EXP สะสม (ยืนยันแล้ว)
+function levelThreshold(level){ return level*100; }
 function grantEXP(av, amount){
   av.exp += amount;
   while(av.exp >= levelThreshold(av.level)){
@@ -329,36 +388,35 @@ function grantEXP(av, amount){
     av.level += 1;
   }
 }
+// EXP = นาทีที่โฟกัสสำเร็จ × 2 ต่อเซสชัน (เฉพาะเซสชันที่จบสำเร็จ ≥ 20 นาที — ยืนยันจาก activity diagram UC-04
+// ที่แสดง "แจก EXP และกล่องสุ่ม" อยู่ในกิ่ง "≥20 นาที" เดียวกัน; ยกเลิกกลางทางหรือสั้นกว่า 20 นาทีไม่ได้ EXP เลย)
+function expForDuration(min){ return min < 20 ? 0 : Math.round(min*2); }
 
-// จำนวนกล่องสุ่มตามความยาวเซสชัน (สมมติฐานอ้างอิงตาราง UC-10 — ยังไม่ระบุตัวเลขแน่นอนในเอกสาร)
-function lootBoxesForDuration(min){
-  if(min < 20) return 0;
-  if(min < 40) return 1;
-  if(min < 60) return 2;
-  return 3;
+function grantBox(userId, tier){
+  if(!tier) return;
+  db.boxes[userId] = db.boxes[userId] || {bronze:0,silver:0,gold:0};
+  db.boxes[userId][tier] += 1;
 }
-function expForDuration(min){ return min < 20 ? 0 : Math.round(min * 1.5); }
-
-// Pity System: ครบ 10 รอบไม่ได้ epic/legendary → การันตีรอบถัดไป (UC-10 Business Rules)
-function rollLootItem(userId){
-  const active = db.itemCatalog.filter(i=>i.active);
-  let pityCount = db.pity[userId] || 0;
-  let picked;
-  if(pityCount >= 10){
-    const rarePool = active.filter(i=>i.rarity==='epic'||i.rarity==='legendary');
-    picked = rarePool[Math.floor(Math.random()*rarePool.length)] || active[active.length-1];
-    db.pity[userId] = 0;
+// เปิดกล่องสุ่ม + Pity System แยกตามชนิดกล่องโดยสิ้นเชิง (UC-10, ยืนยันแล้ว)
+function rollLootItem(userId, tier){
+  const table = db.dropTables[tier];
+  db.pity[userId] = db.pity[userId] || {bronze:0,silver:0,gold:0};
+  const pity = db.pity[userId];
+  let rarity;
+  if(pity[tier] >= 10){
+    rarity = PITY_GUARANTEE[tier]; // การันตี
   } else {
-    const roll = Math.random()*100;
-    let acc = 0;
-    picked = active[0];
-    for(const it of active){ acc += it.dropRate; if(roll <= acc){ picked = it; break; } }
-    if(picked.rarity==='epic' || picked.rarity==='legendary'){ db.pity[userId] = 0; }
-    else { db.pity[userId] = pityCount + 1; }
+    const roll = Math.random()*100; let acc = 0; rarity = 'common';
+    for(const r of RARITIES){ acc += table[r]; if(roll <= acc){ rarity = r; break; } }
   }
+  const guaranteeIdx = RARITIES.indexOf(PITY_GUARANTEE[tier]);
+  if(RARITIES.indexOf(rarity) >= guaranteeIdx){ pity[tier] = 0; } else { pity[tier] += 1; }
+  const candidates = db.itemCatalog.filter(i=>i.active && i.rarity===rarity);
+  const picked = candidates[Math.floor(Math.random()*candidates.length)] || db.itemCatalog[0];
   addToInventory(userId, picked.id, 1);
+  db.boxes[userId][tier] = Math.max(0, (db.boxes[userId][tier]||0) - 1);
   saveDB();
-  return picked;
+  return { picked, pity: pity[tier] };
 }
 function addToInventory(userId, itemId, qty){
   const inv = db.inventory[userId] || (db.inventory[userId]=[]);
@@ -372,6 +430,26 @@ function removeFromInventory(userId, itemId, qty){
 }
 function invQty(userId, itemId){ const row=(db.inventory[userId]||[]).find(r=>r.itemId===itemId); return row?row.qty:0; }
 function itemById(id){ return db.itemCatalog.find(i=>i.id===id); }
+
+// ── Auth/Streak/Suspend (UC-28, UC-31) ──
+function checkAutoUnsuspend(u){
+  if(u.suspended && u.suspendUntil && Date.now() >= u.suspendUntil){
+    u.suspended = false; u.suspendReason = null; u.suspendUntil = null; saveDB();
+  }
+}
+function applyLoginStreak(userId){
+  const av = db.avatars[userId];
+  if(!av) return;
+  const t = todayStr();
+  if(av.lastLoginDate !== t){ av.streak += 1; av.lastLoginDate = t; saveDB(); }
+}
+function performLogin(u){
+  ui.currentUserId = u.id; saveUI();
+  if(u.role==='admin'){ nav('adminDash'); return; }
+  if(db.avatars[u.id]) applyLoginStreak(u.id);
+  if(!db.avatars[u.id]){ nav('createAvatar'); return; }
+  nav(isUnconscious(db.avatars[u.id]) ? 'revival' : 'home');
+}
 
 /* ══════════════════════════════════════════════════════════════════
    3. NAVIGATION + SMALL UI HELPERS
@@ -394,13 +472,14 @@ function simulateTimePass(days){
   if(!av){ showToast('ต้องล็อกอินก่อน'); return; }
   av.lastFocusCompletedAt -= days*24*3600000;
   saveDB(); render();
-  showToast('จำลองเวลาผ่านไป ' + days + ' วัน — HP อวตารคำนวณใหม่แล้ว');
+  showToast('จำลองเวลาผ่านไป ' + days + ' วัน — HP อวตารคำนวณใหม่แล้ว (Decay 2 หน่วย/ชม.)');
 }
 function quickLogin(username){
   const u = db.users.find(x=>x.username===username);
   if(!u) return;
-  ui.currentUserId = u.id; saveUI();
-  nav(u.role==='admin' ? 'adminDash' : (isUnconscious(currentAvatar())?'revival':'home'));
+  checkAutoUnsuspend(u);
+  if(u.suspended){ showToast('บัญชีนี้ถูกระงับ: '+u.suspendReason); return; }
+  performLogin(u);
 }
 
 function appbar(title, backScreen){
@@ -436,13 +515,14 @@ function adminNav(active){
       <span class="ic">${i.ic}</span>${i.label}
     </button>`).join('')}</div>`;
 }
-function hpBarHTML(pct){
+function hpBarHTML(hp, maxHp){
+  const pct = maxHp>0 ? Math.max(0, Math.min(100, hp/maxHp*100)) : 0;
   const cls = pct<=20?'critical':(pct<=50?'low':'');
   return `<div class="hpbar-track"><div class="hpbar-fill ${cls}" style="width:${pct}%"></div></div>`;
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   4. SCREENS — โซนยังไม่เข้าสู่ระบบ (Welcome / Register / Login / CreateAvatar)
+   4. SCREENS — โซนยังไม่เข้าสู่ระบบ (UC-01 สมัคร / UC-31 ล็อกอิน / UC-38 ลืมรหัสผ่าน / UC-02 สร้างอวตาร)
    ══════════════════════════════════════════════════════════════════ */
 function renderWelcome(){
   return `
@@ -481,13 +561,14 @@ function submitRegister(){
   else if(password.length < 4) err = 'รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร';
   else if(db.users.some(u=>u.email===email || u.username===username)) err = 'อีเมลหรือชื่อผู้ใช้นี้ถูกใช้แล้ว';
   if(err){ document.getElementById('regError').innerHTML = fieldError(err); return; }
-  const newUser = { id: db.nextUserId++, username, email, password, role:'member', suspended:false, suspendReason:null };
+  const newUser = { id: db.nextUserId++, username, email, password, role:'member', suspended:false, suspendReason:null, suspendUntil:null };
   db.users.push(newUser);
   db.avatars[newUser.id] = null; // ยังไม่มีอวตาร จนกว่าจะทำ UC-02
   db.focusItems[newUser.id] = [];
   db.settingsByUser[newUser.id] = { focusMin:25, breakMin:5 };
   db.inventory[newUser.id] = [];
-  db.pity[newUser.id] = 0;
+  db.boxes[newUser.id] = { bronze:0, silver:0, gold:0 };
+  db.pity[newUser.id] = { bronze:0, silver:0, gold:0 };
   db.sessionsHistory[newUser.id] = [];
   db.friends[newUser.id] = { friends:[], outgoing:[], incoming:[] };
   saveDB();
@@ -504,7 +585,8 @@ function renderLogin(){
     <div style="height:10px;"></div>
     <div class="field"><label>รหัสผ่าน</label><input id="loginPw" type="password" placeholder="รหัสผ่าน"></div>
     <div id="loginError">${fieldError('')}</div>
-    <div style="height:16px;"></div>
+    <div style="height:12px;"></div>
+    <p style="text-align:right; font-size:12px;"><a style="color:var(--coral-2); cursor:pointer;" onclick="ui._forgotStep=1; saveUI(); nav('forgotPassword')">ลืมรหัสผ่าน?</a></p>
     <button class="btn btn-primary btn-block" onclick="submitLogin()">เข้าสู่ระบบ</button>
   </div>
   <p style="text-align:center; font-size:11px; color:var(--ink-soft); margin-top:14px;">
@@ -519,14 +601,65 @@ function submitLogin(){
     document.getElementById('loginError').innerHTML = fieldError('อีเมล/ชื่อผู้ใช้ หรือรหัสผ่านไม่ถูกต้อง');
     return;
   }
+  checkAutoUnsuspend(u);
   if(u.suspended){
     document.getElementById('loginError').innerHTML = fieldError('บัญชีนี้ถูกระงับ: ' + u.suspendReason);
     return;
   }
-  ui.currentUserId = u.id; saveUI();
-  if(u.role==='admin'){ nav('adminDash'); return; }
-  if(!db.avatars[u.id]){ nav('createAvatar'); return; }
-  nav(isUnconscious(db.avatars[u.id]) ? 'revival' : 'home');
+  performLogin(u);
+}
+
+// UC-38: ลืมรหัสผ่าน — ขั้นตอนที่ 1 กรอกอีเมล (ป้องกัน account enumeration), ขั้นตอนที่ 2 ตั้งรหัสผ่านใหม่ (จำลองว่ากดลิงก์ในอีเมลแล้ว)
+function renderForgotPassword(){
+  const step = ui._forgotStep || 1;
+  if(step === 1){
+    return `
+    ${appbar('ลืมรหัสผ่าน','login')}
+    <div class="card">
+      <p style="font-size:12px; color:var(--ink-soft); margin-bottom:10px;">กรอกอีเมลหรือชื่อผู้ใช้ที่ลงทะเบียนไว้ ระบบจะส่งลิงก์รีเซ็ตรหัสผ่านไปยังอีเมลนั้น (มีอายุ 15 นาที)</p>
+      <div class="field"><label>อีเมล / ชื่อผู้ใช้</label><input id="forgotId" type="text" placeholder="username หรือ อีเมล"></div>
+      <div style="height:14px;"></div>
+      <button class="btn btn-primary btn-block" onclick="submitForgotEmail()">ส่งลิงก์รีเซ็ตรหัสผ่าน</button>
+      <div style="height:8px;"></div>
+      <button class="btn btn-ghost btn-block" onclick="nav('login')">ยกเลิก</button>
+    </div>`;
+  }
+  return `
+  ${appbar('ตั้งรหัสผ่านใหม่')}
+  <div class="card">
+    <p style="font-size:12px; color:var(--ink-soft); margin-bottom:10px;">(จำลอง: ถือว่าคุณกดลิงก์ในอีเมลแล้ว) ตั้งรหัสผ่านใหม่</p>
+    <div class="field"><label>รหัสผ่านใหม่</label><input id="forgotPw1" type="password"></div>
+    <div style="height:10px;"></div>
+    <div class="field"><label>ยืนยันรหัสผ่านใหม่</label><input id="forgotPw2" type="password"></div>
+    <div id="forgotErr"></div>
+    <div style="height:14px;"></div>
+    <button class="btn btn-primary btn-block" onclick="submitForgotReset()">ยืนยันตั้งรหัสผ่านใหม่</button>
+  </div>`;
+}
+function submitForgotEmail(){
+  const idVal = document.getElementById('forgotId').value.trim();
+  // ตาม activity diagram UC-38: เช็คบัญชีถูกระงับ (UC-28) ทันทีหลังกรอกอีเมล ก่อนเช็คว่าอีเมลตรงกับบัญชีหรือไม่
+  const u = db.users.find(x=>x.username.toLowerCase()===idVal.toLowerCase() || x.email.toLowerCase()===idVal.toLowerCase());
+  if(u){
+    checkAutoUnsuspend(u);
+    if(u.suspended){ showToast('บัญชีนี้ถูกระงับ: '+u.suspendReason+' — ไม่อนุญาตให้รีเซ็ตรหัสผ่าน'); return; }
+  }
+  ui._forgotTarget = idVal;
+  ui._forgotStep = 2; saveUI();
+  showToast('หากอีเมลนี้มีอยู่ในระบบ จะได้รับลิงก์รีเซ็ตรหัสผ่าน (จำลอง: ไปขั้นตอนถัดไปได้เลย)');
+  render();
+}
+function submitForgotReset(){
+  const pw1 = document.getElementById('forgotPw1').value;
+  const pw2 = document.getElementById('forgotPw2').value;
+  if(!pw1 || pw1.length<4){ document.getElementById('forgotErr').innerHTML = fieldError('รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร'); return; }
+  if(pw1 !== pw2){ document.getElementById('forgotErr').innerHTML = fieldError('รหัสผ่านใหม่ไม่ตรงกับช่องยืนยัน'); return; }
+  const idVal = (ui._forgotTarget||'').toLowerCase();
+  const u = db.users.find(x=>x.username.toLowerCase()===idVal || x.email.toLowerCase()===idVal);
+  if(u){ u.password = pw1; saveDB(); }
+  ui._forgotStep = 1; ui._forgotTarget = null; saveUI();
+  showToast('ตั้งรหัสผ่านใหม่สำเร็จ — เข้าสู่ระบบด้วยรหัสผ่านใหม่ได้เลย');
+  nav('login');
 }
 
 function renderCreateAvatar(){
@@ -547,27 +680,29 @@ function renderCreateAvatar(){
 function pickSkin(id){ ui._pickedSkin = id; render(); }
 function confirmCreateAvatar(){
   const uid = ui.currentUserId;
-  db.avatars[uid] = { skinId: ui._pickedSkin, level:1, exp:0, hpBaseline:100, lastFocusCompletedAt: Date.now(), streak:0, shieldActiveUntil:null, shieldHpSnapshot:null };
+  db.avatars[uid] = { skinId: ui._pickedSkin, level:1, exp:0, lastFocusCompletedAt: Date.now(), streak:1, lastLoginDate: todayStr(),
+    equipped:{head:null, body:null, legs:null, weapon:null}, shieldActiveUntil:null, shieldHpSnapshot:null };
   saveDB();
   ui._pickedSkin = null; saveUI();
-  showToast('สร้างอวตารสำเร็จ! HP เต็ม เลเวล 1');
+  showToast('สร้างอวตารสำเร็จ! HP เต็ม เลเวล 1 (Max HP 100)');
   nav('home');
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   5. SCREENS — โซนสมาชิก: หน้าหลัก / รายการโฟกัส / ตั้งค่า
+   5. SCREENS — โซนสมาชิก: หน้าหลัก / รายการโฟกัส / ตั้งค่า+โปรไฟล์ / แต่งตัวอวตาร
    ══════════════════════════════════════════════════════════════════ */
 function renderHome(){
   const av = currentAvatar();
   const skin = db.avatarSkins.find(s=>s.id===av.skinId);
-  const hp = computeAvatarHP(av);
-  const unconscious = hp<=0;
-  if(unconscious){ nav('revival'); return ''; }
+  const { hp, maxHp } = computeAvatarHP(av);
+  if(hp<=0){ nav('revival'); return ''; }
   const expNeed = levelThreshold(av.level);
   const items = db.focusItems[ui.currentUserId];
+  const boxes = db.boxes[ui.currentUserId] || {bronze:0,silver:0,gold:0};
+  const totalBoxes = boxes.bronze+boxes.silver+boxes.gold;
   return `
   ${appbar('หน้าหลัก')}
-  <div class="card" style="display:flex; gap:14px; align-items:center;">
+  <div class="card" style="display:flex; gap:14px; align-items:center; cursor:pointer;" onclick="nav('avatarEquip')">
     <div class="sprite-box pixel-border" style="background:var(--pastel-blue);">${skin.emoji}</div>
     <div style="flex:1;">
       <div style="display:flex; justify-content:space-between; align-items:baseline;">
@@ -575,14 +710,14 @@ function renderHome(){
         <span class="chip chip-gold">🔥 streak ${av.streak}</span>
       </div>
       <div style="height:6px;"></div>
-      <div style="font-size:10px; color:var(--ink-soft);">HP ${hp}%</div>
-      ${hpBarHTML(hp)}
+      <div style="font-size:10px; color:var(--ink-soft);">HP ${hp}/${maxHp}</div>
+      ${hpBarHTML(hp, maxHp)}
       <div style="height:6px;"></div>
       <div style="font-size:10px; color:var(--ink-soft);">EXP ${av.exp}/${expNeed}</div>
       <div class="expbar-track"><div class="expbar-fill" style="width:${Math.min(100, av.exp/expNeed*100)}%"></div></div>
     </div>
   </div>
-  <div style="height:14px;"></div>
+  <p style="font-size:11px; color:var(--ink-soft); text-align:center; margin:8px 0;">แตะการ์ดอวตารเพื่อแต่งตัว · กล่องสุ่มที่ยังไม่เปิด ${totalBoxes} ใบ</p>
   <div class="card">
     <div style="font-weight:800; font-size:13px; margin-bottom:10px;">เริ่มเซสชันโฟกัส</div>
     ${items.length===0? `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่มีรายการที่จะโฟกัส — <a style="color:var(--coral-2); cursor:pointer;" onclick="nav('focusList')">เพิ่มรายการก่อน</a></p>` : `
@@ -600,10 +735,8 @@ function renderHome(){
   <div style="height:14px;"></div>
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
     <button class="btn btn-secondary" onclick="nav('focusList')">📝 จัดการรายการ</button>
-    <button class="btn btn-secondary" onclick="nav('settings')">⚙️ ตั้งค่าเวลา</button>
+    <button class="btn btn-secondary" onclick="nav('settings')">⚙️ ตั้งค่า/บัญชี</button>
   </div>
-  <div style="height:10px;"></div>
-  <button class="btn btn-ghost btn-block" onclick="logout()">ออกจากระบบ</button>
   ${bottomNav('home')}`;
 }
 
@@ -652,17 +785,24 @@ function deleteFocusItem(id){
   saveDB(); render();
 }
 
+// UC-37 ระยะเวลาเริ่มต้น + ทางเข้า UC-33 + UC-32 ออกจากระบบ
+// (แยก Settings กับ EditProfile เป็นคนละ state ตาม ui_state_diagram.puml: "Settings --> EditProfile")
 function renderSettings(){
   const s = db.settingsByUser[ui.currentUserId];
   return `
-  ${appbar('ตั้งค่าระยะเวลา','home')}
+  ${appbar('ตั้งค่า/บัญชี','home')}
   <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:10px;">ระยะเวลาเริ่มต้น (UC-37)</div>
     <div class="field"><label>ระยะเวลาโฟกัส (นาที) — ต่ำสุด 5, สูงสุด 120</label><input id="setFocus" type="number" value="${s.focusMin}"></div>
     <div style="height:10px;"></div>
     <div class="field"><label>ระยะเวลาพัก (นาที) — ต่ำสุด 1, สูงสุด 30</label><input id="setBreak" type="number" value="${s.breakMin}"></div>
     <div style="height:14px;"></div>
-    <button class="btn btn-primary btn-block" onclick="saveSettings()">บันทึก</button>
-  </div>`;
+    <button class="btn btn-primary btn-block" onclick="saveSettings()">บันทึกระยะเวลา</button>
+  </div>
+  <div style="height:14px;"></div>
+  <button class="btn btn-secondary btn-block" onclick="nav('editProfile')">👤 แก้ไขโปรไฟล์ / เปลี่ยนรหัสผ่าน (UC-33)</button>
+  <div style="height:10px;"></div>
+  <button class="btn btn-ghost btn-block" onclick="logout()">ออกจากระบบ (UC-32)</button>`;
 }
 function saveSettings(){
   let f = parseInt(document.getElementById('setFocus').value)||25;
@@ -674,8 +814,54 @@ function saveSettings(){
   if(b>30){ b=30; msg+='ปรับเวลาพักเป็นค่าสูงสุด 30 นาที '; }
   db.settingsByUser[ui.currentUserId] = { focusMin:f, breakMin:b };
   saveDB();
-  showToast(msg || 'บันทึกค่าเรียบร้อย');
-  nav('home');
+  showToast(msg || 'บันทึกระยะเวลาเริ่มต้นเรียบร้อย');
+  render();
+}
+// UC-33: แก้ไขโปรไฟล์ + เปลี่ยนรหัสผ่าน (หน้าแยกจาก Settings ตาม ui_state_diagram.puml)
+function renderEditProfile(){
+  const u = currentUser();
+  return `
+  ${appbar('แก้ไขโปรไฟล์/รหัสผ่าน','settings')}
+  <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:10px;">แก้ไขโปรไฟล์</div>
+    <div class="field"><label>ชื่อผู้ใช้แสดงผล</label><input id="profileUsername" type="text" value="${u.username}"></div>
+    <div id="profileErr"></div>
+    <div style="height:10px;"></div>
+    <button class="btn btn-secondary btn-block" onclick="saveProfile()">บันทึกโปรไฟล์</button>
+  </div>
+  <div style="height:14px;"></div>
+  <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:10px;">เปลี่ยนรหัสผ่าน</div>
+    <div class="field"><label>รหัสผ่านเดิม</label><input id="pwOld" type="password"></div>
+    <div style="height:8px;"></div>
+    <div class="field"><label>รหัสผ่านใหม่</label><input id="pwNew1" type="password"></div>
+    <div style="height:8px;"></div>
+    <div class="field"><label>ยืนยันรหัสผ่านใหม่</label><input id="pwNew2" type="password"></div>
+    <div id="pwErr"></div>
+    <div style="height:10px;"></div>
+    <button class="btn btn-secondary btn-block" onclick="changePassword()">เปลี่ยนรหัสผ่าน</button>
+  </div>`;
+}
+function saveProfile(){
+  const name = document.getElementById('profileUsername').value.trim();
+  if(!name){ document.getElementById('profileErr').innerHTML = fieldError('กรุณากรอกชื่อผู้ใช้'); return; }
+  const dup = db.users.some(x=>x.id!==ui.currentUserId && x.username.toLowerCase()===name.toLowerCase());
+  if(dup){ document.getElementById('profileErr').innerHTML = fieldError('ชื่อผู้ใช้นี้ถูกใช้แล้ว'); return; }
+  currentUser().username = name; saveDB();
+  showToast('บันทึกโปรไฟล์แล้ว');
+  nav('settings');
+}
+function changePassword(){
+  const oldPw = document.getElementById('pwOld').value;
+  const p1 = document.getElementById('pwNew1').value;
+  const p2 = document.getElementById('pwNew2').value;
+  const u = currentUser();
+  if(u.password !== oldPw){ document.getElementById('pwErr').innerHTML = fieldError('รหัสผ่านเดิมไม่ถูกต้อง'); return; }
+  if(p1.length<4){ document.getElementById('pwErr').innerHTML = fieldError('รหัสผ่านใหม่ต้องมีอย่างน้อย 4 ตัวอักษร'); return; }
+  if(p1 !== p2){ document.getElementById('pwErr').innerHTML = fieldError('รหัสผ่านใหม่ไม่ตรงกับช่องยืนยัน'); return; }
+  u.password = p1; saveDB();
+  showToast('เปลี่ยนรหัสผ่านแล้ว — อุปกรณ์อื่นถูกบังคับออกจากระบบ (จำลอง)');
+  nav('settings');
 }
 function logout(){
   if(ui.session){ showToast('มีเซสชันโฟกัสกำลังทำงานอยู่ — จบหรือยกเลิกก่อนออกจากระบบ'); return; }
@@ -684,8 +870,76 @@ function logout(){
   nav('login');
 }
 
+// UC-24: สวมใส่/ถอดไอเทมแต่งตัวอวตาร (4 ช่อง: หัว/ลำตัว/ขา/อาวุธ)
+// ตาม activity diagram: "สวมใส่" เลือกได้หลายช่องก่อน (draft + preview) แล้วกด "ยืนยัน" ครั้งเดียวจึงบันทึกจริง
+// ส่วน "ถอด" มีผลทันทีไม่ต้องกดยืนยันซ้ำ — คนละ branch กัน
+const SLOT_LABELS = { head:'หัว', body:'ลำตัว', legs:'ขา', weapon:'อาวุธ' };
+function renderAvatarEquip(){
+  const av = currentAvatar();
+  const skin = db.avatarSkins.find(s=>s.id===av.skinId);
+  const inv = db.inventory[ui.currentUserId] || [];
+  const slots = ['head','body','legs','weapon'];
+  const draft = ui._equipDraft || {};
+  let hasDraft = false;
+  const html = slots.map(slot=>{
+    const equippedId = av.equipped[slot];
+    const equippedItem = equippedId ? itemById(equippedId) : null;
+    const draftId = draft[slot];
+    const draftItem = draftId ? itemById(draftId) : null;
+    if(draftItem) hasDraft = true;
+    const previewItem = draftItem || equippedItem;
+    const options = inv.filter(r=>{ const it=itemById(r.itemId); return it && it.slot===slot && r.qty>0; });
+    return `
+    <div class="card" style="margin-bottom:10px;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div style="font-weight:800; font-size:12px;">ช่อง${SLOT_LABELS[slot]}${draftItem?' <span class="chip chip-gold">เลือกไว้ (ยังไม่ยืนยัน)</span>':''}</div>
+        ${equippedItem && !draftItem? `<button class="btn btn-danger" style="padding:5px 10px;" onclick="unequipSlot('${slot}')">ถอด</button>` : ''}
+      </div>
+      <div style="height:8px;"></div>
+      ${previewItem
+        ? `<div class="list-row"><span>${previewItem.emoji} ${previewItem.name}</span><span class="chip ${RARITY_CHIP[previewItem.rarity]}">${RARITY_LABEL[previewItem.rarity]}</span></div>`
+        : ''}
+      ${options.length===0 && !previewItem? `<p style="font-size:11px; color:var(--ink-soft);">ไม่มีไอเทมที่ใส่ช่องนี้ได้ในกระเป๋า</p>` : ''}
+      ${options.length>0 ? `<div style="height:6px;"></div><div style="font-size:11px; color:var(--ink-soft); margin-bottom:4px;">เลือกไอเทมสำหรับช่องนี้:</div>
+      ${options.map(r=>{ const it=itemById(r.itemId); const picked = draftId===it.id; return `
+        <div class="list-row"><span>${it.emoji} ${it.name} (x${r.qty})</span><button class="btn ${picked?'btn-success':'btn-secondary'}" style="padding:5px 10px;" onclick="pickEquipDraft('${slot}', ${it.id})">${picked?'เลือกไว้ ✓':'เลือก'}</button></div>`;}).join('')}` : ''}
+    </div>`;
+  }).join('');
+  return `
+  ${appbar('แต่งตัวอวตาร','home')}
+  <div style="text-align:center;">
+    <div class="sprite-box sprite-boss pixel-border" style="margin:0 auto; background:var(--pastel-blue);">${skin.emoji}</div>
+  </div>
+  <div style="height:14px;"></div>
+  ${html}
+  ${hasDraft? `<button class="btn btn-primary btn-block" onclick="confirmEquip()">ยืนยันการสวมใส่</button><div style="height:8px;"></div>` : ''}`;
+}
+function pickEquipDraft(slot, itemId){
+  ui._equipDraft = ui._equipDraft || {};
+  ui._equipDraft[slot] = (ui._equipDraft[slot]===itemId) ? null : itemId; // แตะซ้ำ = ยกเลิกที่เลือกไว้
+  render();
+}
+function confirmEquip(){
+  const av = currentAvatar();
+  const draft = ui._equipDraft || {};
+  for(const slot in draft){
+    if(draft[slot]) av.equipped[slot] = draft[slot];
+  }
+  saveDB();
+  ui._equipDraft = {};
+  showToast('สวมใส่แล้ว');
+  render();
+}
+function unequipSlot(slot){
+  const av = currentAvatar();
+  av.equipped[slot] = null;
+  saveDB();
+  showToast('ถอดไอเทมแล้ว — กลับเข้ากระเป๋า');
+  render();
+}
+
 /* ══════════════════════════════════════════════════════════════════
-   6. SCREENS — วงจรเซสชันโฟกัส (UC-04 ตีบอส / UC-05 ยกเลิก / Summary / UC-08 พัก)
+   6. SCREENS — วงจรเซสชันโฟกัส (UC-04 ตีบอส / ยกเลิกกลางทาง / Summary / พัก+เบรกเกิน)
    ══════════════════════════════════════════════════════════════════ */
 let sessionTicker=null, breakTicker=null, holdTimer=null;
 function stopAllTimers(){ clearInterval(sessionTicker); clearInterval(breakTicker); clearTimeout(holdTimer); }
@@ -694,7 +948,7 @@ function startSession(isRevival){
   const itemSel = document.getElementById('sessionItem');
   const minInput = document.getElementById('sessionMin');
   const itemId = itemSel? parseInt(itemSel.value) : 0;
-  const minutes = isRevival ? 20 : (parseInt(minInput.value)||25);
+  const minutes = isRevival ? 20 : (parseInt(minInput.value)||25); // UC-30: ภารกิจชุบชีวิตคงที่ 20 นาที
   const item = isRevival? {name:'ภารกิจชุบชีวิต'} : db.focusItems[ui.currentUserId].find(i=>i.id===itemId);
   ui.session = {
     itemName: item.name, durationMin: minutes, startedAt: Date.now(),
@@ -724,7 +978,7 @@ function renderSession(){
     <div class="sprite-box sprite-boss pixel-border" style="margin:0 auto; background:var(--pastel-blue);">👹</div>
     <div style="height:10px;"></div>
     <div style="font-size:11px; color:var(--ink-soft);">Boss HP</div>
-    ${hpBarHTML(Math.round(bossHpPct))}
+    ${hpBarHTML(Math.round(bossHpPct), 100)}
     <div style="height:18px;"></div>
     <div class="pixel-font" id="sessionClock" style="font-size:30px;">${mm}:${ss}</div>
     <div style="height:22px;"></div>
@@ -766,63 +1020,79 @@ function cancelSessionMidway(){
   clearInterval(sessionTicker);
   const s = ui.session;
   const elapsed = Math.min(bossElapsedMin(), s.durationMin);
-  const ratio = elapsed / s.durationMin;
+  const ratio = s.durationMin>0 ? elapsed / s.durationMin : 0;
   const av = currentAvatar();
-  const partialExp = Math.round(expForDuration(elapsed) * ratio);
   if(!s.isRevival){
-    grantEXP(av, partialExp);
-    av.lastFocusCompletedAt = Date.now();
-    saveDB();
-    db.sessionsHistory[ui.currentUserId].unshift({ id:Date.now(), itemName:s.itemName, dateLabel:'วันนี้', focusMin:Math.round(elapsed), breakMin:0, overrunMin:0, status:'cancelled', roomId:s.roomId });
+    // ยกเลิกกลางทาง: ไม่ได้ EXP เลย (เฉพาะเซสชันที่จบสำเร็จเท่านั้นถึงได้ EXP) แต่คืน HP ตามสัดส่วนเวลาที่โฟกัสจริง
+    const { hp: hpBefore, maxHp } = computeAvatarHP(av);
+    const hpAfter = Math.min(maxHp, Math.round(hpBefore + (maxHp - hpBefore) * ratio));
+    const hoursForThatHp = (maxHp - hpAfter) / 2; // ย้อนเวลาให้ตรงกับ HP Decay 2 หน่วย/ชม.
+    av.lastFocusCompletedAt = Date.now() - hoursForThatHp*3600000;
+    db.sessionsHistory[ui.currentUserId] = db.sessionsHistory[ui.currentUserId] || [];
+    db.sessionsHistory[ui.currentUserId].unshift({ id:Date.now(), itemName:s.itemName, dateLabel:'วันนี้', ts:Date.now(), focusMin:Math.round(elapsed), breakMin:0, overrunMin:0, status:'cancelled', roomId:s.roomId });
     saveDB();
   }
   ui.session = null; saveUI();
-  showToast('ยกเลิกเซสชัน — ได้รับ EXP บางส่วนตามเวลาที่โฟกัสจริง ('+Math.round(elapsed)+' นาที)');
+  showToast('ยกเลิกเซสชัน — ไม่ได้ EXP (ยกเลิกกลางทาง) แต่ HP คืนตามสัดส่วนเวลาที่โฟกัสจริง ('+Math.round(elapsed)+' นาที)');
   nav(s.isRevival ? 'revival' : 'home');
 }
 function completeSession(){
   const s = ui.session;
   const av = currentAvatar();
   if(s.isRevival){
-    av.hpBaseline = 100; av.lastFocusCompletedAt = Date.now();
-    av.level = 1; av.exp = 0; av.shieldActiveUntil=null;
+    // UC-30: ลดเลเวลลง 2 ระดับ (ต่ำสุดเลเวล 1) รีเซ็ต EXP เป็น 0 ปรับ Max HP ตาม Level Scaling แล้วคืน HP เต็มเท่ากับ Max HP ใหม่
+    av.level = Math.max(1, av.level - 2);
+    av.exp = 0;
+    av.lastFocusCompletedAt = Date.now();
     saveDB();
-    db.sessionsHistory[ui.currentUserId].unshift({ id:Date.now(), itemName:'ภารกิจชุบชีวิต', dateLabel:'วันนี้', focusMin:s.durationMin, breakMin:0, overrunMin:0, status:'completed', roomId:null });
+    db.sessionsHistory[ui.currentUserId].unshift({ id:Date.now(), itemName:'ภารกิจชุบชีวิต', dateLabel:'วันนี้', ts:Date.now(), focusMin:s.durationMin, breakMin:0, overrunMin:0, status:'completed', roomId:null });
     saveDB();
     ui.session=null; saveUI();
-    showToast('ชุบชีวิตสำเร็จ! HP เต็ม 100% เลเวล/EXP ถูกรีเซ็ต');
+    showToast('ชุบชีวิตสำเร็จ! เลเวลลดลง 2 ระดับ (Lv.'+av.level+') HP เต็มเท่ากับ Max HP ใหม่');
     nav('home');
     return;
   }
   const exp = expForDuration(s.durationMin);
-  const boxes = lootBoxesForDuration(s.durationMin);
+  const tier = boxTierForDuration(s.durationMin);
   grantEXP(av, exp);
-  av.lastFocusCompletedAt = Date.now();
-  av.streak += 1;
+  av.lastFocusCompletedAt = Date.now(); // คืน HP เต็มเท่ากับ Max HP ปัจจุบันเมื่อจบสำเร็จ (lazy-eval: ตอนนี้ = HP เต็ม)
   saveDB();
+  if(tier) grantBox(ui.currentUserId, tier);
   if(s.roomId){
     const room = db.rooms.find(r=>r.id===s.roomId);
     if(room){ const m = room.members.find(m=>m.userId===ui.currentUserId); if(m) m.focusMin += s.durationMin; saveDB(); }
   }
-  db.sessionsHistory[ui.currentUserId].unshift({ id:Date.now(), itemName:s.itemName, dateLabel:'วันนี้', focusMin:s.durationMin, breakMin:db.settingsByUser[ui.currentUserId].breakMin, overrunMin:0, status:'completed', roomId:s.roomId });
+  db.sessionsHistory[ui.currentUserId].unshift({ id:Date.now(), itemName:s.itemName, dateLabel:'วันนี้', ts:Date.now(), focusMin:s.durationMin, breakMin:db.settingsByUser[ui.currentUserId].breakMin, overrunMin:0, status:'completed', roomId:s.roomId });
   saveDB();
-  ui._lastReward = { exp, boxes };
+  ui._lastReward = { exp, tier };
+  ui._lastHistoryId = db.sessionsHistory[ui.currentUserId][0].id;
   ui.session = null;
-  ui.breakState = { startedAt: Date.now(), durationMin: db.settingsByUser[ui.currentUserId].breakMin };
+  ui.breakState = { startedAt: Date.now(), durationMin: db.settingsByUser[ui.currentUserId].breakMin, overrunNotified:false, roomId: s.roomId };
   saveUI();
   nav('summary');
 }
+// เก็บสถิติ Rest/Over-rest ของสมาชิกในห้อง (UC-20 ต้องแสดง 3 คอลัมน์: Focus/Rest/Over-rest)
+function creditRoomStats(roomId, userId, restMin, overrunMin){
+  if(!roomId) return;
+  const room = db.rooms.find(r=>r.id===roomId);
+  if(!room) return;
+  const m = room.members.find(m=>m.userId===userId);
+  if(!m) return;
+  m.restMin = (m.restMin||0) + Math.max(0, Math.round(restMin));
+  m.overrunMin = (m.overrunMin||0) + Math.max(0, Math.round(overrunMin));
+  saveDB();
+}
 
 function renderSummary(){
-  const r = ui._lastReward || {exp:0, boxes:0};
+  const r = ui._lastReward || {exp:0, tier:null};
   return `
   <div style="text-align:center; padding-top:20px;">
     <div style="font-size:54px;">🏆</div>
     <h1 class="pixel-font" style="font-size:15px; margin:12px 0;">ชนะบอสแล้ว!</h1>
     <div class="card" style="text-align:left;">
       <div class="list-row"><span>EXP ที่ได้รับ</span><span class="chip chip-blue">+${r.exp} EXP</span></div>
-      <div class="list-row"><span>กล่องสุ่มที่ได้</span><span class="chip chip-gold">🎁 x${r.boxes}</span></div>
-      <div class="list-row"><span>HP อวตาร</span><span class="chip chip-green">เติมคืนแล้ว</span></div>
+      <div class="list-row"><span>กล่องสุ่มที่ได้</span><span class="chip chip-gold">${r.tier? '🎁 '+BOX_LABEL[r.tier] : 'ไม่ได้กล่อง (ต่ำกว่า 20 นาที)'}</span></div>
+      <div class="list-row"><span>HP อวตาร</span><span class="chip chip-green">เติมคืนเต็ม Max HP แล้ว</span></div>
       <div class="list-row"><span>Streak ไฟ</span><span class="chip chip-gold">🔥 ${currentAvatar().streak}</span></div>
     </div>
     <div style="height:16px;"></div>
@@ -834,31 +1104,74 @@ function renderBreak(){
   const b = ui.breakState;
   const speed = ui.demoSpeed ? 60 : 1;
   const elapsedMin = (Date.now()-b.startedAt)/60000*speed;
-  const remain = Math.max(0, b.durationMin - elapsedMin);
+  const remain = b.durationMin - elapsedMin;
   setTimeout(()=>{ clearInterval(breakTicker); breakTicker = setInterval(tickBreak, 250); },0);
+  if(remain > 0){
+    return `
+    <div style="text-align:center; padding-top:30px;">
+      <div style="font-size:50px;">☕</div>
+      <h1 class="pixel-font" style="font-size:14px; margin:14px 0;">ช่วงพัก</h1>
+      <div class="pixel-font" id="breakClock" style="font-size:26px;">${fmtMin(remain)}</div>
+      <div style="height:20px;"></div>
+      <button class="btn btn-secondary btn-block" onclick="endBreakEarly()">เสร็จสิ้นช่วงพัก (จบก่อนเวลา)</button>
+    </div>`;
+  }
+  const overrun = elapsedMin - b.durationMin;
   return `
   <div style="text-align:center; padding-top:30px;">
-    <div style="font-size:50px;">☕</div>
-    <h1 class="pixel-font" style="font-size:14px; margin:14px 0;">ช่วงพัก</h1>
-    <div class="pixel-font" id="breakClock" style="font-size:26px;">${fmtMin(remain)}</div>
+    <div style="font-size:50px;">⏰</div>
+    <h1 class="pixel-font" style="font-size:14px; margin:14px 0;">พักเกินเวลาแล้ว</h1>
+    <div class="pixel-font" id="breakClock" style="font-size:26px; color:var(--danger);">+${fmtMin(overrun)}</div>
+    <p style="font-size:11px; color:var(--ink-soft); margin-top:8px;">ระบบนับเวลาพักเกินไว้เป็นสถิติ (Over-rest) จนกว่าจะเริ่มเซสชันถัดไป</p>
     <div style="height:20px;"></div>
-    <button class="btn btn-secondary btn-block" onclick="endBreakEarly()">เสร็จสิ้นช่วงพัก (จบก่อนเวลา)</button>
+    <button class="btn btn-primary btn-block" onclick="endBreakOverrun()">ไปเริ่มเซสชันถัดไป</button>
   </div>`;
 }
-function fmtMin(min){ const m=Math.floor(min), s=Math.floor((min%1)*60); return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); }
+function fmtMin(min){ const m=Math.floor(Math.max(0,min)), s=Math.floor((Math.max(0,min)%1)*60); return String(m).padStart(2,'0')+':'+String(s).padStart(2,'0'); }
 function tickBreak(){
   const b = ui.breakState; if(!b) return;
   const speed = ui.demoSpeed?60:1;
   const elapsedMin = (Date.now()-b.startedAt)/60000*speed;
   const remain = b.durationMin - elapsedMin;
-  if(remain<=0){ clearInterval(breakTicker); ui.breakState=null; saveUI(); showToast('พักครบเวลาแล้ว! เริ่มเซสชันถัดไปได้เลย'); nav('home'); return; }
-  const el = document.getElementById('breakClock'); if(el) el.textContent = fmtMin(remain);
+  const el = document.getElementById('breakClock');
+  if(remain<=0){
+    if(!b.overrunNotified){
+      b.overrunNotified = true; saveUI();
+      showToast('พักครบเวลาแล้ว! เริ่มนับเวลาพักเกินเป็นสถิติจนกว่าจะเริ่มเซสชันถัดไป (แจ้งเตือนแม้แอปอยู่ background — จำลอง)');
+      render();
+      return;
+    }
+    if(el) el.textContent = '+' + fmtMin(elapsedMin - b.durationMin);
+    return;
+  }
+  if(el) el.textContent = fmtMin(remain);
 }
 function endBreakEarly(){
   clearInterval(breakTicker);
+  const b = ui.breakState;
+  const speed = ui.demoSpeed?60:1;
+  const elapsedMin = Math.min(b.durationMin, (Date.now()-b.startedAt)/60000*speed);
+  if(b.roomId) creditRoomStats(b.roomId, ui.currentUserId, elapsedMin, 0);
+  const backTo = b.roomId ? 'roomView' : 'home';
   ui.breakState = null; saveUI();
   showToast('จบช่วงพักทันที ไม่มีการนับเบรกเกิน');
-  nav('home');
+  nav(backTo);
+}
+function endBreakOverrun(){
+  clearInterval(breakTicker);
+  const b = ui.breakState;
+  const speed = ui.demoSpeed?60:1;
+  const elapsedMin = (Date.now()-b.startedAt)/60000*speed;
+  const overrun = Math.max(0, Math.round(elapsedMin - b.durationMin));
+  if(ui._lastHistoryId){
+    const row = (db.sessionsHistory[ui.currentUserId]||[]).find(r=>r.id===ui._lastHistoryId);
+    if(row){ row.overrunMin = overrun; saveDB(); }
+  }
+  if(b.roomId) creditRoomStats(b.roomId, ui.currentUserId, b.durationMin, overrun);
+  const backTo = b.roomId ? 'roomView' : 'home';
+  ui.breakState = null; ui._lastHistoryId = null; saveUI();
+  showToast('บันทึกเวลาพักเกิน '+overrun+' นาทีแล้ว — เริ่มเซสชันใหม่ได้เลย');
+  nav(backTo);
 }
 
 /* ══════════════════════════════════════════════════════════════════
@@ -869,7 +1182,7 @@ function renderRevival(){
   <div style="text-align:center; padding-top:20px;">
     <div style="font-size:56px; filter:grayscale(1); opacity:0.6;">💀</div>
     <h1 class="pixel-font" style="font-size:14px; margin:14px 0;">อวตารหมดสติ</h1>
-    <p style="font-size:12px; color:var(--ink-soft);">ทำภารกิจโฟกัส 20 นาทีให้สำเร็จในเซสชันเดียว เพื่อชุบชีวิตอวตารกลับมา (HP เต็ม 100% แต่เลเวล/EXP จะถูกรีเซ็ต)</p>
+    <p style="font-size:12px; color:var(--ink-soft);">ทำภารกิจโฟกัส 20 นาทีให้สำเร็จในเซสชันเดียว เพื่อชุบชีวิตอวตารกลับมา (ไม่ได้รับ EXP/กล่องสุ่มระหว่างภารกิจนี้ — เลเวลจะลดลง 2 ระดับจากก่อนหมดสติ ต่ำสุดคือเลเวล 1 แล้ว HP เต็มเท่ากับ Max HP ใหม่)</p>
     <div style="height:18px;"></div>
     <button class="btn btn-primary btn-block" onclick="startSession(true)">🕯️ เริ่มภารกิจชุบชีวิต (20 นาที)</button>
     <div style="height:8px;"></div>
@@ -878,97 +1191,214 @@ function renderRevival(){
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   8. SCREENS — ไอเทม: กระเป๋า (UC-23) / กล่องสุ่ม (UC-10) / ผสม (UC-12)
+   8. SCREENS — ไอเทม: กระเป๋า (UC-23) / กล่องสุ่ม (UC-10) / ผสม (UC-12) / โล่เวลา (UC-13)
    ══════════════════════════════════════════════════════════════════ */
 function renderInventory(){
   const inv = db.inventory[ui.currentUserId] || [];
+  const boxes = db.boxes[ui.currentUserId] || {bronze:0,silver:0,gold:0};
+  const equip = inv.filter(r=>{ const it=itemById(r.itemId); return it && it.slot; });
+  const materials = inv.filter(r=>{ const it=itemById(r.itemId); return it && it.category==='material'; });
+  const shields = inv.filter(r=>{ const it=itemById(r.itemId); return it && it.category==='shield'; });
   return `
   ${appbar('กระเป๋าไอเทม','home')}
   <div class="card">
-    ${inv.length===0? `<p style="font-size:12px; color:var(--ink-soft);">กระเป๋ายังว่างเปล่า — ลองเริ่มโฟกัสดูสิ!</p>` :
-    inv.map(row=>{ const it=itemById(row.itemId); return `
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">กล่องสุ่มที่ยังไม่เปิด</div>
+    ${BOX_TIERS.filter(t=>(boxes[t]||0)>0).map(t=>`
+      <div class="list-row">
+        <span>🎁 ${BOX_LABEL[t]}</span>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:12px; color:var(--ink-soft);">x${boxes[t]}</span>
+          <button class="btn btn-primary" style="padding:6px 10px;" onclick="openLootboxTier('${t}')">เปิด</button>
+        </div>
+      </div>`).join('') || `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่มีกล่องสุ่มเลย — <a style="color:var(--coral-2); cursor:pointer;" onclick="nav('home')">ไปโฟกัสเพื่อรับกล่องสุ่ม</a></p>`}
+  </div>
+  <div style="height:14px;"></div>
+  <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">ไอเทมแต่งตัว</div>
+    ${equip.length===0? `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่มีไอเทมแต่งตัว</p>` :
+    equip.map(row=>{ const it=itemById(row.itemId); return `
       <div class="list-row">
         <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:22px;">${it.emoji}</span>
-          <div><div style="font-weight:700; font-size:13px;">${it.name}</div><span class="chip ${rarityChip(it.rarity)}">${it.rarity}</span></div>
+          <div><div style="font-weight:700; font-size:13px;">${it.name}</div><span class="chip ${RARITY_CHIP[it.rarity]}">${RARITY_LABEL[it.rarity]}</span></div>
+        </div>
+        <span style="font-size:12px; color:var(--ink-soft);">x${row.qty}</span>
+      </div>`;}).join('')}
+    <div style="height:8px;"></div>
+    <button class="btn btn-secondary btn-block" onclick="nav('avatarEquip')">👕 ไปสวมใส่/ถอด</button>
+  </div>
+  <div style="height:14px;"></div>
+  <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">โล่เวลา</div>
+    ${shields.length===0? `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่มีโล่เวลา</p>` :
+    shields.map(row=>{ const it=itemById(row.itemId); const hrs=(it.rarity==='common'||it.rarity==='rare')?24:48; return `
+      <div class="list-row">
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:22px;">${it.emoji}</span>
+          <div><div style="font-weight:700; font-size:13px;">${it.name}</div><span class="chip ${RARITY_CHIP[it.rarity]}">${hrs} ชม.</span></div>
         </div>
         <div style="display:flex; align-items:center; gap:8px;">
           <span style="font-size:12px; color:var(--ink-soft);">x${row.qty}</span>
-          ${it.id===3? `<button class="btn btn-success" style="padding:6px 10px;" onclick="useShieldItem(${it.id})">ใช้</button>` : ''}
+          <button class="btn btn-success" style="padding:6px 10px;" onclick="useShieldItem(${it.id})">ใช้</button>
         </div>
       </div>`;}).join('')}
   </div>
   <div style="height:14px;"></div>
-  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-    <button class="btn btn-primary" onclick="nav('lootbox')">🎁 เปิดกล่องสุ่ม</button>
-    <button class="btn btn-secondary" onclick="nav('crafting')">⚗️ ผสมไอเทม</button>
-  </div>`;
+  <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">วัตถุดิบผสม</div>
+    ${materials.length===0? `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่มีวัตถุดิบผสม</p>` :
+    materials.map(row=>{ const it=itemById(row.itemId); return `
+      <div class="list-row">
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:22px;">${it.emoji}</span>
+          <div><div style="font-weight:700; font-size:13px;">${it.name}</div><span class="chip ${RARITY_CHIP[it.rarity]}">${RARITY_LABEL[it.rarity]}</span></div>
+        </div>
+        <span style="font-size:12px; color:var(--ink-soft);">x${row.qty}</span>
+      </div>`;}).join('')}
+  </div>
+  <div style="height:14px;"></div>
+  <button class="btn btn-secondary btn-block" onclick="nav('crafting')">⚗️ ผสมไอเทม</button>
+  ${bottomNav('inventory')}`;
 }
-function rarityChip(r){ return {common:'chip-blue',rare:'chip-green',epic:'chip-gold',legendary:'chip-red'}[r] || 'chip-blue'; }
+function openLootboxTier(tier){ ui.lootboxTier = tier; saveUI(); nav('lootbox'); }
 function useShieldItem(itemId){
   if(invQty(ui.currentUserId, itemId) <= 0){ showToast('ไม่มีไอเทมนี้ในกระเป๋า'); return; }
+  const it = itemById(itemId);
+  const hours = (it.rarity==='common'||it.rarity==='rare') ? 24 : 48;
   removeFromInventory(ui.currentUserId, itemId, 1);
   const av = currentAvatar();
-  const hpNow = computeAvatarHP(av);
-  av.shieldActiveUntil = Date.now() + 24*3600000;
-  av.shieldHpSnapshot = hpNow;
+  const { hp } = computeAvatarHP(av);
+  av.shieldActiveUntil = Date.now() + hours*3600000;
+  av.shieldHpSnapshot = hp;
   saveDB();
-  showToast('ใช้โล่เวลาแล้ว — HP/Streak จะไม่ลดเป็นเวลา 24 ชั่วโมง');
+  showToast(`ใช้โล่เวลาแล้ว — HP/Streak จะไม่ลดเป็นเวลา ${hours} ชั่วโมง`);
   render();
 }
 
 function renderLootbox(){
-  const pity = db.pity[ui.currentUserId] || 0;
-  const canOpen = invQty(ui.currentUserId, 999) >= 0; // ไม่มีข้อจำกัดจำนวนกล่องในสาธิตนี้ เปิดได้เรื่อย ๆ เพื่อสาธิต Pity System
+  const tier = ui.lootboxTier || 'bronze';
+  const count = (db.boxes[ui.currentUserId]||{})[tier] || 0;
+  const pity = (db.pity[ui.currentUserId]||{})[tier] || 0;
+  const guarantee = RARITY_LABEL[PITY_GUARANTEE[tier]];
   return `
-  ${appbar('เปิดกล่องสุ่ม','inventory')}
+  ${appbar('เปิด'+BOX_LABEL[tier],'inventory')}
   <div style="text-align:center;">
     <div id="lootSprite" class="sprite-box pixel-border" style="margin:20px auto; background:var(--pastel-blue); font-size:50px;">🎁</div>
-    <p style="font-size:11px; color:var(--ink-soft);">ตัวนับ Pity: ${pity}/10 (ครบ 10 การันตีของหายากมาก/ตำนาน)</p>
+    <p style="font-size:11px; color:var(--ink-soft);">เหลือ ${count} ใบ · ตัวนับ Pity: ${pity}/10 (ครบ 10 การันตี${guarantee}ขึ้นไป)</p>
     <div id="lootResult"></div>
     <div style="height:14px;"></div>
-    <button class="btn btn-primary btn-block" onclick="openLootBox()">เปิดกล่องสุ่ม</button>
+    <button class="btn btn-primary btn-block" ${count>0?'':'disabled'} onclick="openLootBox()">เปิดกล่องสุ่ม</button>
   </div>`;
 }
 function openLootBox(){
-  const picked = rollLootItem(ui.currentUserId);
+  const tier = ui.lootboxTier || 'bronze';
+  if(((db.boxes[ui.currentUserId]||{})[tier]||0) <= 0){ showToast('ไม่มีกล่องชนิดนี้เหลือแล้ว'); return; }
+  const { picked, pity } = rollLootItem(ui.currentUserId, tier);
   document.getElementById('lootSprite').textContent = picked.emoji;
   document.getElementById('lootResult').innerHTML = `
     <div style="height:10px;"></div>
-    <div class="chip ${rarityChip(picked.rarity)}" style="font-size:13px;">ได้รับ: ${picked.name} (${picked.rarity})</div>`;
+    <div class="chip ${RARITY_CHIP[picked.rarity]}" style="font-size:13px;">ได้รับ: ${picked.name}</div>`;
+  const count = (db.boxes[ui.currentUserId]||{})[tier]||0;
+  const guarantee = RARITY_LABEL[PITY_GUARANTEE[tier]];
+  const infoEl = document.querySelector('#screen-root p');
+  if(infoEl) infoEl.textContent = `เหลือ ${count} ใบ · ตัวนับ Pity: ${pity}/10 (ครบ 10 การันตี${guarantee}ขึ้นไป)`;
+  if(count<=0){ const btn=document.querySelector('#screen-root button.btn-primary'); if(btn) btn.disabled = true; }
   showToast('ได้รับ ' + picked.name + '!');
 }
 
 function renderCrafting(){
-  const recipe = db.craftRecipes[0];
-  const have = invQty(ui.currentUserId, recipe.ingredients[0].itemId);
-  const need = recipe.ingredients[0].qty;
-  const ok = have >= need;
-  const ing = itemById(recipe.ingredients[0].itemId);
-  const result = itemById(recipe.resultItemId);
+  const selectedId = ui._craftRecipe || null;
+  const recipe = selectedId ? db.craftRecipes.find(r=>r.id===selectedId) : null;
   return `
   ${appbar('ผสมไอเทม','inventory')}
+  <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">เลือกสูตร</div>
+    ${db.craftRecipes.map(r=>`
+      <div class="list-row" style="cursor:pointer; ${selectedId===r.id?'background:#FFF0EC; border-radius:10px; padding:8px;':''}" onclick="selectCraftRecipe('${r.id}')">
+        <div><div style="font-weight:700; font-size:13px;">${r.name}</div><div style="font-size:11px; color:var(--ink-soft);">${r.desc}</div></div>
+        <span style="font-size:16px;">${selectedId===r.id?'✓':'›'}</span>
+      </div>`).join('')}
+  </div>
+  <div style="height:14px;"></div>
+  ${recipe ? renderCraftRecipeDetail(recipe) : `<p style="font-size:12px; color:var(--ink-soft); text-align:center;">เลือกสูตรด้านบนก่อน</p>`}`;
+}
+function selectCraftRecipe(id){ ui._craftRecipe = id; ui._craftSlotRarity = null; render(); }
+function renderCraftRecipeDetail(recipe){
+  const uid = ui.currentUserId;
+  if(recipe.kind === 'upgrade'){
+    const slots = ['head','body','legs','weapon'];
+    const options = [];
+    for(const slot of slots){
+      for(const rarity of ['common','rare','epic']){
+        const it = itemsByCategoryRarity(slot, rarity)[0];
+        if(it && invQty(uid, it.id) >= 5) options.push({slot, rarity, item:it});
+      }
+    }
+    const pickedKey = ui._craftSlotRarity;
+    const picked = options.find(o=>`${o.slot}-${o.rarity}`===pickedKey);
+    return `
+    <div class="card">
+      <div style="font-weight:800; font-size:12px; margin-bottom:8px;">เลือกไอเทมต้นทาง (ต้องมี 5 ชิ้นระดับเดียวกัน ช่องเดียวกัน)</div>
+      ${options.length===0? `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่มีไอเทมชุดใดครบ 5 ชิ้น</p>` :
+      options.map(o=>`
+        <div class="list-row" style="cursor:pointer;" onclick="pickCraftSlotRarity('${o.slot}','${o.rarity}')">
+          <span>${o.item.emoji} ${o.item.name} (${invQty(uid,o.item.id)} ชิ้น)</span>
+          <span>${pickedKey===(o.slot+'-'+o.rarity)?'✓':'›'}</span>
+        </div>`).join('')}
+      ${picked? `
+      <div style="height:14px;"></div>
+      <button class="btn btn-primary btn-block" onclick="doCraftUpgrade('${picked.slot}','${picked.rarity}')">ยืนยันการผสม → ${itemsByCategoryRarity(picked.slot, nextRarity(picked.rarity))[0].name}</button>` : ''}
+    </div>`;
+  }
+  // สูตรผสมโล่เวลา
+  const haveA = itemsByCategoryRarity('material', recipe.need[0]).reduce((a,i)=>a+invQty(uid,i.id),0);
+  const haveB = itemsByCategoryRarity('material', recipe.need[1]).reduce((a,i)=>a+invQty(uid,i.id),0);
+  const have = haveA + haveB;
+  const ok = have >= recipe.qty;
+  return `
   <div class="card" style="text-align:center;">
-    <div style="font-weight:800; font-size:13px; margin-bottom:10px;">${recipe.name}</div>
-    <div style="display:flex; align-items:center; justify-content:center; gap:14px;">
-      <div><div style="font-size:34px;">${ing.emoji}</div><div style="font-size:11px;">${ing.name} (${have}/${need})</div></div>
-      <div style="font-size:22px;">➜</div>
-      <div><div style="font-size:34px;">${result.emoji}</div><div style="font-size:11px;">${result.name}</div></div>
-    </div>
+    <div style="font-weight:800; font-size:12px; margin-bottom:8px;">วัตถุดิบผสมระดับ${RARITY_LABEL[recipe.need[0]]}/${RARITY_LABEL[recipe.need[1]]}: ${have}/${recipe.qty}</div>
+    <div style="font-size:34px;">🌿💎 ➜ 🛡️</div>
     <div style="height:14px;"></div>
-    <button class="btn btn-primary btn-block" ${ok?'':'disabled'} onclick="doCraft(${recipe.id})">${ok?'ยืนยันการผสม':'ไอเทมไม่ครบตามสูตร'}</button>
+    <button class="btn btn-primary btn-block" ${ok?'':'disabled'} onclick="doCraftShield('${recipe.id}')">${ok?'ยืนยันการผสม':'วัตถุดิบไม่ครบ'}</button>
   </div>`;
 }
-function doCraft(recipeId){
-  const recipe = db.craftRecipes.find(r=>r.id===recipeId);
-  for(const ing of recipe.ingredients) removeFromInventory(ui.currentUserId, ing.itemId, ing.qty);
-  addToInventory(ui.currentUserId, recipe.resultItemId, 1);
+function pickCraftSlotRarity(slot, rarity){ ui._craftSlotRarity = slot+'-'+rarity; render(); }
+function doCraftUpgrade(slot, rarity){
+  const uid = ui.currentUserId;
+  const srcItem = itemsByCategoryRarity(slot, rarity)[0];
+  const nr = nextRarity(rarity);
+  if(!nr){ showToast('ระดับตำนานคือระดับสูงสุดแล้ว ผสมต่อไม่ได้'); return; }
+  if(invQty(uid, srcItem.id) < 5){ showToast('ไอเทมไม่ครบ 5 ชิ้น'); return; }
+  const resultItem = itemsByCategoryRarity(slot, nr)[0];
+  removeFromInventory(uid, srcItem.id, 5);
+  addToInventory(uid, resultItem.id, 1);
   saveDB();
-  showToast('ผสมไอเทมสำเร็จ!');
+  ui._craftSlotRarity = null; ui._craftRecipe = null;
+  showToast('อัพเกรดสำเร็จ! ได้รับ ' + resultItem.name);
+  nav('inventory');
+}
+function doCraftShield(recipeId){
+  const recipe = db.craftRecipes.find(r=>r.id===recipeId);
+  const uid = ui.currentUserId;
+  let remaining = recipe.qty;
+  for(const rarity of recipe.need){
+    const mats = itemsByCategoryRarity('material', rarity);
+    for(const m of mats){
+      if(remaining<=0) break;
+      const have = invQty(uid, m.id);
+      const take = Math.min(have, remaining);
+      if(take>0){ removeFromInventory(uid, m.id, take); remaining -= take; }
+    }
+  }
+  if(remaining>0){ showToast('วัตถุดิบไม่ครบ'); return; }
+  const shieldItem = db.itemCatalog.find(i=>i.category==='shield' && i.rarity===recipe.resultRarity);
+  addToInventory(uid, shieldItem.id, 1);
+  saveDB();
+  ui._craftRecipe = null;
+  showToast(`ผสมสำเร็จ! ได้รับ ${shieldItem.name} (${recipe.hours} ชม.)`);
   nav('inventory');
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   9. SCREENS — ห้องโฟกัส (UC-18,19,20,25,34)
+   9. SCREENS — ห้องโฟกัส (UC-18 สร้าง/เข้าร่วม/ปิดห้อง, UC-20 ranking, UC-34 ออกจากห้อง, UC-36 เตะสมาชิก)
    ══════════════════════════════════════════════════════════════════ */
 function renderRoomList(){
   const myRooms = db.rooms.filter(r=>r.members.some(m=>m.userId===ui.currentUserId));
@@ -978,7 +1408,7 @@ function renderRoomList(){
     ${myRooms.map(r=>`
       <div class="list-row" style="cursor:pointer;" onclick="openRoom(${r.id})">
         <div><div style="font-weight:700; font-size:13px;">${r.name} ${r.closed?'<span class=\"chip chip-red\">ปิดแล้ว</span>':''}</div>
-        <div style="font-size:11px; color:var(--ink-soft);">รหัส ${r.code} · เป้าหมาย ${r.goalName}</div></div>
+        <div style="font-size:11px; color:var(--ink-soft);">รหัส ${r.code} · เป้าหมาย ${r.goalName} · ${r.members.length}/8 คน</div></div>
         <span style="font-size:18px;">›</span>
       </div>`).join('') || `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่ได้อยู่ในห้องไหน</p>`}
   </div>
@@ -986,7 +1416,8 @@ function renderRoomList(){
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
     <button class="btn btn-primary" onclick="nav('createRoom')">+ สร้างห้อง</button>
     <button class="btn btn-secondary" onclick="nav('joinRoom')">🔑 เข้าร่วมห้อง</button>
-  </div>`;
+  </div>
+  ${bottomNav('roomList')}`;
 }
 function openRoom(id){ ui.tempRoomId = id; saveUI(); nav('roomView'); }
 
@@ -1008,7 +1439,9 @@ function submitCreateRoom(){
   const goal = document.getElementById('roomGoal').value.trim() || 'โฟกัสร่วมกัน';
   const target = parseInt(document.getElementById('roomTarget').value) || 300;
   const code = 'ROOM' + Math.floor(1000+Math.random()*9000);
-  const newRoom = { id: Date.now(), code, name, goalName:goal, targetMin:target, ownerId:ui.currentUserId, members:[{userId:ui.currentUserId, focusMin:0}], closed:false };
+  const newRoom = { id: Date.now(), code, name, goalName:goal, targetMin:target, ownerId:ui.currentUserId,
+    members:[{userId:ui.currentUserId, focusMin:0, restMin:0, overrunMin:0, joinedAt:Date.now()}],
+    bossMaxHp: target*100*1, kickedUserIds:[], closed:false };
   db.rooms.push(newRoom);
   saveDB();
   ui.tempRoomId = newRoom.id; saveUI();
@@ -1031,7 +1464,15 @@ function submitJoinRoom(){
   const room = db.rooms.find(r=>r.code===code);
   if(!room){ document.getElementById('joinErr').innerHTML = fieldError('รหัสไม่ถูกต้องหรือหมดอายุ'); return; }
   if(room.closed){ document.getElementById('joinErr').innerHTML = fieldError('ห้องนี้ปิดรับสมัครแล้ว'); return; }
-  if(!room.members.some(m=>m.userId===ui.currentUserId)) room.members.push({userId:ui.currentUserId, focusMin:0});
+  if((room.kickedUserIds||[]).includes(ui.currentUserId)){ document.getElementById('joinErr').innerHTML = fieldError('คุณถูกเตะออกจากห้องนี้ ไม่สามารถเข้าร่วมซ้ำด้วยรหัสเดิมได้'); return; }
+  const already = room.members.some(m=>m.userId===ui.currentUserId);
+  if(!already && room.members.length >= 8){ document.getElementById('joinErr').innerHTML = fieldError('ห้องนี้มีสมาชิกครบ 8 คนแล้ว'); return; }
+  if(!already){
+    room.members.push({userId:ui.currentUserId, focusMin:0, restMin:0, overrunMin:0, joinedAt:Date.now()});
+    // HP บอสกลุ่มปรับเพิ่มขึ้นเมื่อมีสมาชิกเข้าร่วมเพิ่มเท่านั้น (ไม่ลดย้อนหลังเมื่อมีคนออก/ถูกเตะ)
+    const newMax = room.targetMin*100*room.members.length;
+    if(newMax > room.bossMaxHp) room.bossMaxHp = newMax;
+  }
   saveDB();
   ui.tempRoomId = room.id; saveUI();
   showToast('เข้าร่วมห้องสำเร็จ!');
@@ -1040,33 +1481,61 @@ function submitJoinRoom(){
 
 function renderRoomView(){
   const room = db.rooms.find(r=>r.id===ui.tempRoomId);
-  const isOwner = room.ownerId === ui.currentUserId;
   const totalMin = room.members.reduce((a,m)=>a+m.focusMin,0);
+  const bossMaxHp = room.bossMaxHp || (room.targetMin*100*room.members.length);
+  const bossHp = Math.max(0, bossMaxHp - totalMin*100);
+  // UC-18: เป้าหมายห้องสำเร็จอัตโนมัติเมื่อ HP บอสกลุ่ม = 0 (ไม่ต้องรอเจ้าของห้องกดปิดเอง)
+  if(bossHp<=0 && !room.closed){
+    autoCloseRoomGoal(room);
+    return '';
+  }
+  const isOwner = room.ownerId === ui.currentUserId;
   const pct = Math.min(100, Math.round(totalMin/room.targetMin*100));
   const sorted = [...room.members].sort((a,b)=>b.focusMin-a.focusMin);
   return `
   ${appbar(room.name,'roomList')}
   <div class="card">
     <div style="font-size:12px; color:var(--ink-soft);">เป้าหมาย: ${room.goalName}</div>
-    <div style="font-size:11px; margin:6px 0;">${totalMin}/${room.targetMin} นาที (${pct}%)</div>
-    <div class="expbar-track" style="height:12px;"><div class="expbar-fill" style="width:${pct}%"></div></div>
+    <div style="font-size:11px; margin:6px 0;">HP บอสกลุ่ม ${bossHp}/${bossMaxHp} (สมาชิก ${room.members.length}/8 คน)</div>
+    ${hpBarHTML(bossHp, bossMaxHp)}
+    <div style="height:8px;"></div>
+    <div style="font-size:11px;">${totalMin}/${room.targetMin} นาทีรวม (${pct}%)</div>
+    <div class="expbar-track" style="height:8px;"><div class="expbar-fill" style="width:${pct}%"></div></div>
     <div style="height:6px;"></div>
     <div style="font-size:11px; color:var(--ink-soft);">รหัสเชิญ: <b>${room.code}</b></div>
   </div>
   <div style="height:14px;"></div>
   <div class="card">
-    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">อันดับสมาชิกในห้อง</div>
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">อันดับสมาชิกในห้อง (Focus / Rest / Over-rest)</div>
     ${sorted.map((m,idx)=>{ const u=db.users.find(x=>x.id===m.userId); return `
-      <div class="list-row"><span>${idx+1}. ${u.username} ${m.userId===room.ownerId?'👑':''}</span><span class="chip chip-blue">${m.focusMin} นาที</span></div>`;}).join('')}
+      <div class="list-row" style="flex-wrap:wrap;">
+        <span>${idx+1}. ${u.username} ${m.userId===room.ownerId?'👑':''}</span>
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+          <span class="chip chip-blue">🎯${m.focusMin}</span>
+          <span class="chip chip-green">☕${m.restMin||0}</span>
+          <span class="chip chip-red">⏰${m.overrunMin||0}</span>
+          ${(isOwner && m.userId!==ui.currentUserId && !room.closed) ? `<button class="btn btn-danger" style="padding:4px 8px;" onclick="kickMember(${room.id}, ${m.userId})">เตะ</button>` : ''}
+        </div>
+      </div>`;}).join('')}
   </div>
   <div style="height:14px;"></div>
   ${room.closed? `<p style="text-align:center; font-size:12px; color:var(--ink-soft);">ห้องนี้ปิดแล้ว</p>` : `
   <button class="btn btn-primary btn-block" onclick="startSessionInRoom()">⚔️ เริ่มโฟกัสในห้องนี้</button>
   <div style="height:10px;"></div>
   ${isOwner
-    ? `<button class="btn btn-success btn-block" onclick="closeRoomGoal(${room.id})">🏁 สำเร็จเป้าหมาย (ปิดห้อง)</button>`
+    ? `<button class="btn btn-success btn-block" onclick="closeRoomGoal(${room.id})">🏁 สำเร็จเป้าหมาย (ปิดห้อง)</button><div style="height:10px;"></div><button class="btn btn-ghost btn-block" onclick="leaveRoom(${room.id})">ออกจากห้อง (โอนสิทธิ์เจ้าของ)</button>`
     : `<button class="btn btn-danger btn-block" onclick="leaveRoom(${room.id})">ออกจากห้อง</button>`}
   `}`;
+}
+function autoCloseRoomGoal(room){
+  room.closed = true;
+  room.members.forEach(m=>{
+    db.sessionsHistory[m.userId] = db.sessionsHistory[m.userId] || [];
+    db.sessionsHistory[m.userId].unshift({ id:Date.now()+m.userId, itemName:'สรุปห้อง: '+room.name, dateLabel:'วันนี้', ts:Date.now(), focusMin:m.focusMin, breakMin:m.restMin||0, overrunMin:m.overrunMin||0, status:'completed', roomId:room.id });
+  });
+  saveDB();
+  showToast('บรรลุเป้าหมายห้องสำเร็จ! (HP บอสกลุ่มเหลือ 0)');
+  nav('roomSummary');
 }
 function startSessionInRoom(){
   const items = db.focusItems[ui.currentUserId];
@@ -1082,37 +1551,66 @@ function closeRoomGoal(roomId){
   room.closed = true;
   room.members.forEach(m=>{
     db.sessionsHistory[m.userId] = db.sessionsHistory[m.userId] || [];
-    db.sessionsHistory[m.userId].unshift({ id:Date.now()+m.userId, itemName:'สรุปห้อง: '+room.name, dateLabel:'วันนี้', focusMin:m.focusMin, breakMin:0, overrunMin:0, status:'completed', roomId:room.id });
+    db.sessionsHistory[m.userId].unshift({ id:Date.now()+m.userId, itemName:'สรุปห้อง: '+room.name, dateLabel:'วันนี้', ts:Date.now(), focusMin:m.focusMin, breakMin:m.restMin||0, overrunMin:m.overrunMin||0, status:'completed', roomId:room.id });
   });
   saveDB();
   showToast('ปิดห้องและบันทึกสรุปสถิติให้ทุกคนแล้ว');
   nav('roomSummary');
 }
+function kickMember(roomId, userId){
+  const room = db.rooms.find(r=>r.id===roomId);
+  if(room.ownerId !== ui.currentUserId) return;
+  if(!confirm('ยืนยันเตะสมาชิกคนนี้ออกจากห้อง?')) return;
+  room.members = room.members.filter(m=>m.userId!==userId);
+  room.kickedUserIds = room.kickedUserIds || [];
+  room.kickedUserIds.push(userId);
+  saveDB();
+  showToast('เตะสมาชิกออกจากห้องแล้ว');
+  render();
+}
 function leaveRoom(roomId){
   const room = db.rooms.find(r=>r.id===roomId);
-  if(room.ownerId===ui.currentUserId){ showToast('เจ้าของห้องต้องกด "สำเร็จเป้าหมาย" แทนการออกจากห้อง'); return; }
   if(!confirm('ยืนยันออกจากห้องนี้?')) return;
+  const wasOwner = room.ownerId === ui.currentUserId;
   room.members = room.members.filter(m=>m.userId!==ui.currentUserId);
+  if(wasOwner){
+    if(room.members.length === 0){
+      room.closed = true;
+      showToast('คุณเป็นสมาชิกคนสุดท้าย — ห้องถูกปิดอัตโนมัติ (ไม่มีการสรุป Ranking)');
+    } else {
+      const longest = [...room.members].sort((a,b)=>a.joinedAt-b.joinedAt)[0];
+      room.ownerId = longest.userId;
+      showToast('ออกจากห้องแล้ว — โอนสิทธิ์เจ้าของห้องให้ '+db.users.find(u=>u.id===longest.userId).username+' อัตโนมัติ');
+    }
+  } else {
+    showToast('ออกจากห้องแล้ว — สถิติเดิมยังอยู่ในประวัติส่วนตัว');
+  }
   saveDB();
-  showToast('ออกจากห้องแล้ว — สถิติเดิมยังอยู่ในประวัติส่วนตัว');
   nav('roomList');
 }
 function renderRoomSummary(){
   const room = db.rooms.find(r=>r.id===ui.tempRoomId);
   const sorted = [...room.members].sort((a,b)=>b.focusMin-a.focusMin);
   return `
-  ${appbar('สรุปผลห้อง','roomList')}
+  ${appbar('สรุปผลห้อง · Ranking สุดท้าย','roomList')}
   <div style="text-align:center; font-size:44px;">🎉</div>
   <div class="card">
     ${sorted.map((m,idx)=>{ const u=db.users.find(x=>x.id===m.userId); return `
-      <div class="list-row"><span>${idx+1}. ${u.username}</span><span class="chip chip-green">${m.focusMin} นาที</span></div>`;}).join('')}
+      <div class="list-row" style="flex-wrap:wrap;">
+        <span>${idx+1}. ${u.username}</span>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <span class="chip chip-blue">🎯${m.focusMin}</span>
+          <span class="chip chip-green">☕${m.restMin||0}</span>
+          <span class="chip chip-red">⏰${m.overrunMin||0}</span>
+        </div>
+      </div>`;}).join('')}
   </div>
   <div style="height:14px;"></div>
   <button class="btn btn-primary btn-block" onclick="nav('roomList')">กลับหน้ารายการห้อง</button>`;
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   10. SCREENS — เพื่อน (UC-21, UC-35)
+   10. SCREENS — เพื่อน (UC-21 เพิ่มเพื่อน (คำขอ+ตอบรับ) / UC-35 ยกเลิกคำขอ/ลบเพื่อน)
    ══════════════════════════════════════════════════════════════════ */
 function renderFriends(){
   const f = db.friends[ui.currentUserId];
@@ -1126,13 +1624,33 @@ function renderFriends(){
   </div>
   <div style="height:14px;"></div>
   <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">คำขอที่ได้รับ</div>
+    ${f.incoming.length===0? `<p style="font-size:12px; color:var(--ink-soft);">ไม่มีคำขอเข้ามา</p>` :
+    f.incoming.map(fid=>{ const u=db.users.find(x=>x.id===fid); return `
+      <div class="list-row"><span>${u.username}</span>
+        <div style="display:flex; gap:6px;">
+          <button class="btn btn-success" style="padding:5px 10px;" onclick="acceptFriendRequest(${fid})">ยอมรับ</button>
+          <button class="btn btn-danger" style="padding:5px 10px;" onclick="declineFriendRequest(${fid})">ปฏิเสธ</button>
+        </div>
+      </div>`;}).join('')}
+  </div>
+  <div style="height:14px;"></div>
+  <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">คำขอที่ส่งไป (รอตอบรับ)</div>
+    ${f.outgoing.length===0? `<p style="font-size:12px; color:var(--ink-soft);">ไม่มีคำขอที่ส่งไป</p>` :
+    f.outgoing.map(fid=>{ const u=db.users.find(x=>x.id===fid); return `
+      <div class="list-row"><span>${u.username}</span><button class="btn btn-secondary" style="padding:5px 10px;" onclick="cancelOutgoingRequest(${fid})">ยกเลิกคำขอ</button></div>`;}).join('')}
+  </div>
+  <div style="height:14px;"></div>
+  <div class="card">
     <div style="font-weight:800; font-size:13px; margin-bottom:8px;">รายชื่อเพื่อน</div>
     ${f.friends.map(fid=>{ const u=db.users.find(x=>x.id===fid); const av=db.avatars[fid]; return `
       <div class="list-row">
         <span>${u.username} <span class="chip chip-gold">🔥 ${av?av.streak:0}</span></span>
-        <button class="btn btn-danger" style="padding:5px 10px;" onclick="removeFriend(${fid})">ลบ</button>
+        <button class="btn btn-danger" style="padding:5px 10px;" onclick="removeFriend(${fid})">ลบเพื่อน</button>
       </div>`;}).join('') || `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่มีเพื่อน</p>`}
-  </div>`;
+  </div>
+  ${bottomNav('friends')}`;
 }
 function searchFriend(){
   const q = document.getElementById('friendSearch').value.trim().toLowerCase();
@@ -1142,32 +1660,77 @@ function searchFriend(){
   if(!found){ box.innerHTML = fieldError('ไม่พบผู้ใช้ที่ค้นหา'); return; }
   const f = db.friends[ui.currentUserId];
   if(f.friends.includes(found.id)){ box.innerHTML = `<p style="font-size:12px; color:var(--ink-soft); margin-top:6px;">เป็นเพื่อนกันอยู่แล้ว</p>`; return; }
+  if(f.outgoing.includes(found.id)){ box.innerHTML = `<p style="font-size:12px; color:var(--ink-soft); margin-top:6px;">ส่งคำขอไปแล้ว รอตอบรับ</p>`; return; }
   box.innerHTML = `<div class="list-row" style="margin-top:6px;"><span>${found.username}</span><button class="btn btn-primary" style="padding:6px 10px;" onclick="sendFriendRequest(${found.id})">ส่งคำขอ</button></div>`;
 }
 function sendFriendRequest(targetId){
-  db.friends[ui.currentUserId].friends.push(targetId);
+  const f = db.friends[ui.currentUserId];
+  if(f.outgoing.includes(targetId) || f.friends.includes(targetId)) return;
+  f.outgoing.push(targetId);
   db.friends[targetId] = db.friends[targetId] || {friends:[],outgoing:[],incoming:[]};
-  db.friends[targetId].friends.push(ui.currentUserId);
+  db.friends[targetId].incoming.push(ui.currentUserId);
   saveDB();
-  showToast('ส่งคำขอเป็นเพื่อนแล้ว (จำลอง: อีกฝ่ายรับอัตโนมัติ)');
+  showToast('ส่งคำขอเป็นเพื่อนแล้ว รอการตอบรับ');
+  render();
+}
+function acceptFriendRequest(fromId){
+  const me = db.friends[ui.currentUserId];
+  const other = db.friends[fromId];
+  me.incoming = me.incoming.filter(x=>x!==fromId);
+  if(other) other.outgoing = other.outgoing.filter(x=>x!==ui.currentUserId);
+  me.friends.push(fromId);
+  if(other) other.friends.push(ui.currentUserId);
+  saveDB();
+  showToast('รับคำขอเป็นเพื่อนแล้ว');
+  render();
+}
+function declineFriendRequest(fromId){
+  const me = db.friends[ui.currentUserId];
+  const other = db.friends[fromId];
+  me.incoming = me.incoming.filter(x=>x!==fromId);
+  if(other) other.outgoing = other.outgoing.filter(x=>x!==ui.currentUserId);
+  saveDB();
+  showToast('ปฏิเสธคำขอแล้ว');
+  render();
+}
+function cancelOutgoingRequest(targetId){
+  const me = db.friends[ui.currentUserId];
+  const other = db.friends[targetId];
+  me.outgoing = me.outgoing.filter(x=>x!==targetId);
+  if(other) other.incoming = other.incoming.filter(x=>x!==ui.currentUserId);
+  saveDB();
+  showToast('ยกเลิกคำขอแล้ว');
   render();
 }
 function removeFriend(fid){
   if(!confirm('ยืนยันลบเพื่อนคนนี้?')) return;
   db.friends[ui.currentUserId].friends = db.friends[ui.currentUserId].friends.filter(x=>x!==fid);
+  const other = db.friends[fid];
+  if(other) other.friends = other.friends.filter(x=>x!==ui.currentUserId);
   saveDB(); render();
 }
 
 /* ══════════════════════════════════════════════════════════════════
-   11. SCREENS — ประวัติ/สถิติ (UC-22)
+   11. SCREENS — ประวัติ/สถิติ (UC-22: ตัวกรองช่วงเวลา + แยกตามรายการที่โฟกัส)
    ══════════════════════════════════════════════════════════════════ */
 function renderHistory(){
-  const hist = db.sessionsHistory[ui.currentUserId] || [];
+  const period = ui._historyPeriod || 'all';
+  const all = db.sessionsHistory[ui.currentUserId] || [];
+  const now = Date.now();
+  const cutoffs = { today: now - 24*3600000, week: now - 7*24*3600000, month: now - 30*24*3600000, all: 0 };
+  const hist = all.filter(s => (s.ts||now) >= cutoffs[period]);
   const totalFocus = hist.reduce((a,s)=>a+s.focusMin,0);
   const totalBreak = hist.reduce((a,s)=>a+s.breakMin,0);
   const totalOverrun = hist.reduce((a,s)=>a+s.overrunMin,0);
+  const byItem = {};
+  hist.forEach(s=>{ byItem[s.itemName] = byItem[s.itemName] || {focus:0,brk:0,over:0}; byItem[s.itemName].focus+=s.focusMin; byItem[s.itemName].brk+=s.breakMin; byItem[s.itemName].over+=s.overrunMin; });
+  const periods = [['today','วันนี้'],['week','7 วัน'],['month','30 วัน'],['all','ทั้งหมด']];
   return `
   ${appbar('ประวัติ / สถิติ','home')}
+  <div class="card" style="display:flex; gap:6px; flex-wrap:wrap;">
+    ${periods.map(([k,label])=>`<button class="chip ${period===k?'chip-blue':''}" style="border:none; cursor:pointer;" onclick="setHistoryPeriod('${k}')">${label}</button>`).join('')}
+  </div>
+  <div style="height:10px;"></div>
   <div class="card" style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; text-align:center;">
     <div><div style="font-size:18px; font-weight:800;">${totalFocus}</div><div style="font-size:10px; color:var(--ink-soft);">โฟกัส (นาที)</div></div>
     <div><div style="font-size:18px; font-weight:800;">${totalBreak}</div><div style="font-size:10px; color:var(--ink-soft);">พัก (นาที)</div></div>
@@ -1175,23 +1738,33 @@ function renderHistory(){
   </div>
   <div style="height:14px;"></div>
   <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">แยกตามรายการที่โฟกัส</div>
+    ${Object.keys(byItem).length===0? `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่มีข้อมูลในช่วงเวลานี้</p>` :
+    Object.entries(byItem).map(([name,v])=>`
+      <div class="list-row"><span>${name}</span><span style="font-size:11px; color:var(--ink-soft);">โฟกัส ${v.focus} · พัก ${v.brk} · เกิน ${v.over} นาที</span></div>`).join('')}
+  </div>
+  <div style="height:14px;"></div>
+  <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">รายการเซสชันย้อนหลัง</div>
     ${hist.length===0? `<p style="font-size:12px; color:var(--ink-soft);">ยังไม่มีข้อมูลในช่วงเวลานี้</p>` :
     hist.map(s=>`
       <div class="list-row">
-        <div><div style="font-weight:700; font-size:13px;">${s.itemName}</div><div style="font-size:11px; color:var(--ink-soft);">${s.dateLabel} · ${s.focusMin} นาที</div></div>
+        <div><div style="font-weight:700; font-size:13px;">${s.itemName}</div><div style="font-size:11px; color:var(--ink-soft);">${s.dateLabel} · ${s.focusMin} นาที${s.roomId?' · ห้องโฟกัส':''}</div></div>
         <span class="chip ${s.status==='completed'?'chip-green':'chip-red'}">${s.status==='completed'?'สำเร็จ':'ยกเลิกกลางทาง'}</span>
       </div>`).join('')}
   </div>
   ${bottomNav('history')}`;
 }
+function setHistoryPeriod(p){ ui._historyPeriod = p; render(); }
 
 /* ══════════════════════════════════════════════════════════════════
-   12. SCREENS — ผู้ดูแลระบบ (UC-26,27,28,29)
+   12. SCREENS — ผู้ดูแลระบบ (UC-26 ไอเทม/อัตราดรอป, UC-27 รูปแบบอวตาร, UC-28 ระงับบัญชี)
    ══════════════════════════════════════════════════════════════════ */
 function renderAdminDash(){
   const s = db.adminStatsSeed;
   return `
   ${appbar('แดชบอร์ดสถิติระบบ')}
+  <button class="btn btn-ghost" style="padding:6px 10px; margin-bottom:10px;" onclick="logout()">ออกจากระบบ (UC-32)</button>
   <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
     <div class="card"><div style="font-size:20px; font-weight:800;">${s.sessionCount}</div><div style="font-size:11px; color:var(--ink-soft);">เซสชันทั้งหมด</div></div>
     <div class="card"><div style="font-size:20px; font-weight:800;">${s.totalFocusMin}</div><div style="font-size:11px; color:var(--ink-soft);">นาทีโฟกัสรวม</div></div>
@@ -1207,44 +1780,55 @@ function renderAdminDash(){
   </div>
   <div style="height:14px;"></div>
   <div class="card">
-    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">อัตราดรอปจริง เทียบกับที่กำหนด (UC-26)</div>
-    ${db.itemCatalog.map(it=>`<div class="list-row"><span>${it.emoji} ${it.name}</span><span style="font-size:11px;">กำหนด ${it.dropRate}%</span></div>`).join('')}
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">อัตราดรอปปัจจุบัน (UC-26)</div>
+    ${BOX_TIERS.map(t=>`
+      <div style="font-size:11px; margin-bottom:4px;"><b>${BOX_LABEL[t]}</b>: ${RARITIES.map(r=>RARITY_LABEL[r]+' '+db.dropTables[t][r]+'%').join(' · ')}</div>`).join('')}
   </div>
   ${adminNav('adminDash')}`;
 }
 
 function renderItemMgmt(){
-  const sum = db.itemCatalog.filter(i=>i.active).reduce((a,i)=>a+i.dropRate,0);
   return `
   ${appbar('จัดการไอเทม / อัตราดรอป')}
+  ${BOX_TIERS.map(t=>{
+    const table = db.dropTables[t];
+    const sum = RARITIES.reduce((a,r)=>a+table[r],0);
+    return `
+    <div class="card" style="margin-bottom:10px;">
+      <div style="font-weight:800; font-size:13px; margin-bottom:8px;">${BOX_LABEL[t]}</div>
+      ${RARITIES.map(r=>`
+        <div class="list-row"><span>${RARITY_LABEL[r]}</span>
+          <input type="number" value="${table[r]}" style="width:56px; border:2px solid #EFE6DC; border-radius:8px; padding:4px 6px;" onchange="updateDropRate('${t}','${r}', this.value)">
+        </div>`).join('')}
+      <div style="font-size:12px; margin-top:6px; ${sum===100?'color:var(--green-dark);':'color:var(--danger); font-weight:800;'}">ผลรวม: ${sum}%${sum===100?' ✓':' — ต้องเท่ากับ 100%'}</div>
+    </div>`;
+  }).join('')}
   <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">แคตตาล็อกไอเทม (เปิด/ปิดใช้งาน)</div>
     ${db.itemCatalog.map(it=>`
       <div class="list-row">
-        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:20px;">${it.emoji}</span>
-          <div><div style="font-weight:700; font-size:13px;">${it.name}</div><span class="chip ${rarityChip(it.rarity)}">${it.rarity}</span></div></div>
-        <div style="display:flex; align-items:center; gap:6px;">
-          <input type="number" value="${it.dropRate}" style="width:56px; border:2px solid #EFE6DC; border-radius:8px; padding:4px 6px;" onchange="updateDropRate(${it.id}, this.value)">
-          <label style="font-size:10px;"><input type="checkbox" ${it.active?'checked':''} onchange="toggleItemActive(${it.id})"> เปิดใช้</label>
-        </div>
+        <div style="display:flex; align-items:center; gap:8px;"><span style="font-size:18px;">${it.emoji}</span>
+          <div style="font-weight:700; font-size:12px;">${it.name}</div></div>
+        <label style="font-size:10px;"><input type="checkbox" ${it.active?'checked':''} onchange="toggleItemActive(${it.id})"> เปิดใช้</label>
       </div>`).join('')}
   </div>
   <div style="height:10px;"></div>
-  <div style="font-size:12px; ${sum===100?'color:var(--green-dark);':'color:var(--danger); font-weight:800;'}">ผลรวมอัตราดรอป (ไอเทมที่เปิดใช้): ${sum}%${sum===100?' ✓':' — ต้องเท่ากับ 100%'}</div>
+  <div class="card">
+    <div style="font-weight:800; font-size:13px; margin-bottom:8px;">สูตรผสม (Recipe Table)</div>
+    ${db.craftRecipes.map(r=>`<div class="list-row"><span>${r.name}</span><span style="font-size:11px; color:var(--ink-soft); text-align:right;">${r.desc}</span></div>`).join('')}
+  </div>
   <div style="height:12px;"></div>
-  <button class="btn btn-primary btn-block" ${sum===100?'':'disabled'} onclick="saveItemCatalog()">บันทึกการเปลี่ยนแปลง</button>
+  <button class="btn btn-primary btn-block" onclick="saveItemCatalog()">บันทึกการเปลี่ยนแปลง</button>
   ${adminNav('itemMgmt')}`;
 }
-function updateDropRate(id, val){ const it=itemById(id); it.dropRate = parseInt(val)||0; saveDB(); render(); }
+function updateDropRate(tier, rarity, val){ db.dropTables[tier][rarity] = parseInt(val)||0; saveDB(); render(); }
 function toggleItemActive(id){
   const it = itemById(id);
-  const usedInRecipe = db.craftRecipes.some(r=>r.ingredients.some(ing=>ing.itemId===id) || r.resultItemId===id);
-  if(it.active && usedInRecipe){ if(!confirm('ไอเทมนี้ถูกอ้างอิงในสูตรผสม — ปิดใช้งานต่อไหม?')) { render(); return; } }
   it.active = !it.active; saveDB(); render();
 }
 function saveItemCatalog(){ saveDB(); showToast('บันทึกข้อมูลไอเทม/อัตราดรอปแล้ว — มีผลกับการเปิดกล่อง/ผสมครั้งถัดไป'); }
 
 function renderAvatarMgmt(){
-  const activeCount = db.avatarSkins.filter(s=>s.active).length;
   return `
   ${appbar('จัดการรูปแบบอวตาร')}
   <div class="card">
@@ -1255,13 +1839,15 @@ function renderAvatarMgmt(){
       </div>`).join('')}
   </div>
   <div style="height:10px;"></div>
-  <p style="font-size:11px; color:var(--ink-soft);">ปิดใช้งานจะซ่อนจากบัญชีใหม่เท่านั้น สมาชิกเดิมที่ใช้อยู่ไม่ได้รับผลกระทบ</p>
+  <p style="font-size:11px; color:var(--ink-soft);">ปิดใช้งานจะซ่อนจากบัญชีใหม่เท่านั้น สมาชิกเดิมที่ใช้อยู่ไม่ได้รับผลกระทบ (ระบบเตือนก่อนหากเหลือน้อยกว่า 3 แบบ)</p>
   ${adminNav('avatarMgmt')}`;
 }
 function toggleSkinActive(id){
   const s = db.avatarSkins.find(x=>x.id===id);
   const activeCount = db.avatarSkins.filter(x=>x.active).length;
-  if(s.active && activeCount<=1){ showToast('ต้องเหลืออย่างน้อย 1 รูปแบบที่เปิดใช้งาน'); return; }
+  if(s.active && (activeCount-1) < 3){
+    if(!confirm('ปิดใช้งานแล้วจะเหลือตัวเลือกสำหรับสมาชิกใหม่น้อยกว่า 3 แบบ ยืนยันปิดใช้งานหรือไม่?')) return;
+  }
   s.active = !s.active; saveDB(); render();
 }
 
@@ -1281,35 +1867,48 @@ function searchUser(){
   const u = db.users.find(x=>x.username.toLowerCase()===q || x.email.toLowerCase()===q);
   const box = document.getElementById('userMgmtResult');
   if(!u){ box.innerHTML = `<div class="card">${fieldError('ไม่พบบัญชีที่ค้นหา')}</div>`; return; }
+  checkAutoUnsuspend(u);
+  const untilLabel = u.suspendUntil ? new Date(u.suspendUntil).toLocaleString('th-TH') : 'ถาวร';
   box.innerHTML = `
   <div class="card">
     <div style="font-weight:800;">${u.username}</div>
     <div style="font-size:12px; color:var(--ink-soft);">${u.email}</div>
     <div style="height:6px;"></div>
-    <span class="chip ${u.suspended?'chip-red':'chip-green'}">${u.suspended? 'ถูกระงับ: '+u.suspendReason : 'ใช้งานได้ปกติ'}</span>
+    <span class="chip ${u.suspended?'chip-red':'chip-green'}">${u.suspended? 'ถูกระงับ: '+u.suspendReason+' (ถึง '+untilLabel+')' : 'ใช้งานได้ปกติ'}</span>
     <div style="height:12px;"></div>
     ${u.suspended
-      ? `<button class="btn btn-success btn-block" onclick="unsuspendUser(${u.id})">ปลดระงับบัญชี</button>`
+      ? `<button class="btn btn-success btn-block" onclick="unsuspendUser(${u.id})">ยกเลิกการระงับ</button>`
       : `<div class="field"><label>เหตุผลการระงับ</label><input id="suspendReason" type="text" placeholder="เช่น สแปม / ละเมิดเงื่อนไข"></div>
+         <div style="height:8px;"></div>
+         <div class="field"><label>ระยะเวลาระงับ</label>
+           <select id="suspendDuration">
+             <option value="1">1 วัน</option>
+             <option value="7">7 วัน</option>
+             <option value="30">30 วัน</option>
+             <option value="permanent">ถาวร</option>
+           </select>
+         </div>
          <div style="height:8px;"></div>
          <button class="btn btn-danger btn-block" onclick="suspendUser(${u.id})">ระงับบัญชี</button>`}
   </div>`;
 }
 function suspendUser(id){
   const reason = document.getElementById('suspendReason').value.trim();
+  const duration = document.getElementById('suspendDuration').value;
   if(!reason){ showToast('กรุณากรอกเหตุผล'); return; }
   if(!confirm('ยืนยันระงับบัญชีนี้?')) return;
   const u = db.users.find(x=>x.id===id);
   u.suspended = true; u.suspendReason = reason;
+  u.suspendUntil = duration==='permanent' ? null : Date.now() + parseInt(duration)*24*3600000;
   saveDB();
   showToast('ระงับบัญชีแล้ว — ส่งอีเมลแจ้งเจ้าของบัญชี (จำลอง)');
   searchUser();
 }
 function unsuspendUser(id){
   const u = db.users.find(x=>x.id===id);
-  u.suspended = false; u.suspendReason = null;
+  u.suspended = false; u.suspendReason = null; u.suspendUntil = null;
   saveDB();
-  showToast('ปลดระงับบัญชีแล้ว');
+  showToast('ยกเลิกการระงับแล้ว');
   searchUser();
 }
 
@@ -1317,8 +1916,8 @@ function unsuspendUser(id){
    13. ROUTER
    ══════════════════════════════════════════════════════════════════ */
 const renderers = {
-  welcome: renderWelcome, register: renderRegister, login: renderLogin, createAvatar: renderCreateAvatar,
-  home: renderHome, focusList: renderFocusList, settings: renderSettings,
+  welcome: renderWelcome, register: renderRegister, login: renderLogin, forgotPassword: renderForgotPassword, createAvatar: renderCreateAvatar,
+  home: renderHome, focusList: renderFocusList, settings: renderSettings, editProfile: renderEditProfile, avatarEquip: renderAvatarEquip,
   session: renderSession, summary: renderSummary, break: renderBreak, revival: renderRevival,
   inventory: renderInventory, lootbox: renderLootbox, crafting: renderCrafting,
   roomList: renderRoomList, createRoom: renderCreateRoom, joinRoom: renderJoinRoom, roomView: renderRoomView, roomSummary: renderRoomSummary,

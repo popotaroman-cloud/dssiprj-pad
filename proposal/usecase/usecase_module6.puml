@@ -32,7 +32,7 @@ left to right direction
 actor "สมาชิก\n(Member)" as Member
 
 rectangle "โมดูล 6 · ประวัติและสถิติ" {
-  package "ประวัติและสถิติ" {
+  package "E1 · ประวัติและสถิติการโฟกัส" {
     usecase "UC-22\nดูประวัติและสถิติการโฟกัส\n(โฟกัส/พัก/เบรกเกิน แยกกัน)" as UC22
   }
 }
