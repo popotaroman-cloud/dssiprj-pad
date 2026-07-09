@@ -1,1076 +1,1334 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pomo RPG · Mockup v2</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-  :root{
-    --pink:#FF0052;
-    --yellow:#FFD400;
-    --green:#00C68D;
-    --blue:#0055DA;
-    --cream:#FFFAF0;
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0; font-family:-apple-system,"Segoe UI",Helvetica,Arial,sans-serif;
-    background:#2b2340; min-height:100vh;
-    display:flex; align-items:flex-start; justify-content:center; flex-wrap:wrap; gap:20px;
-    padding:24px;
-  }
-  .devbar{
-    width:375px; color:#eee; font-size:12px; display:flex; gap:6px; flex-wrap:wrap;
-    align-items:center; justify-content:center; margin-bottom:8px;
-  }
-  .devbar button{
-    background:#463a66; color:#fff; border:1px solid #6a5b93; border-radius:8px;
-    padding:4px 8px; font-size:11px; cursor:pointer;
-  }
-  .devbar button.active{ background:var(--pink); border-color:var(--pink); }
-  .phone{
-    width:375px; height:812px; background:#000; border-radius:44px; padding:12px;
-    box-shadow:0 20px 60px rgba(0,0,0,.5); position:relative; flex-shrink:0;
-  }
-  .notch{
-    position:absolute; top:12px; left:50%; transform:translateX(-50%);
-    width:180px; height:26px; background:#000; border-radius:0 0 18px 18px; z-index:50;
-  }
-  .screen-wrap{
-    width:100%; height:100%; background:var(--cream); border-radius:34px; overflow:hidden;
-    position:relative; display:flex; flex-direction:column;
-  }
-  #screen{ flex:1; overflow-y:auto; -webkit-overflow-scrolling:touch; }
-  #screen::-webkit-scrollbar{ width:0; }
-  .topbar{
-    background:var(--cream); padding:14px 16px 10px; display:flex; align-items:center; gap:10px;
-    position:sticky; top:0; z-index:20; border-bottom:1px solid rgba(0,0,0,.06);
-  }
-  .topbar h1{ font-size:17px; font-weight:800; color:#3a2b55; margin:0; flex:1; }
-  .backbtn{
-    width:32px;height:32px;border-radius:10px;background:#fff;border:1px solid #e5decf;
-    display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;
-  }
-  .bottomnav{
-    display:flex; background:#fff; border-top:1px solid #eee; padding:6px 4px 10px;
-    position:sticky; bottom:0; z-index:20;
-  }
-  .navitem{
-    flex:1; display:flex; flex-direction:column; align-items:center; gap:2px; padding:6px 0;
-    cursor:pointer; color:#9b8fae; font-size:10px; font-weight:700; border-radius:12px;
-  }
-  .navitem.active{ color:var(--pink); }
-  .navitem .ico{ font-size:18px; }
-  .btn-primary{
-    background:var(--pink); color:#fff; font-weight:800; border:none; border-radius:14px;
-    padding:12px 16px; cursor:pointer; font-size:14px; box-shadow:0 4px 0 #b3003a; width:100%;
-  }
-  .btn-primary:disabled{ background:#d9b8c5; box-shadow:none; cursor:not-allowed; }
-  .btn-secondary{
-    background:var(--blue); color:#fff; font-weight:800; border:none; border-radius:14px;
-    padding:12px 16px; cursor:pointer; font-size:14px; box-shadow:0 4px 0 #00307d; width:100%;
-  }
-  .btn-outline{
-    background:#fff; color:#3a2b55; font-weight:700; border:2px solid #3a2b55; border-radius:14px;
-    padding:10px 14px; cursor:pointer; font-size:13px; width:100%;
-  }
-  .btn-danger{
-    background:#fff; color:var(--pink); font-weight:800; border:2px solid var(--pink); border-radius:14px;
-    padding:10px 14px; cursor:pointer; font-size:13px; width:100%;
-  }
-  .card{ background:#fff; border-radius:18px; padding:14px; box-shadow:0 2px 10px rgba(58,43,85,.06); }
-  .input{
-    width:100%; border:2px solid #ece3d3; border-radius:12px; padding:10px 12px; font-size:14px;
-    background:#fff; outline:none;
-  }
-  .input:focus{ border-color:var(--blue); }
-  .pill{ display:inline-block; padding:2px 10px; border-radius:99px; font-size:11px; font-weight:800; }
-  .bar-track{ background:#eee2cf; border-radius:99px; height:10px; overflow:hidden; }
-  .bar-fill{ height:100%; border-radius:99px; transition:width .4s; }
-  .rarity-common{ color:#6b6b6b; }
-  .rarity-rare{ color:var(--blue); }
-  .rarity-epic{ color:#8b2fd6; }
-  .rarity-legendary{ color:var(--yellow); text-shadow:0 0 4px rgba(255,212,0,.6); }
-  .toast-wrap{ position:absolute; top:70px; left:0; right:0; display:flex; flex-direction:column; align-items:center; gap:8px; z-index:200; pointer-events:none; padding:0 16px;}
-  .toast{
-    background:#3a2b55; color:#fff; padding:10px 16px; border-radius:12px; font-size:13px;
-    font-weight:700; box-shadow:0 6px 20px rgba(0,0,0,.25); animation:toastIn .25s ease-out; max-width:100%;
-  }
-  @keyframes toastIn{ from{opacity:0; transform:translateY(-10px);} to{opacity:1; transform:translateY(0);} }
-  .modal-overlay{
-    position:absolute; inset:0; background:rgba(30,20,45,.55); z-index:150; display:flex;
-    align-items:center; justify-content:center; padding:20px;
-  }
-  .modal-box{ background:#fff; border-radius:20px; padding:20px; width:100%; max-width:320px; }
-  .errtext{ color:var(--pink); font-size:12px; font-weight:700; margin-top:4px; }
-  .avatar-emoji{ font-size:56px; line-height:1; }
-  .boss-emoji{ font-size:64px; line-height:1; }
-  .field-label{ font-size:12px; font-weight:800; color:#8a7d9c; margin-bottom:4px; display:block; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pomo RPG · Mockup v2</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --pink: #FF0052;
+      --yellow: #FFD400;
+      --green: #00C68D;
+      --blue: #0055DA;
+      --cream: #FFFAF0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: #2b2340;
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 24px;
+    }
+
+    .devbar {
+      width: 375px;
+      color: #eee;
+      font-size: 12px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+
+    .devbar button {
+      background: #463a66;
+      color: #fff;
+      border: 1px solid #6a5b93;
+      border-radius: 8px;
+      padding: 4px 8px;
+      font-size: 11px;
+      cursor: pointer;
+    }
+
+    .devbar button.active {
+      background: var(--pink);
+      border-color: var(--pink);
+    }
+
+    .phone {
+      width: 375px;
+      height: 812px;
+      background: #000;
+      border-radius: 44px;
+      padding: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .5);
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .screen-wrap {
+      width: 100%;
+      height: 100%;
+      background: var(--cream);
+      border-radius: 34px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #screen {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    #screen::-webkit-scrollbar {
+      width: 0;
+    }
+
+    .topbar {
+      background: var(--cream);
+      padding: 14px 16px 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(0, 0, 0, .06);
+    }
+
+    .topbar h1 {
+      font-size: 17px;
+      font-weight: 800;
+      color: #3a2b55;
+      margin: 0;
+      flex: 1;
+    }
+
+    .backbtn {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: #fff;
+      border: 1px solid #e5decf;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .bottomnav {
+      display: flex;
+      background: #fff;
+      border-top: 1px solid #eee;
+      padding: 6px 4px 10px;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20;
+    }
+
+    .navitem {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 6px 0;
+      cursor: pointer;
+      color: #9b8fae;
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 12px;
+    }
+
+    .navitem.active {
+      color: var(--pink);
+    }
+
+    .navitem .ico {
+      font-size: 18px;
+    }
+
+    .btn-primary {
+      background: var(--pink);
+      color: #fff;
+      font-weight: 800;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 4px 0 #b3003a;
+      width: 100%;
+    }
+
+    .btn-primary:disabled {
+      background: #d9b8c5;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: var(--blue);
+      color: #fff;
+      font-weight: 800;
+      border: none;
+      border-radius: 14px;
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      box-shadow: 0 4px 0 #00307d;
+      width: 100%;
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: #3a2b55;
+      font-weight: 700;
+      border: 2px solid #3a2b55;
+      border-radius: 14px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 13px;
+      width: 100%;
+    }
+
+    .btn-danger {
+      background: #fff;
+      color: var(--pink);
+      font-weight: 800;
+      border: 2px solid var(--pink);
+      border-radius: 14px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-size: 13px;
+      width: 100%;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 14px;
+      box-shadow: 0 2px 10px rgba(58, 43, 85, .06);
+    }
+
+    .input {
+      width: 100%;
+      border: 2px solid #ece3d3;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      background: #fff;
+      outline: none;
+    }
+
+    .input:focus {
+      border-color: var(--blue);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 99px;
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    .bar-track {
+      background: #eee2cf;
+      border-radius: 99px;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 99px;
+      transition: width .4s;
+    }
+
+    .rarity-common {
+      color: #6b6b6b;
+    }
+
+    .rarity-rare {
+      color: var(--blue);
+    }
+
+    .rarity-epic {
+      color: #8b2fd6;
+    }
+
+    .rarity-legendary {
+      color: var(--yellow);
+      text-shadow: 0 0 4px rgba(255, 212, 0, .6);
+    }
+
+    .toast-wrap {
+      position: absolute;
+      top: 70px;
+      left: 0;
+      right: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      z-index: 200;
+      pointer-events: none;
+      padding: 0 16px;
+    }
+
+    .toast {
+      background: #3a2b55;
+      color: #fff;
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 700;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, .25);
+      animation: toastIn .25s ease-out;
+      max-width: 100%;
+    }
+
+    @keyframes toastIn {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(30, 20, 45, .55);
+      z-index: 150;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .errtext {
+      color: var(--pink);
+      font-size: 12px;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .avatar-emoji {
+      font-size: 56px;
+      line-height: 1;
+    }
+
+    .boss-emoji {
+      font-size: 64px;
+      line-height: 1;
+    }
+
+    .field-label {
+      font-size: 12px;
+      font-weight: 800;
+      color: #8a7d9c;
+      margin-bottom: 4px;
+      display: block;
+    }
+  </style>
 </head>
+
 <body>
 
-<div class="devbar" id="devbar"></div>
-<div class="phone">
-  <div class="notch"></div>
-  <div class="screen-wrap">
-    <div id="screen"></div>
-    <div class="toast-wrap" id="toastWrap"></div>
+  <div class="devbar" id="devbar"></div>
+  <div class="phone">
+    <div class="screen-wrap">
+      <div id="screen"></div>
+      <div class="toast-wrap" id="toastWrap"></div>
+    </div>
   </div>
-</div>
 
-<script>
-/* ══════════════════════════════════════════════════════════════════
-   POMO RPG — Standalone Mockup (v2)
-   ทุกปุ่มมีผลจริง / ข้อมูลอยู่ใน localStorage / ไม่มี backend จริง
-   Sim clock: 1 วินาทีจริง = 1 นาทีในเกม (SIM_SPEED=60) เพื่อให้ demo เร็ว
-   ══════════════════════════════════════════════════════════════════ */
-const SIM_SPEED = 60; // 1 real sec = 60 sim sec (1 sim min)
-const STORAGE_KEY = "pomo_rpg_mockup_v2";
-const RARITY_ORDER = ["common","rare","epic","legendary"];
-const RARITY_LABEL = {common:"สามัญ", rare:"หายาก", epic:"หายากมาก", legendary:"ตำนาน"};
-const SLOT_LABEL = {head:"หัว", body:"ลำตัว", legs:"ขา", weapon:"อาวุธ"};
+  <script>
+    /* ══════════════════════════════════════════════════════════════════
+       POMO RPG — Standalone Mockup (v2)
+       ทุกปุ่มมีผลจริง / ข้อมูลอยู่ใน localStorage / ไม่มี backend จริง
+       Sim clock: 1 วินาทีจริง = 1 นาทีในเกม (SIM_SPEED=60) เพื่อให้ demo เร็ว
+       ══════════════════════════════════════════════════════════════════ */
+    const SIM_SPEED = 60; // 1 real sec = 60 sim sec (1 sim min)
+    const STORAGE_KEY = "pomo_rpg_mockup_v2";
+    const RARITY_ORDER = ["common", "rare", "epic", "legendary"];
+    const RARITY_LABEL = { common: "สามัญ", rare: "หายาก", epic: "หายากมาก", legendary: "ตำนาน" };
+    const SLOT_LABEL = { head: "หัว", body: "ลำตัว", legs: "ขา", weapon: "อาวุธ" };
 
-function uid(p){ return p+"_"+Math.random().toString(36).slice(2,9); }
-function todayStr(ms){ const d=new Date(ms); return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0"); }
-function daysBetween(a,b){ return Math.round((new Date(b)-new Date(a))/86400000); }
-function fmtMMSS(sec){ sec=Math.max(0,Math.floor(sec)); const m=Math.floor(sec/60); const s=sec%60; return String(m).padStart(2,"0")+":"+String(s).padStart(2,"0"); }
-function fmtDateTime(ms){ const d=new Date(ms); return d.toLocaleDateString("th-TH")+" "+d.toLocaleTimeString("th-TH",{hour:"2-digit",minute:"2-digit"}); }
-function calcMaxHp(level){ return 100 + (level-1)*5; }
-function expNeeded(level){ return level*100; }
-function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
+    function uid(p) { return p + "_" + Math.random().toString(36).slice(2, 9); }
+    function todayStr(ms) { const d = new Date(ms); return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0"); }
+    function daysBetween(a, b) { return Math.round((new Date(b) - new Date(a)) / 86400000); }
+    function fmtMMSS(sec) { sec = Math.max(0, Math.floor(sec)); const m = Math.floor(sec / 60); const s = sec % 60; return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0"); }
+    function fmtDateTime(ms) { const d = new Date(ms); return d.toLocaleDateString("th-TH") + " " + d.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }); }
+    function calcMaxHp(level) { return 100 + (level - 1) * 5; }
+    function expNeeded(level) { return level * 100; }
+    function clamp(v, a, b) { return Math.max(a, Math.min(b, v)); }
 
-/* ───────── Seed Data ───────── */
-function seedState(){
-  const nowSim = Date.now();
-  const state = {
-    clockAnchorReal: Date.now(),
-    clockAnchorSim: nowSim - 3*3600*1000, // ผ่านไปแล้ว 3 ชม.จำลอง ก่อนเริ่ม demo
-    screen: "welcome",
-    screenArg: null,
-    currentRole: "guest",
-    currentUserId: null,
-    currentRoomId: null,
-    activeSession: null,
-    pendingConfirm: null,
-    users: [
-      {id:"admin1", username:"admin", email:"admin@pomo.rpg", password:"admin123", role:"admin"},
-      {id:"u1", username:"nawa_dev", email:"nawa@pomo.rpg", password:"123456", role:"member"},
-      {id:"u2", username:"ploy_focus", email:"ploy@pomo.rpg", password:"123456", role:"member"},
-      {id:"u3", username:"ken_rpg", email:"ken@pomo.rpg", password:"123456", role:"member"},
-    ],
-    members: {
-      u1: mkMember("u1","Nawa","knight", 3, 40, {hp:82}),
-      u2: mkMember("u2","Ploy","mage", 5, 10, {hp:130}),
-      u3: mkMember("u3","Ken","archer", 2, 60, {hp:95}),
-    },
-    focusItems: [
-      {id:uid("fi"), memberId:"u1", name:"อ่านหนังสือ DSSI", deletedAt:null},
-      {id:uid("fi"), memberId:"u1", name:"เขียนโค้ด Mockup", deletedAt:null},
-      {id:uid("fi"), memberId:"u1", name:"ทำการบ้านสถิติ", deletedAt:null},
-    ],
-    sessions: [],
-    restLogs: [],
-    historyPeriod: "all",
-    inventory: {
-      u1: [
-        {key:"lootbox_bronze", type:"lootbox", tier:"bronze", name:"กล่องระดับต้น", qty:2},
-        {key:"lootbox_silver", type:"lootbox", tier:"silver", name:"กล่องระดับกลาง", qty:1},
-        {key:"equip_head_common", type:"equip", slot:"head", rarity:"common", name:"หมวกผ้าเก่า", qty:2},
-        {key:"equip_weapon_rare", type:"equip", slot:"weapon", rarity:"rare", name:"กระบี่เหล็กกล้า", qty:1},
-        {key:"material_common", type:"material", rarity:"common", name:"เศษแร่ธรรมดา", qty:2},
-        {key:"shield_24", type:"shield", hours:24, name:"โล่เวลา 24 ชม.", qty:1},
-      ],
-    },
-    friendships: [
-      {id:uid("fr"), aId:"u1", bId:"u2", status:"accepted"},
-    ],
-    rooms: {},
-    feedbacks: [
-      {id:uid("fb"), memberId:"u1", category:"ข้อเสนอแนะ", message:"อยากให้มีธีมสีมืดตอนกลางคืนครับ", status:"answered", answer:"ขอบคุณครับ อยู่ใน roadmap แล้ว!", createdAt: nowSim-86400000*3},
-    ],
-    itemCatalog: buildCatalog(),
-    dropRates: {
-      bronze:{common:85,rare:13,epic:2,legendary:0},
-      silver:{common:55,rare:30,epic:12,legendary:3},
-      gold:{common:35,rare:35,epic:22,legendary:8},
-    },
-    recipeConfig: { upgradeQty:5, shieldQty:3 },
-    avatarTemplates: [
-      {id:"knight", name:"อัศวิน", emoji:"🛡️🗡️", active:true},
-      {id:"mage", name:"จอมเวท", emoji:"🧙", active:true},
-      {id:"archer", name:"นักธนู", emoji:"🏹", active:true},
-      {id:"rogue", name:"นินจา", emoji:"🥷", active:true},
-      {id:"cleric", name:"บาทหลวง", emoji:"⚕️", active:false},
-    ],
-  };
-  return state;
-}
-function mkMember(userId, name, template, level, streak, overrides){
-  const maxHp = calcMaxHp(level);
-  const base = {
-    id:userId, avatarName:name, avatarTemplate:template, level, exp:20,
-    hp:maxHp, maxHp, streak, lastLoginDate: todayStr(Date.now()),
-    lastDecayCheckAt: Date.now()-1800000,
-    equip:{head:null,body:null,legs:null,weapon:null},
-    settings:{defaultFocus:25, defaultBreak:5},
-    pity:{bronze:0,silver:0,gold:0},
-    shieldUntil:null, unconscious:false, displayName:name, avatarPic:"🙂",
-  };
-  const merged = Object.assign(base, overrides||{});
-  merged.hp = clamp(merged.hp,0,merged.maxHp);
-  return merged;
-}
-function buildCatalog(){
-  const items=[]; const slots=["head","body","legs","weapon"];
-  const names={
-    head:{common:"หมวกผ้าเก่า",rare:"หมวกเกราะเหล็ก",epic:"มงกุฎอัศวิน",legendary:"มงกุฎมังกรทอง"},
-    body:{common:"เสื้อผ้าฝ้าย",rare:"เกราะโซ่",epic:"เกราะเวทมนตร์",legendary:"เกราะเทพประจัน"},
-    legs:{common:"กางเกงหยาบ",rare:"เกราะขาเหล็ก",epic:"บูทแห่งสายลม",legendary:"บูทเทพเจ้า"},
-    weapon:{common:"มีดสั้นสนิม",rare:"กระบี่เหล็กกล้า",epic:"คทาอัศจรรย์",legendary:"ดาบในตำนาน"},
-  };
-  slots.forEach(slot=>{
-    RARITY_ORDER.forEach(r=>{
-      items.push({id:uid("it"), type:"equip", slot, rarity:r, name:names[slot][r], active:true});
-    });
-  });
-  RARITY_ORDER.forEach(r=>{
-    items.push({id:uid("it"), type:"material", rarity:r, name:"วัตถุดิบผสม ("+RARITY_LABEL[r]+")", active:true});
-  });
-  return items;
-}
+    /* ───────── Seed Data ───────── */
+    function seedState() {
+      const nowSim = Date.now();
+      const state = {
+        clockAnchorReal: Date.now(),
+        clockAnchorSim: nowSim - 3 * 3600 * 1000, // ผ่านไปแล้ว 3 ชม.จำลอง ก่อนเริ่ม demo
+        screen: "welcome",
+        screenArg: null,
+        currentRole: "guest",
+        currentUserId: null,
+        currentRoomId: null,
+        activeSession: null,
+        pendingConfirm: null,
+        users: [
+          { id: "admin1", username: "admin", email: "admin@pomo.rpg", password: "admin123", role: "admin" },
+          { id: "u1", username: "nawa_dev", email: "nawa@pomo.rpg", password: "123456", role: "member" },
+          { id: "u2", username: "ploy_focus", email: "ploy@pomo.rpg", password: "123456", role: "member" },
+          { id: "u3", username: "ken_rpg", email: "ken@pomo.rpg", password: "123456", role: "member" },
+        ],
+        members: {
+          u1: mkMember("u1", "Nawa", "male", 3, 40, { hp: 82 }),
+          u2: mkMember("u2", "Ploy", "female", 5, 10, { hp: 130 }),
+          u3: mkMember("u3", "Ken", "male", 2, 60, { hp: 95 }),
+        },
+        focusItems: [
+          { id: uid("fi"), memberId: "u1", name: "อ่านหนังสือ DSSI", deletedAt: null },
+          { id: uid("fi"), memberId: "u1", name: "เขียนโค้ด Mockup", deletedAt: null },
+          { id: uid("fi"), memberId: "u1", name: "ทำการบ้านสถิติ", deletedAt: null },
+        ],
+        sessions: [],
+        restLogs: [],
+        historyPeriod: "all",
+        inventory: {
+          u1: [
+            { key: "lootbox_bronze", type: "lootbox", tier: "bronze", name: "กล่องระดับต้น", qty: 2 },
+            { key: "lootbox_silver", type: "lootbox", tier: "silver", name: "กล่องระดับกลาง", qty: 1 },
+            { key: "equip_head_common", type: "equip", slot: "head", rarity: "common", name: "หมวกผ้าเก่า", qty: 2 },
+            { key: "equip_weapon_rare", type: "equip", slot: "weapon", rarity: "rare", name: "กระบี่เหล็กกล้า", qty: 1 },
+            { key: "material_common", type: "material", rarity: "common", name: "เศษแร่ธรรมดา", qty: 2 },
+            { key: "shield_24", type: "shield", hours: 24, name: "โล่เวลา 24 ชม.", qty: 1 },
+          ],
+        },
+        friendships: [
+          { id: uid("fr"), aId: "u1", bId: "u2", status: "accepted" },
+        ],
+        rooms: {},
+        feedbacks: [
+          { id: uid("fb"), memberId: "u1", category: "ข้อเสนอแนะ", message: "อยากให้มีธีมสีมืดตอนกลางคืนครับ", status: "answered", answer: "ขอบคุณครับ อยู่ใน roadmap แล้ว!", createdAt: nowSim - 86400000 * 3 },
+        ],
+        itemCatalog: buildCatalog(),
+        dropRates: {
+          bronze: { common: 85, rare: 13, epic: 2, legendary: 0 },
+          silver: { common: 55, rare: 30, epic: 12, legendary: 3 },
+          gold: { common: 35, rare: 35, epic: 22, legendary: 8 },
+        },
+        recipeConfig: { upgradeQty: 5, shieldQty: 3 },
+        avatarTemplates: [
+          { id: "male", name: "เพศชาย", emoji: "🙋‍♂️", active: true },
+          { id: "female", name: "เพศหญิง", emoji: "🙋‍♀️", active: true },
+        ],
+      };
+      return state;
+    }
+    function mkMember(userId, name, template, level, streak, overrides) {
+      const maxHp = calcMaxHp(level);
+      const base = {
+        id: userId, avatarName: name, avatarTemplate: template, level, exp: 20,
+        hp: maxHp, maxHp, streak, lastLoginDate: todayStr(Date.now()),
+        lastDecayCheckAt: Date.now() - 1800000,
+        equip: { head: null, body: null, legs: null, weapon: null },
+        settings: { defaultFocus: 25, defaultBreak: 5 },
+        pity: { bronze: 0, silver: 0, gold: 0 },
+        shieldUntil: null, unconscious: false, displayName: name, avatarPic: "🙂",
+      };
+      const merged = Object.assign(base, overrides || {});
+      merged.hp = clamp(merged.hp, 0, merged.maxHp);
+      return merged;
+    }
+    function buildCatalog() {
+      const items = []; const slots = ["head", "body", "legs", "weapon"];
+      const names = {
+        head: { common: "หมวกผ้าเก่า", rare: "หมวกเกราะเหล็ก", epic: "มงกุฎอัศวิน", legendary: "มงกุฎมังกรทอง" },
+        body: { common: "เสื้อผ้าฝ้าย", rare: "เกราะโซ่", epic: "เกราะเวทมนตร์", legendary: "เกราะเทพประจัน" },
+        legs: { common: "กางเกงหยาบ", rare: "เกราะขาเหล็ก", epic: "บูทแห่งสายลม", legendary: "บูทเทพเจ้า" },
+        weapon: { common: "มีดสั้นสนิม", rare: "กระบี่เหล็กกล้า", epic: "คทาอัศจรรย์", legendary: "ดาบในตำนาน" },
+      };
+      slots.forEach(slot => {
+        RARITY_ORDER.forEach(r => {
+          items.push({ id: uid("it"), type: "equip", slot, rarity: r, name: names[slot][r], active: true });
+        });
+      });
+      RARITY_ORDER.forEach(r => {
+        items.push({ id: uid("it"), type: "material", rarity: r, name: "วัตถุดิบผสม (" + RARITY_LABEL[r] + ")", active: true });
+      });
+      return items;
+    }
 
-/* ───────── Load / Save ───────── */
-let state = null;
-function load(){
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if(raw){ try{ state = JSON.parse(raw); }catch(e){ state = seedState(); } }
-  else { state = seedState(); }
-  if(!state.clockAnchorReal){ state.clockAnchorReal=Date.now(); state.clockAnchorSim=Date.now(); }
-  if(!state.restLogs) state.restLogs=[];
-  if(!state.historyPeriod) state.historyPeriod="all";
-  if(!state.friendPeriod) state.friendPeriod="all";
-  if(!state.invFilterRarity) state.invFilterRarity="all";
-  if(!state.recipeConfig) state.recipeConfig={upgradeQty:5, shieldQty:3};
-}
-function save(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-function resetAll(){ localStorage.removeItem(STORAGE_KEY); load(); navigate("welcome"); toast("รีเซ็ตข้อมูลตัวอย่างแล้ว 🔄"); }
+    /* ───────── Load / Save ───────── */
+    let state = null;
+    function load() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (raw) { try { state = JSON.parse(raw); } catch (e) { state = seedState(); } }
+      else { state = seedState(); }
+      if (!state.clockAnchorReal) { state.clockAnchorReal = Date.now(); state.clockAnchorSim = Date.now(); }
+      if (!state.restLogs) state.restLogs = [];
+      if (!state.historyPeriod) state.historyPeriod = "all";
+      if (!state.friendPeriod) state.friendPeriod = "all";
+      if (!state.invFilterRarity) state.invFilterRarity = "all";
+      if (!state.recipeConfig) state.recipeConfig = { upgradeQty: 5, shieldQty: 3 };
+    }
+    function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    function resetAll() { localStorage.removeItem(STORAGE_KEY); load(); navigate("welcome"); toast("รีเซ็ตข้อมูลตัวอย่างแล้ว 🔄"); }
 
-/* ───────── Sim Clock ───────── */
-function simNow(){
-  return state.clockAnchorSim + (Date.now()-state.clockAnchorReal)*SIM_SPEED;
-}
-function jumpSim(ms){ state.clockAnchorSim += ms; save(); tick(); render(); toast("⏩ เร่งเวลาไป "+(ms/3600000)+" ชม. (จำลอง)"); }
+    /* ───────── Sim Clock ───────── */
+    function simNow() {
+      return state.clockAnchorSim + (Date.now() - state.clockAnchorReal) * SIM_SPEED;
+    }
+    function jumpSim(ms) { state.clockAnchorSim += ms; save(); tick(); render(); toast("⏩ เร่งเวลาไป " + (ms / 3600000) + " ชม. (จำลอง)"); }
 
-/* ───────── Toast / Confirm ───────── */
-function toast(msg){
-  const wrap = document.getElementById("toastWrap");
-  const el = document.createElement("div");
-  el.className="toast"; el.textContent=msg;
-  wrap.appendChild(el);
-  setTimeout(()=>{ el.remove(); }, 2600);
-}
-function askConfirm(msg, yesLabel, onYes){
-  state.pendingConfirm = {msg, yesLabel: yesLabel||"ยืนยัน", cbKey: registerCb(onYes)};
-  render();
-}
-let cbRegistry = {}; let cbSeq=0;
-function registerCb(fn){ const k="cb"+(cbSeq++); cbRegistry[k]=fn; return k; }
-function doConfirmYes(){ const c=state.pendingConfirm; state.pendingConfirm=null; if(c && cbRegistry[c.cbKey]) cbRegistry[c.cbKey](); render(); }
-function doConfirmNo(){ state.pendingConfirm=null; render(); }
+    /* ───────── Toast / Confirm ───────── */
+    function toast(msg) {
+      const wrap = document.getElementById("toastWrap");
+      const el = document.createElement("div");
+      el.className = "toast"; el.textContent = msg;
+      wrap.appendChild(el);
+      setTimeout(() => { el.remove(); }, 2600);
+    }
+    function askConfirm(msg, yesLabel, onYes) {
+      state.pendingConfirm = { msg, yesLabel: yesLabel || "ยืนยัน", cbKey: registerCb(onYes) };
+      render();
+    }
+    let cbRegistry = {}; let cbSeq = 0;
+    function registerCb(fn) { const k = "cb" + (cbSeq++); cbRegistry[k] = fn; return k; }
+    function doConfirmYes() { const c = state.pendingConfirm; state.pendingConfirm = null; if (c && cbRegistry[c.cbKey]) cbRegistry[c.cbKey](); render(); }
+    function doConfirmNo() { state.pendingConfirm = null; render(); }
 
-/* ───────── Getters ───────── */
-function me(){ return state.members[state.currentUserId]; }
-function myInv(){ if(!state.inventory[state.currentUserId]) state.inventory[state.currentUserId]=[]; return state.inventory[state.currentUserId]; }
-function invAdd(memberId,key,item,qty){
-  if(!state.inventory[memberId]) state.inventory[memberId]=[];
-  const arr = state.inventory[memberId];
-  const found = arr.find(x=>x.key===key);
-  if(found) found.qty+=qty; else arr.push(Object.assign({key,qty},item));
-}
-function invRemove(memberId,key,qty){
-  const arr = state.inventory[memberId]||[];
-  const found = arr.find(x=>x.key===key);
-  if(!found) return false;
-  found.qty-=qty;
-  if(found.qty<=0) state.inventory[memberId]=arr.filter(x=>x.key!==key);
-  return true;
-}
+    /* ───────── Getters ───────── */
+    function me() { return state.members[state.currentUserId]; }
+    function myInv() { if (!state.inventory[state.currentUserId]) state.inventory[state.currentUserId] = []; return state.inventory[state.currentUserId]; }
+    function invAdd(memberId, key, item, qty) {
+      if (!state.inventory[memberId]) state.inventory[memberId] = [];
+      const arr = state.inventory[memberId];
+      const found = arr.find(x => x.key === key);
+      if (found) found.qty += qty; else arr.push(Object.assign({ key, qty }, item));
+    }
+    function invRemove(memberId, key, qty) {
+      const arr = state.inventory[memberId] || [];
+      const found = arr.find(x => x.key === key);
+      if (!found) return false;
+      found.qty -= qty;
+      if (found.qty <= 0) state.inventory[memberId] = arr.filter(x => x.key !== key);
+      return true;
+    }
 
-/* ───────── Decay / Streak / Exp ───────── */
-function settleDecay(member){
-  const now = simNow();
-  if(member.unconscious){ member.lastDecayCheckAt = now; return; }
-  if(member.shieldUntil && member.shieldUntil > now){ member.lastDecayCheckAt = now; return; }
-  const hours = (now - member.lastDecayCheckAt)/3600000;
-  if(hours <= 0) return;
-  const loss = Math.floor(hours*2);
-  if(loss>0){
-    member.hp = clamp(member.hp - loss, 0, member.maxHp);
-    member.lastDecayCheckAt = now;
-    if(member.hp<=0){ member.unconscious = true; }
-  }
-}
-function addExp(member, amount){
-  member.exp += amount;
-  let leveled=false;
-  while(member.exp >= expNeeded(member.level)){
-    member.exp -= expNeeded(member.level);
-    member.level += 1;
-    member.maxHp = calcMaxHp(member.level);
-    leveled=true;
-  }
-  return leveled;
-}
-function doLoginStreak(member){
-  const today = todayStr(simNow());
-  if(member.lastLoginDate === today) return;
-  const diff = daysBetween(member.lastLoginDate, today);
-  if(diff > 1){
-    const shieldCoversGap = member.shieldUntil && member.shieldUntil >= new Date(member.lastLoginDate).getTime();
-    if(!shieldCoversGap){ member.streak = 0; }
-  }
-  member.streak += 1;
-  member.lastLoginDate = today;
-}
+    /* ───────── Decay / Streak / Exp ───────── */
+    function settleDecay(member) {
+      const now = simNow();
+      if (member.unconscious) { member.lastDecayCheckAt = now; return; }
+      if (member.shieldUntil && member.shieldUntil > now) { member.lastDecayCheckAt = now; return; }
+      const hours = (now - member.lastDecayCheckAt) / 3600000;
+      if (hours <= 0) return;
+      const loss = Math.floor(hours * 2);
+      if (loss > 0) {
+        member.hp = clamp(member.hp - loss, 0, member.maxHp);
+        member.lastDecayCheckAt = now;
+        if (member.hp <= 0) { member.unconscious = true; }
+      }
+    }
+    function addExp(member, amount) {
+      member.exp += amount;
+      let leveled = false;
+      while (member.exp >= expNeeded(member.level)) {
+        member.exp -= expNeeded(member.level);
+        member.level += 1;
+        member.maxHp = calcMaxHp(member.level);
+        leveled = true;
+      }
+      return leveled;
+    }
+    function doLoginStreak(member) {
+      const today = todayStr(simNow());
+      if (member.lastLoginDate === today) return;
+      const diff = daysBetween(member.lastLoginDate, today);
+      if (diff > 1) {
+        const shieldCoversGap = member.shieldUntil && member.shieldUntil >= new Date(member.lastLoginDate).getTime();
+        if (!shieldCoversGap) { member.streak = 0; }
+      }
+      member.streak += 1;
+      member.lastLoginDate = today;
+    }
 
-/* ───────── History / Stats (UC-24, UC-23) — ตัวกรองช่วงเวลา + แยก Focus/Break/Over-rest ───────── */
-const PERIOD_LABEL = {all:"ทั้งหมด", today:"วันนี้", week:"7 วันล่าสุด", month:"30 วันล่าสุด"};
-function periodSinceMs(period){
-  const now = simNow();
-  if(period==="today") return now - (now % 86400000);
-  if(period==="week") return now - 7*86400000;
-  if(period==="month") return now - 30*86400000;
-  return -Infinity;
-}
-function computeStats(memberId, period){
-  const since = periodSinceMs(period);
-  const allInPeriod = state.sessions.filter(s=>s.memberId===memberId && s.endedAt>=since).sort((a,b)=>a.endedAt-b.endedAt);
-  const success = allInPeriod.filter(s=>s.status==="success" && !s.isRoomSummaryOnly);
-  const totalFocus = success.reduce((a,s)=>a+s.focusMin,0);
-  const restLogs = (state.restLogs||[]).filter(r=>r.memberId===memberId && r.at>=since);
-  const totalBreak = Math.round(restLogs.reduce((a,r)=>a+r.breakSec,0)/60);
-  const totalOverrest = Math.round(restLogs.reduce((a,r)=>a+r.overrestSec,0)/60);
-  const byItem = {};
-  success.forEach(s=>{ const key=s.itemName||"ไม่ระบุ"; byItem[key]=(byItem[key]||0)+s.focusMin; });
-  return {allInPeriod, totalFocus, totalBreak, totalOverrest, byItem};
-}
-function periodSelectorHtml(currentPeriod, actName){
-  return `<select class="input" onchange="A.${actName}(this.value)">
-    ${Object.keys(PERIOD_LABEL).map(p=>`<option value="${p}" ${p===currentPeriod?'selected':''}>${PERIOD_LABEL[p]}</option>`).join("")}
+    /* ───────── History / Stats (UC-24, UC-23) — ตัวกรองช่วงเวลา + แยก Focus/Break/Over-rest ───────── */
+    const PERIOD_LABEL = { all: "ทั้งหมด", today: "วันนี้", week: "7 วันล่าสุด", month: "30 วันล่าสุด" };
+    function periodSinceMs(period) {
+      const now = simNow();
+      if (period === "today") return now - (now % 86400000);
+      if (period === "week") return now - 7 * 86400000;
+      if (period === "month") return now - 30 * 86400000;
+      return -Infinity;
+    }
+    function computeStats(memberId, period) {
+      const since = periodSinceMs(period);
+      const allInPeriod = state.sessions.filter(s => s.memberId === memberId && s.endedAt >= since).sort((a, b) => a.endedAt - b.endedAt);
+      const success = allInPeriod.filter(s => s.status === "success" && !s.isRoomSummaryOnly);
+      const totalFocus = success.reduce((a, s) => a + s.focusMin, 0);
+      const restLogs = (state.restLogs || []).filter(r => r.memberId === memberId && r.at >= since);
+      const totalBreak = Math.round(restLogs.reduce((a, r) => a + r.breakSec, 0) / 60);
+      const totalOverrest = Math.round(restLogs.reduce((a, r) => a + r.overrestSec, 0) / 60);
+      const byItem = {};
+      success.forEach(s => { const key = s.itemName || "ไม่ระบุ"; byItem[key] = (byItem[key] || 0) + s.focusMin; });
+      return { allInPeriod, totalFocus, totalBreak, totalOverrest, byItem };
+    }
+    function periodSelectorHtml(currentPeriod, actName) {
+      return `<select class="input" onchange="A.${actName}(this.value)">
+    ${Object.keys(PERIOD_LABEL).map(p => `<option value="${p}" ${p === currentPeriod ? 'selected' : ''}>${PERIOD_LABEL[p]}</option>`).join("")}
   </select>`;
-}
-
-/* ───────── Router ───────── */
-function navigate(screen, arg){ state.screen=screen; state.screenArg=arg; save(); render(); window.scrollTo(0,0); }
-
-/* ───────── Global tick (sessions / rooms / bots) ───────── */
-function tick(){
-  if(state.currentUserId) settleDecay(me());
-  if(state.activeSession) sessionTick();
-  Object.values(state.rooms||{}).forEach(roomTick);
-  save();
-}
-function sessionTick(){
-  const s = state.activeSession;
-  if(!s) return;
-  const now = simNow();
-  if(s.phase==="focus"){
-    const elapsedMin = (now - s.phaseStartedSim)/60000;
-    if(elapsedMin >= s.focusMin){ completeFocusPhase(); }
-  } else if(s.phase==="break"){
-    const elapsedMin = (now - s.phaseStartedSim)/60000;
-    if(elapsedMin >= s.breakMin){
-      s.phase="overrest"; s.phaseStartedSim=now;
-      toast("🔔 เวลาพักหมดแล้ว! (จำลอง push notification)");
     }
-  }
-}
-function completeFocusPhase(){
-  const s = state.activeSession;
-  const member = state.members[s.memberId];
-  const focusMin = s.focusMin;
-  if(s.isRevival){
-    member.level = Math.max(1, member.level-2);
-    member.exp = 0;
-    member.maxHp = calcMaxHp(member.level);
-    member.hp = member.maxHp;
-    member.unconscious = false;
-    member.lastDecayCheckAt = simNow();
-    state.sessions.push({id:uid("ses"), memberId:s.memberId, itemName:"ภารกิจชุบชีวิต", focusMin, status:"success", isRevival:true, endedAt:simNow(), mode:"solo"});
-    state.activeSession = null;
-    toast("✨ ชุบชีวิตสำเร็จ! เลเวลลด 2 ระดับ HP เต็มแล้ว");
-    navigate("home");
-    return;
-  }
-  const expGain = focusMin*2;
-  const leveled = addExp(member, expGain);
-  member.hp = member.maxHp;
-  member.lastDecayCheckAt = simNow();
-  let boxTier = null;
-  if(focusMin>=90) boxTier="gold"; else if(focusMin>=45) boxTier="silver"; else if(focusMin>=20) boxTier="bronze";
-  if(boxTier){ invAdd(s.memberId, "lootbox_"+boxTier, {type:"lootbox",tier:boxTier,name:"กล่องระดับ"+({bronze:"ต้น",silver:"กลาง",gold:"สูง"}[boxTier])}, 1); }
-  state.sessions.push({id:uid("ses"), memberId:s.memberId, itemId:s.itemId, itemName:s.itemName, focusMin, breakMin:s.breakMin, status:"success", expGain, boxTier, endedAt:simNow(), mode:s.mode, roomId:s.roomId});
-  if(s.mode==="room" && state.rooms[s.roomId]){
-    const room = state.rooms[s.roomId];
-    const rm = room.members.find(x=>x.memberId===s.memberId);
-    if(rm) rm.focusSec += focusMin*60;
-  }
-  s.phase="break"; s.phaseStartedSim=simNow();
-  toast("⚔️ ชนะบอส! +"+expGain+" EXP"+(boxTier?" · ได้กล่องสุ่ม 🎁":"")+(leveled?" · เลเวลอัพ!! 🎉":""));
-  render();
-}
-function roomTick(room){
-  if(room.status!=="active") return;
-  const now = simNow();
-  if(now >= room.closesAt){
-    // ตาม activity diagram UC-17: ถ้ามีสมาชิกกำลังโฟกัสอยู่ในห้องนี้ ให้ปล่อยโฟกัสจนจบก่อน ค่อยปิดห้องจริง
-    const blockedByActiveSession = state.activeSession && state.activeSession.roomId===room.id && state.activeSession.phase==="focus";
-    if(!blockedByActiveSession){ closeRoom(room.id, true); }
-    return;
-  }
-  room.members.forEach(rm=>{
-    if(rm.isBot && !rm.kicked){
-      if(Math.random()<0.35){ rm.focusSec += Math.floor(Math.random()*40)+10; }
+
+    /* ───────── Router ───────── */
+    function navigate(screen, arg) { state.screen = screen; state.screenArg = arg; save(); render(); window.scrollTo(0, 0); }
+
+    /* ───────── Global tick (sessions / rooms / bots) ───────── */
+    function tick() {
+      if (state.currentUserId) settleDecay(me());
+      if (state.activeSession) sessionTick();
+      Object.values(state.rooms || {}).forEach(roomTick);
+      save();
     }
-  });
-}
-function commitRestStats(sess){
-  // บันทึกเวลาพัก/พักเกินกำหนดที่สะสมไปแล้วก่อนสถานะ session ถูกแทนที่/ล้าง (ใช้ทั้งโหมดเดี่ยวและห้อง)
-  if(!sess) return;
-  const now = simNow();
-  let breakSec=0, overrestSec=0;
-  if(sess.phase==="break"){ breakSec = Math.max(0,(now-sess.phaseStartedSim)/1000); }
-  else if(sess.phase==="overrest"){ breakSec = sess.breakMin*60; overrestSec = Math.max(0,(now-sess.phaseStartedSim)/1000); }
-  if(breakSec<=0 && overrestSec<=0) return;
-  if(!state.restLogs) state.restLogs=[];
-  state.restLogs.push({id:uid("rl"), memberId:sess.memberId, breakSec, overrestSec, at:now, mode:sess.mode, roomId:sess.roomId});
-  if(sess.mode==="room" && state.rooms[sess.roomId]){
-    const room = state.rooms[sess.roomId];
-    const rm = room.members.find(x=>x.memberId===sess.memberId);
-    if(rm){ rm.breakSec = (rm.breakSec||0)+breakSec; rm.overrestSec = (rm.overrestSec||0)+overrestSec; }
-  }
-}
+    function sessionTick() {
+      const s = state.activeSession;
+      if (!s) return;
+      const now = simNow();
+      if (s.phase === "focus") {
+        const elapsedMin = (now - s.phaseStartedSim) / 60000;
+        if (elapsedMin >= s.focusMin) { completeFocusPhase(); }
+      } else if (s.phase === "break") {
+        const elapsedMin = (now - s.phaseStartedSim) / 60000;
+        if (elapsedMin >= s.breakMin) {
+          s.phase = "overrest"; s.phaseStartedSim = now;
+          toast("🔔 เวลาพักหมดแล้ว! (จำลอง push notification)");
+        }
+      }
+    }
+    function completeFocusPhase() {
+      const s = state.activeSession;
+      const member = state.members[s.memberId];
+      const focusMin = s.focusMin;
+      if (s.isRevival) {
+        member.level = Math.max(1, member.level - 2);
+        member.exp = 0;
+        member.maxHp = calcMaxHp(member.level);
+        member.hp = member.maxHp;
+        member.unconscious = false;
+        member.lastDecayCheckAt = simNow();
+        state.sessions.push({ id: uid("ses"), memberId: s.memberId, itemName: "ภารกิจชุบชีวิต", focusMin, status: "success", isRevival: true, endedAt: simNow(), mode: "solo" });
+        state.activeSession = null;
+        toast("✨ ชุบชีวิตสำเร็จ! เลเวลลด 2 ระดับ HP เต็มแล้ว");
+        navigate("home");
+        return;
+      }
+      const expGain = focusMin * 2;
+      const leveled = addExp(member, expGain);
+      member.hp = member.maxHp;
+      member.lastDecayCheckAt = simNow();
+      let boxTier = null;
+      if (focusMin >= 90) boxTier = "gold"; else if (focusMin >= 45) boxTier = "silver"; else if (focusMin >= 20) boxTier = "bronze";
+      if (boxTier) { invAdd(s.memberId, "lootbox_" + boxTier, { type: "lootbox", tier: boxTier, name: "กล่องระดับ" + ({ bronze: "ต้น", silver: "กลาง", gold: "สูง" }[boxTier]) }, 1); }
+      state.sessions.push({ id: uid("ses"), memberId: s.memberId, itemId: s.itemId, itemName: s.itemName, focusMin, breakMin: s.breakMin, status: "success", expGain, boxTier, endedAt: simNow(), mode: s.mode, roomId: s.roomId });
+      if (s.mode === "room" && state.rooms[s.roomId]) {
+        const room = state.rooms[s.roomId];
+        const rm = room.members.find(x => x.memberId === s.memberId);
+        if (rm) rm.focusSec += focusMin * 60;
+      }
+      s.phase = "break"; s.phaseStartedSim = simNow();
+      toast("⚔️ ชนะบอส! +" + expGain + " EXP" + (boxTier ? " · ได้กล่องสุ่ม 🎁" : "") + (leveled ? " · เลเวลอัพ!! 🎉" : ""));
+      render();
+    }
+    function roomTick(room) {
+      if (room.status !== "active") return;
+      const now = simNow();
+      if (now >= room.closesAt) {
+        // ตาม activity diagram UC-17: ถ้ามีสมาชิกกำลังโฟกัสอยู่ในห้องนี้ ให้ปล่อยโฟกัสจนจบก่อน ค่อยปิดห้องจริง
+        const blockedByActiveSession = state.activeSession && state.activeSession.roomId === room.id && state.activeSession.phase === "focus";
+        if (!blockedByActiveSession) { closeRoom(room.id, true); }
+        return;
+      }
+      room.members.forEach(rm => {
+        if (rm.isBot && !rm.kicked) {
+          if (Math.random() < 0.35) { rm.focusSec += Math.floor(Math.random() * 40) + 10; }
+        }
+      });
+    }
+    function commitRestStats(sess) {
+      // บันทึกเวลาพัก/พักเกินกำหนดที่สะสมไปแล้วก่อนสถานะ session ถูกแทนที่/ล้าง (ใช้ทั้งโหมดเดี่ยวและห้อง)
+      if (!sess) return;
+      const now = simNow();
+      let breakSec = 0, overrestSec = 0;
+      if (sess.phase === "break") { breakSec = Math.max(0, (now - sess.phaseStartedSim) / 1000); }
+      else if (sess.phase === "overrest") { breakSec = sess.breakMin * 60; overrestSec = Math.max(0, (now - sess.phaseStartedSim) / 1000); }
+      if (breakSec <= 0 && overrestSec <= 0) return;
+      if (!state.restLogs) state.restLogs = [];
+      state.restLogs.push({ id: uid("rl"), memberId: sess.memberId, breakSec, overrestSec, at: now, mode: sess.mode, roomId: sess.roomId });
+      if (sess.mode === "room" && state.rooms[sess.roomId]) {
+        const room = state.rooms[sess.roomId];
+        const rm = room.members.find(x => x.memberId === sess.memberId);
+        if (rm) { rm.breakSec = (rm.breakSec || 0) + breakSec; rm.overrestSec = (rm.overrestSec || 0) + overrestSec; }
+      }
+    }
 
-/* ───────── Loot / Pity ───────── */
-function weightedPick(rates){
-  const total = Object.values(rates).reduce((a,b)=>a+b,0);
-  let r = Math.random()*total;
-  for(const k of RARITY_ORDER){ if(rates[k]==null) continue; if(r<rates[k]) return k; r-=rates[k]; }
-  return "common";
-}
-function pickAtLeast(rates, minRarity){
-  const minIdx = RARITY_ORDER.indexOf(minRarity);
-  const pool = {}; RARITY_ORDER.forEach((k,i)=>{ if(i>=minIdx && rates[k]!=null) pool[k]=Math.max(rates[k],1); });
-  return weightedPick(pool);
-}
-function openLootbox(tier){
-  const member = me();
-  const key = "lootbox_"+tier;
-  const had = invRemove(member.id, key, 1);
-  if(!had){ toast("ไม่มีกล่องนี้ในกระเป๋าแล้ว"); return; }
-  const pityTarget = {bronze:"rare", silver:"epic", gold:"legendary"}[tier];
-  const pityCount = member.pity[tier]||0;
-  let rarity;
-  let pityTriggered=false;
-  if(pityCount>=9){ rarity = pickAtLeast(state.dropRates[tier], pityTarget); member.pity[tier]=0; pityTriggered=true; }
-  else{
-    rarity = weightedPick(state.dropRates[tier]);
-    if(RARITY_ORDER.indexOf(rarity) >= RARITY_ORDER.indexOf(pityTarget)) member.pity[tier]=0;
-    else member.pity[tier]=pityCount+1;
-  }
-  const isMaterial = Math.random()<0.35;
-  let resultItem;
-  if(isMaterial){
-    resultItem = {type:"material", rarity, name:"วัตถุดิบผสม ("+RARITY_LABEL[rarity]+")"};
-    invAdd(member.id, "material_"+rarity, resultItem, 1);
-  } else {
-    const slots=["head","body","legs","weapon"]; const slot = slots[Math.floor(Math.random()*4)];
-    const catalogItem = state.itemCatalog.find(x=>x.type==="equip"&&x.slot===slot&&x.rarity===rarity);
-    resultItem = {type:"equip", slot, rarity, name:catalogItem.name};
-    invAdd(member.id, "equip_"+slot+"_"+rarity, resultItem, 1);
-  }
-  save();
-  state.screenArg = {lastResult:resultItem, pityTriggered, tier};
-  navigate("lootResult", state.screenArg);
-}
+    /* ───────── Loot / Pity ───────── */
+    function weightedPick(rates) {
+      const total = Object.values(rates).reduce((a, b) => a + b, 0);
+      let r = Math.random() * total;
+      for (const k of RARITY_ORDER) { if (rates[k] == null) continue; if (r < rates[k]) return k; r -= rates[k]; }
+      return "common";
+    }
+    function pickAtLeast(rates, minRarity) {
+      const minIdx = RARITY_ORDER.indexOf(minRarity);
+      const pool = {}; RARITY_ORDER.forEach((k, i) => { if (i >= minIdx && rates[k] != null) pool[k] = Math.max(rates[k], 1); });
+      return weightedPick(pool);
+    }
+    function openLootbox(tier) {
+      const member = me();
+      const key = "lootbox_" + tier;
+      const had = invRemove(member.id, key, 1);
+      if (!had) { toast("ไม่มีกล่องนี้ในกระเป๋าแล้ว"); return; }
+      const pityTarget = { bronze: "rare", silver: "epic", gold: "legendary" }[tier];
+      const pityCount = member.pity[tier] || 0;
+      let rarity;
+      let pityTriggered = false;
+      if (pityCount >= 9) { rarity = pickAtLeast(state.dropRates[tier], pityTarget); member.pity[tier] = 0; pityTriggered = true; }
+      else {
+        rarity = weightedPick(state.dropRates[tier]);
+        if (RARITY_ORDER.indexOf(rarity) >= RARITY_ORDER.indexOf(pityTarget)) member.pity[tier] = 0;
+        else member.pity[tier] = pityCount + 1;
+      }
+      const isMaterial = Math.random() < 0.35;
+      let resultItem;
+      if (isMaterial) {
+        resultItem = { type: "material", rarity, name: "วัตถุดิบผสม (" + RARITY_LABEL[rarity] + ")" };
+        invAdd(member.id, "material_" + rarity, resultItem, 1);
+      } else {
+        const slots = ["head", "body", "legs", "weapon"]; const slot = slots[Math.floor(Math.random() * 4)];
+        const catalogItem = state.itemCatalog.find(x => x.type === "equip" && x.slot === slot && x.rarity === rarity);
+        resultItem = { type: "equip", slot, rarity, name: catalogItem.name };
+        invAdd(member.id, "equip_" + slot + "_" + rarity, resultItem, 1);
+      }
+      save();
+      state.screenArg = { lastResult: resultItem, pityTriggered, tier };
+      navigate("lootResult", state.screenArg);
+    }
 
-/* ───────── Crafting ───────── */
-const RECIPES = [
-  {id:"upgrade", label:"อัพเกรดไอเทมแต่งตัว", desc:"ไอเทมแต่งตัวช่องเดียวกัน ระดับเดียวกัน 5 ชิ้น → 1 ชิ้นระดับถัดไป"},
-  {id:"shield24", label:"ผสมโล่เวลา 24 ชม.", desc:"วัตถุดิบผสม สามัญ/หายาก รวม 3 ชิ้น → โล่เวลา 24 ชม."},
-  {id:"shield48", label:"ผสมโล่เวลา 48 ชม.", desc:"วัตถุดิบผสม หายากมาก/ตำนาน รวม 3 ชิ้น → โล่เวลา 48 ชม."},
-];
-function canCraftUpgrade(item){ return item.type==="equip" && item.rarity!=="legendary" && item.qty>=(state.recipeConfig?state.recipeConfig.upgradeQty:5); }
-function doCraftUpgrade(key){
-  const qtyNeeded = state.recipeConfig?state.recipeConfig.upgradeQty:5;
-  const inv = myInv(); const item = inv.find(x=>x.key===key);
-  if(!item || !canCraftUpgrade(item)){ toast("ไอเทมไม่ครบ "+qtyNeeded+" ชิ้น"); return; }
-  const nextRarity = RARITY_ORDER[RARITY_ORDER.indexOf(item.rarity)+1];
-  invRemove(me().id, key, qtyNeeded);
-  const catalogItem = state.itemCatalog.find(x=>x.type==="equip"&&x.slot===item.slot&&x.rarity===nextRarity);
-  invAdd(me().id, "equip_"+item.slot+"_"+nextRarity, {type:"equip",slot:item.slot,rarity:nextRarity,name:catalogItem.name}, 1);
-  save(); render();
-  toast("✨ อัพเกรดสำเร็จ! ได้ "+catalogItem.name+" ("+RARITY_LABEL[nextRarity]+")");
-}
-function doCraftShield(hours){
-  const qtyNeeded = state.recipeConfig?state.recipeConfig.shieldQty:3;
-  const inv = myInv();
-  const wantRarities = hours===24? ["common","rare"] : ["epic","legendary"];
-  let need = qtyNeeded; const used=[];
-  for(const r of wantRarities){
-    const item = inv.find(x=>x.key==="material_"+r);
-    if(item){ const take=Math.min(item.qty, need); if(take>0){ used.push({key:item.key,qty:take}); need-=take; } }
-    if(need<=0) break;
-  }
-  if(need>0){ toast("วัตถุดิบไม่ครบ "+qtyNeeded+" ชิ้น ("+wantRarities.map(r=>RARITY_LABEL[r]).join("/")+")"); return; }
-  used.forEach(u=>invRemove(me().id, u.key, u.qty));
-  invAdd(me().id, "shield_"+hours, {type:"shield",hours,name:"โล่เวลา "+hours+" ชม."}, 1);
-  save(); render();
-  toast("✨ ผสมโล่เวลา "+hours+" ชม. สำเร็จ!");
-}
+    /* ───────── Crafting ───────── */
+    const RECIPES = [
+      { id: "upgrade", label: "อัพเกรดไอเทมแต่งตัว", desc: "ไอเทมแต่งตัวช่องเดียวกัน ระดับเดียวกัน 5 ชิ้น → 1 ชิ้นระดับถัดไป" },
+      { id: "shield24", label: "ผสมโล่เวลา 24 ชม.", desc: "วัตถุดิบผสม สามัญ/หายาก รวม 3 ชิ้น → โล่เวลา 24 ชม." },
+      { id: "shield48", label: "ผสมโล่เวลา 48 ชม.", desc: "วัตถุดิบผสม หายากมาก/ตำนาน รวม 3 ชิ้น → โล่เวลา 48 ชม." },
+    ];
+    function canCraftUpgrade(item) { return item.type === "equip" && item.rarity !== "legendary" && item.qty >= (state.recipeConfig ? state.recipeConfig.upgradeQty : 5); }
+    function doCraftUpgrade(key) {
+      const qtyNeeded = state.recipeConfig ? state.recipeConfig.upgradeQty : 5;
+      const inv = myInv(); const item = inv.find(x => x.key === key);
+      if (!item || !canCraftUpgrade(item)) { toast("ไอเทมไม่ครบ " + qtyNeeded + " ชิ้น"); return; }
+      const nextRarity = RARITY_ORDER[RARITY_ORDER.indexOf(item.rarity) + 1];
+      invRemove(me().id, key, qtyNeeded);
+      const catalogItem = state.itemCatalog.find(x => x.type === "equip" && x.slot === item.slot && x.rarity === nextRarity);
+      invAdd(me().id, "equip_" + item.slot + "_" + nextRarity, { type: "equip", slot: item.slot, rarity: nextRarity, name: catalogItem.name }, 1);
+      save(); render();
+      toast("✨ อัพเกรดสำเร็จ! ได้ " + catalogItem.name + " (" + RARITY_LABEL[nextRarity] + ")");
+    }
+    function doCraftShield(hours) {
+      const qtyNeeded = state.recipeConfig ? state.recipeConfig.shieldQty : 3;
+      const inv = myInv();
+      const wantRarities = hours === 24 ? ["common", "rare"] : ["epic", "legendary"];
+      let need = qtyNeeded; const used = [];
+      for (const r of wantRarities) {
+        const item = inv.find(x => x.key === "material_" + r);
+        if (item) { const take = Math.min(item.qty, need); if (take > 0) { used.push({ key: item.key, qty: take }); need -= take; } }
+        if (need <= 0) break;
+      }
+      if (need > 0) { toast("วัตถุดิบไม่ครบ " + qtyNeeded + " ชิ้น (" + wantRarities.map(r => RARITY_LABEL[r]).join("/") + ")"); return; }
+      used.forEach(u => invRemove(me().id, u.key, u.qty));
+      invAdd(me().id, "shield_" + hours, { type: "shield", hours, name: "โล่เวลา " + hours + " ชม." }, 1);
+      save(); render();
+      toast("✨ ผสมโล่เวลา " + hours + " ชม. สำเร็จ!");
+    }
 
-/* ───────── Rooms ───────── */
-function genRoomCode(){ return Math.random().toString(36).slice(2,8).toUpperCase(); }
-function createRoom(name, durationMin, focusMin, breakMin){
-  const id = uid("room");
-  state.rooms[id] = {
-    id, code: genRoomCode(), name, ownerId: me().id, durationMin, focusMin, breakMin,
-    status:"waiting", createdAt: simNow(), startedAt:null, closesAt:null, kickedIds:[],
-    members:[{memberId: me().id, name: me().avatarName, isBot:false, joinedAt: simNow(), focusSec:0, breakSec:0, overrestSec:0}],
-  };
-  state.currentRoomId = id;
-  save(); navigate("roomView", id);
-  toast("สร้างห้องสำเร็จ! รหัสเชิญ: "+state.rooms[id].code);
-}
-function joinRoomByCode(code){
-  const room = Object.values(state.rooms).find(r=>r.code===code.trim().toUpperCase());
-  if(!room){ return "รหัสเชิญไม่ถูกต้อง หรือห้องไม่มีอยู่"; }
-  if(room.status!=="waiting"){ return "ห้องนี้เริ่มไปแล้วหรือปิดไปแล้ว เข้าร่วมไม่ได้"; }
-  if(room.members.length>=8){ return "ห้องเต็ม 8 คนแล้ว"; }
-  if(room.kickedIds.includes(me().id)){ return "คุณถูกเตะออกจากห้องนี้ ไม่สามารถเข้าร่วมซ้ำได้"; }
-  if(state.currentRoomId){ return "คุณอยู่ในห้องอื่นอยู่ ต้องออกจากห้องเดิมก่อน"; }
-  room.members.push({memberId: me().id, name: me().avatarName, isBot:false, joinedAt: simNow(), focusSec:0, breakSec:0, overrestSec:0});
-  state.currentRoomId = room.id;
-  save(); navigate("roomView", room.id);
-  toast("เข้าร่วมห้องสำเร็จ!");
-  return null;
-}
-function addBotToRoom(roomId, botName){
-  const room = state.rooms[roomId];
-  if(room.members.length>=8){ toast("ห้องเต็มแล้ว"); return; }
-  room.members.push({memberId: uid("bot"), name: botName, isBot:true, joinedAt: simNow(), focusSec:0, breakSec:0, overrestSec:0});
-  save(); render();
-  toast(botName+" เข้าร่วมห้องแล้ว (จำลองเพื่อนกดลิงก์เชิญ)");
-}
-function startRoom(roomId){
-  const room = state.rooms[roomId];
-  room.status="active"; room.startedAt=simNow(); room.closesAt = simNow()+room.durationMin*60000;
-  save(); render();
-  toast("เริ่มห้องแล้ว! นับเวลาถอยหลัง "+room.durationMin+" นาที");
-}
-function logRoomHistory(room, member){
-  // บันทึกสรุปสถิติของสมาชิกคนหนึ่งในห้องนี้ลงประวัติส่วนตัว (UC-24) — เป็นการ์ดสรุปเท่านั้น
-  // ไม่รวมเข้าตัวเลขสรุป "เวลาโฟกัสรวม" ซ้ำ เพราะแต่ละเซสชันโฟกัสถูกบันทึกแยกไปแล้วตอนจบจริงผ่าน completeFocusPhase
-  if(!member || member.isBot) return;
-  state.sessions.push({
-    id:uid("ses"), memberId:member.memberId, itemName:"🏰 ห้องโฟกัส: "+room.name,
-    focusMin: Math.round((member.focusSec||0)/60), breakMin: Math.round((member.breakSec||0)/60),
-    status:"success", isRoomSummaryOnly:true, roomId:room.id, endedAt:simNow(), mode:"room",
-  });
-}
-function closeRoom(roomId, auto){
-  const room = state.rooms[roomId];
-  room.status="closed";
-  room.ranking = room.members.slice().sort((a,b)=>b.focusSec-a.focusSec);
-  room.members.forEach(m=> logRoomHistory(room, m));
-  save();
-  if(state.currentUserId && room.members.some(m=>m.memberId===state.currentUserId)){
-    if(state.currentRoomId===roomId) state.currentRoomId=null;
-    if(state.activeSession && state.activeSession.roomId===roomId){ /* let it finish naturally */ }
-    navigate("roomSummary", roomId);
-  }
-  toast(auto? "⏰ เวลาห้องหมดแล้ว! ปิดห้องอัตโนมัติ" : "ปิดห้องแล้ว สรุปผลพร้อมแล้ว");
-}
-function leaveRoom(roomId){
-  const room = state.rooms[roomId];
-  const me_ = room.members.find(m=>m.memberId===state.currentUserId);
-  if(me_) logRoomHistory(room, me_);
-  room.members = room.members.filter(m=>m.memberId!==state.currentUserId);
-  state.currentRoomId = null;
-  if(room.members.length===0){ room.status="closed"; room.noSummary=true; }
-  else if(room.ownerId===state.currentUserId){
-    const next = room.members.slice().sort((a,b)=>a.joinedAt-b.joinedAt)[0];
-    room.ownerId = next.memberId;
-  }
-  save(); navigate("roomList");
-  toast("ออกจากห้องแล้ว");
-}
-function kickFromRoom(roomId, memberId){
-  const room = state.rooms[roomId];
-  const target = room.members.find(m=>m.memberId===memberId);
-  if(target) logRoomHistory(room, target);
-  room.members = room.members.filter(m=>m.memberId!==memberId);
-  room.kickedIds.push(memberId);
-  save(); render();
-  toast("เตะสมาชิกออกจากห้องแล้ว (จำลองการแจ้งเตือนไปยังสมาชิกที่ถูกเตะ)");
-}
+    /* ───────── Rooms ───────── */
+    function genRoomCode() { return Math.random().toString(36).slice(2, 8).toUpperCase(); }
+    function createRoom(name, durationMin, focusMin, breakMin) {
+      const id = uid("room");
+      state.rooms[id] = {
+        id, code: genRoomCode(), name, ownerId: me().id, durationMin, focusMin, breakMin,
+        status: "waiting", createdAt: simNow(), startedAt: null, closesAt: null, kickedIds: [],
+        members: [{ memberId: me().id, name: me().avatarName, isBot: false, joinedAt: simNow(), focusSec: 0, breakSec: 0, overrestSec: 0 }],
+      };
+      state.currentRoomId = id;
+      save(); navigate("roomView", id);
+      toast("สร้างห้องสำเร็จ! รหัสเชิญ: " + state.rooms[id].code);
+    }
+    function joinRoomByCode(code) {
+      const room = Object.values(state.rooms).find(r => r.code === code.trim().toUpperCase());
+      if (!room) { return "รหัสเชิญไม่ถูกต้อง หรือห้องไม่มีอยู่"; }
+      if (room.status !== "waiting") { return "ห้องนี้เริ่มไปแล้วหรือปิดไปแล้ว เข้าร่วมไม่ได้"; }
+      if (room.members.length >= 8) { return "ห้องเต็ม 8 คนแล้ว"; }
+      if (room.kickedIds.includes(me().id)) { return "คุณถูกเตะออกจากห้องนี้ ไม่สามารถเข้าร่วมซ้ำได้"; }
+      if (state.currentRoomId) { return "คุณอยู่ในห้องอื่นอยู่ ต้องออกจากห้องเดิมก่อน"; }
+      room.members.push({ memberId: me().id, name: me().avatarName, isBot: false, joinedAt: simNow(), focusSec: 0, breakSec: 0, overrestSec: 0 });
+      state.currentRoomId = room.id;
+      save(); navigate("roomView", room.id);
+      toast("เข้าร่วมห้องสำเร็จ!");
+      return null;
+    }
+    function addBotToRoom(roomId, botName) {
+      const room = state.rooms[roomId];
+      if (room.members.length >= 8) { toast("ห้องเต็มแล้ว"); return; }
+      room.members.push({ memberId: uid("bot"), name: botName, isBot: true, joinedAt: simNow(), focusSec: 0, breakSec: 0, overrestSec: 0 });
+      save(); render();
+      toast(botName + " เข้าร่วมห้องแล้ว (จำลองเพื่อนกดลิงก์เชิญ)");
+    }
+    function startRoom(roomId) {
+      const room = state.rooms[roomId];
+      room.status = "active"; room.startedAt = simNow(); room.closesAt = simNow() + room.durationMin * 60000;
+      save(); render();
+      toast("เริ่มห้องแล้ว! นับเวลาถอยหลัง " + room.durationMin + " นาที");
+    }
+    function logRoomHistory(room, member) {
+      // บันทึกสรุปสถิติของสมาชิกคนหนึ่งในห้องนี้ลงประวัติส่วนตัว (UC-24) — เป็นการ์ดสรุปเท่านั้น
+      // ไม่รวมเข้าตัวเลขสรุป "เวลาโฟกัสรวม" ซ้ำ เพราะแต่ละเซสชันโฟกัสถูกบันทึกแยกไปแล้วตอนจบจริงผ่าน completeFocusPhase
+      if (!member || member.isBot) return;
+      state.sessions.push({
+        id: uid("ses"), memberId: member.memberId, itemName: "🏰 ห้องโฟกัส: " + room.name,
+        focusMin: Math.round((member.focusSec || 0) / 60), breakMin: Math.round((member.breakSec || 0) / 60),
+        status: "success", isRoomSummaryOnly: true, roomId: room.id, endedAt: simNow(), mode: "room",
+      });
+    }
+    function closeRoom(roomId, auto) {
+      const room = state.rooms[roomId];
+      room.status = "closed";
+      room.ranking = room.members.slice().sort((a, b) => b.focusSec - a.focusSec);
+      room.members.forEach(m => logRoomHistory(room, m));
+      save();
+      if (state.currentUserId && room.members.some(m => m.memberId === state.currentUserId)) {
+        if (state.currentRoomId === roomId) state.currentRoomId = null;
+        if (state.activeSession && state.activeSession.roomId === roomId) { /* let it finish naturally */ }
+        navigate("roomSummary", roomId);
+      }
+      toast(auto ? "⏰ เวลาห้องหมดแล้ว! ปิดห้องอัตโนมัติ" : "ปิดห้องแล้ว สรุปผลพร้อมแล้ว");
+    }
+    function leaveRoom(roomId) {
+      const room = state.rooms[roomId];
+      const me_ = room.members.find(m => m.memberId === state.currentUserId);
+      if (me_) logRoomHistory(room, me_);
+      room.members = room.members.filter(m => m.memberId !== state.currentUserId);
+      state.currentRoomId = null;
+      if (room.members.length === 0) { room.status = "closed"; room.noSummary = true; }
+      else if (room.ownerId === state.currentUserId) {
+        const next = room.members.slice().sort((a, b) => a.joinedAt - b.joinedAt)[0];
+        room.ownerId = next.memberId;
+      }
+      save(); navigate("roomList");
+      toast("ออกจากห้องแล้ว");
+    }
+    function kickFromRoom(roomId, memberId) {
+      const room = state.rooms[roomId];
+      const target = room.members.find(m => m.memberId === memberId);
+      if (target) logRoomHistory(room, target);
+      room.members = room.members.filter(m => m.memberId !== memberId);
+      room.kickedIds.push(memberId);
+      save(); render();
+      toast("เตะสมาชิกออกจากห้องแล้ว (จำลองการแจ้งเตือนไปยังสมาชิกที่ถูกเตะ)");
+    }
 
-/* ───────── Actions dispatch ───────── */
-const A = {};
-document.addEventListener("click", e=>{
-  const t = e.target.closest("[data-act]");
-  if(!t) return;
-  const fn = A[t.dataset.act];
-  if(fn) fn(t.dataset.arg, t);
-});
-document.addEventListener("visibilitychange", ()=>{
-  if(!state || !state.activeSession) return;
-  const s = state.activeSession;
-  if(document.hidden){ s._pauseSimSnapshot = simNow(); }
-  else if(s._pauseSimSnapshot!=null){
-    const gap = simNow() - s._pauseSimSnapshot;
-    s.phaseStartedSim += gap;
-    s._pauseSimSnapshot = null;
-    save();
-    toast("▶️ กลับมาโฟกัสต่อ (เวลาที่หลุดโฟกัสไม่ถูกนับ)");
-  }
-});
+    /* ───────── Actions dispatch ───────── */
+    const A = {};
+    document.addEventListener("click", e => {
+      const t = e.target.closest("[data-act]");
+      if (!t) return;
+      const fn = A[t.dataset.act];
+      if (fn) fn(t.dataset.arg, t);
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (!state || !state.activeSession) return;
+      const s = state.activeSession;
+      if (document.hidden) { s._pauseSimSnapshot = simNow(); }
+      else if (s._pauseSimSnapshot != null) {
+        const gap = simNow() - s._pauseSimSnapshot;
+        s.phaseStartedSim += gap;
+        s._pauseSimSnapshot = null;
+        save();
+        toast("▶️ กลับมาโฟกัสต่อ (เวลาที่หลุดโฟกัสไม่ถูกนับ)");
+      }
+    });
 
-/* ==== Auth actions ==== */
-A.goto = (arg)=> navigate(arg);
-A.loginAsRole = (role)=>{
-  if(role==="guest"){ state.currentRole="guest"; state.currentUserId=null; navigate("welcome"); return; }
-  if(role==="member"){ state.currentRole="member"; state.currentUserId="u1"; doLoginStreak(me()); settleDecay(me()); navigate(me().unconscious?"revival":"home"); return; }
-  if(role==="admin"){ state.currentRole="admin"; state.currentUserId="admin1"; navigate("adminDash"); return; }
-};
-A.doRegister = ()=>{
-  const email=val("regEmail"), username=val("regUsername"), pw=val("regPw"), pw2=val("regPw2");
-  const errs=[];
-  if(!email||!username||!pw||!pw2) errs.push("กรอกข้อมูลให้ครบทุกช่อง");
-  if(pw && pw2 && pw!==pw2) errs.push("รหัสผ่านไม่ตรงกัน");
-  if(username && state.users.some(u=>u.username===username)) errs.push("ชื่อผู้ใช้นี้ถูกใช้แล้ว");
-  if(email && state.users.some(u=>u.email===email)) errs.push("อีเมลนี้ถูกใช้แล้ว");
-  if(errs.length){ showFieldError("regErr", errs.join(" · ")); return; }
-  const id = uid("u");
-  state.users.push({id, username, email, password:pw, role:"member"});
-  state.members[id] = mkMember(id, "", "knight", 1, 0, {hp:100});
-  state.inventory[id] = [];
-  state.currentUserId = id; state.currentRole="member";
-  save();
-  toast("สมัครสมาชิกสำเร็จ! ต่อไปสร้างอวตารกันเลย");
-  navigate("createAvatar");
-};
-A.doLogin = ()=>{
-  const idf=val("loginId"), pw=val("loginPw");
-  const user = state.users.find(u=>(u.username===idf||u.email===idf) && u.password===pw);
-  if(!user){ showFieldError("loginErr","อีเมล/ชื่อผู้ใช้ หรือรหัสผ่านไม่ถูกต้อง"); return; }
-  state.currentUserId=user.id; state.currentRole=user.role;
-  if(user.role==="admin"){ navigate("adminDash"); return; }
-  doLoginStreak(me()); settleDecay(me());
-  navigate(me().unconscious? "revival":"home");
-  toast("เข้าสู่ระบบสำเร็จ! 🔥 Streak: "+me().streak);
-};
-A.doForgot = ()=>{
-  const email = val("forgotEmail");
-  if(!email){ showFieldError("forgotErr","กรอกอีเมลก่อน"); return; }
-  navigate("forgotSent", email);
-};
-A.doResetPassword = ()=>{
-  const p1=val("newPw1"), p2=val("newPw2");
-  if(!p1||!p2||p1!==p2){ showFieldError("resetErr","รหัสผ่านไม่ตรงกันหรือไม่ครบ"); return; }
-  if(p1.length<6){ showFieldError("resetErr","รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร (เงื่อนไขความปลอดภัย)"); return; }
-  toast("ตั้งรหัสผ่านใหม่สำเร็จ! (จำลอง) เพิกถอน token ทุกอุปกรณ์แล้ว กรุณาเข้าสู่ระบบใหม่");
-  navigate("login");
-};
-A.logout = ()=>{
-  if(state.activeSession){ toast("มีเซสชันโฟกัสกำลังทำงานอยู่ ต้องจบหรือยกเลิกก่อนออกจากระบบ"); return; }
-  askConfirm("ยืนยันออกจากระบบ?","ออกจากระบบ", ()=>{
-    state.currentUserId=null; state.currentRole="guest"; navigate("welcome");
-    toast("ออกจากระบบแล้ว");
-  });
-};
+    /* ==== Auth actions ==== */
+    A.goto = (arg) => navigate(arg);
+    A.loginAsRole = (role) => {
+      if (role === "guest") { state.currentRole = "guest"; state.currentUserId = null; navigate("welcome"); return; }
+      if (role === "member") { state.currentRole = "member"; state.currentUserId = "u1"; doLoginStreak(me()); settleDecay(me()); navigate(me().unconscious ? "revival" : "home"); return; }
+      if (role === "admin") { state.currentRole = "admin"; state.currentUserId = "admin1"; navigate("adminDash"); return; }
+    };
+    A.doRegister = () => {
+      const email = val("regEmail"), username = val("regUsername"), pw = val("regPw"), pw2 = val("regPw2");
+      const errs = [];
+      if (!email || !username || !pw || !pw2) errs.push("กรอกข้อมูลให้ครบทุกช่อง");
+      if (pw && pw2 && pw !== pw2) errs.push("รหัสผ่านไม่ตรงกัน");
+      if (username && state.users.some(u => u.username === username)) errs.push("ชื่อผู้ใช้นี้ถูกใช้แล้ว");
+      if (email && state.users.some(u => u.email === email)) errs.push("อีเมลนี้ถูกใช้แล้ว");
+      if (errs.length) { showFieldError("regErr", errs.join(" · ")); return; }
+      const id = uid("u");
+      state.users.push({ id, username, email, password: pw, role: "member" });
+      state.members[id] = mkMember(id, "", "knight", 1, 0, { hp: 100 });
+      state.inventory[id] = [];
+      state.currentUserId = id; state.currentRole = "member";
+      save();
+      toast("สมัครสมาชิกสำเร็จ! ต่อไปสร้างอวตารกันเลย");
+      navigate("createAvatar");
+    };
+    A.doLogin = () => {
+      const idf = val("loginId"), pw = val("loginPw");
+      const user = state.users.find(u => (u.username === idf || u.email === idf) && u.password === pw);
+      if (!user) { showFieldError("loginErr", "อีเมล/ชื่อผู้ใช้ หรือรหัสผ่านไม่ถูกต้อง"); return; }
+      state.currentUserId = user.id; state.currentRole = user.role;
+      if (user.role === "admin") { navigate("adminDash"); return; }
+      doLoginStreak(me()); settleDecay(me());
+      navigate(me().unconscious ? "revival" : "home");
+      toast("เข้าสู่ระบบสำเร็จ! 🔥 Streak: " + me().streak);
+    };
+    A.doForgot = () => {
+      const email = val("forgotEmail");
+      if (!email) { showFieldError("forgotErr", "กรอกอีเมลก่อน"); return; }
+      navigate("forgotSent", email);
+    };
+    A.doResetPassword = () => {
+      const p1 = val("newPw1"), p2 = val("newPw2");
+      if (!p1 || !p2 || p1 !== p2) { showFieldError("resetErr", "รหัสผ่านไม่ตรงกันหรือไม่ครบ"); return; }
+      if (p1.length < 6) { showFieldError("resetErr", "รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร (เงื่อนไขความปลอดภัย)"); return; }
+      toast("ตั้งรหัสผ่านใหม่สำเร็จ! (จำลอง) เพิกถอน token ทุกอุปกรณ์แล้ว กรุณาเข้าสู่ระบบใหม่");
+      navigate("login");
+    };
+    A.logout = () => {
+      if (state.activeSession) { toast("มีเซสชันโฟกัสกำลังทำงานอยู่ ต้องจบหรือยกเลิกก่อนออกจากระบบ"); return; }
+      askConfirm("ยืนยันออกจากระบบ?", "ออกจากระบบ", () => {
+        state.currentUserId = null; state.currentRole = "guest"; navigate("welcome");
+        toast("ออกจากระบบแล้ว");
+      });
+    };
 
-/* ==== Avatar creation ==== */
-A.pickTemplate = (id)=>{ state.screenArg = id; render(); };
-A.confirmAvatar = ()=>{
-  const name = val("avatarName");
-  const tpl = state.screenArg || "knight";
-  if(!name){ showFieldError("avatarErr","กรุณาตั้งชื่ออวตาร"); return; }
-  if(name.length<4||name.length>16){ showFieldError("avatarErr","ชื่ออวตารต้องยาว 4-16 ตัวอักษร"); return; }
-  const dup = Object.values(state.members).some(m=>m.avatarName===name && m.id!==me().id);
-  if(dup){ showFieldError("avatarErr","ชื่ออวตารนี้ถูกใช้แล้ว"); return; }
-  const m = me();
-  m.avatarName=name; m.avatarTemplate=tpl; m.hp=m.maxHp;
-  save(); navigate("home");
-  toast("สร้างอวตารสำเร็จ! ยินดีต้อนรับ "+name);
-};
+    /* ==== Avatar creation ==== */
+    A.pickTemplate = (id) => { state.screenArg = id; render(); };
+    A.confirmAvatar = () => {
+      const name = val("avatarName");
+      const tpl = state.screenArg || "male";
+      if (!name) { showFieldError("avatarErr", "กรุณาตั้งชื่ออวตาร"); return; }
+      if (name.length < 4 || name.length > 16) { showFieldError("avatarErr", "ชื่ออวตารต้องยาว 4-16 ตัวอักษร"); return; }
+      const dup = Object.values(state.members).some(m => m.avatarName === name && m.id !== me().id);
+      if (dup) { showFieldError("avatarErr", "ชื่ออวตารนี้ถูกใช้แล้ว"); return; }
+      const m = me();
+      m.avatarName = name; m.avatarTemplate = tpl; m.hp = m.maxHp;
+      save(); navigate("home");
+      toast("สร้างอวตารสำเร็จ! ยินดีต้อนรับ " + name);
+    };
 
-/* ==== Focus list ==== */
-A.addFocusItem = ()=>{
-  const name = val("newItemName");
-  if(!name){ showFieldError("focusListErr","กรุณากรอกชื่อรายการ"); return; }
-  state.focusItems.push({id:uid("fi"), memberId: me().id, name, deletedAt:null});
-  save(); render(); document.getElementById("newItemName").value="";
-  toast("เพิ่มรายการแล้ว: "+name);
-};
-A.deleteFocusItem = (id)=>{
-  askConfirm("ลบรายการนี้ออกจากลิสต์?","ลบรายการ", ()=>{
-    const it = state.focusItems.find(x=>x.id===id); if(it) it.deletedAt = simNow();
-    save(); render(); toast("ลบรายการแล้ว");
-  });
-};
+    /* ==== Focus list ==== */
+    A.addFocusItem = () => {
+      const name = val("newItemName");
+      if (!name) { showFieldError("focusListErr", "กรุณากรอกชื่อรายการ"); return; }
+      state.focusItems.push({ id: uid("fi"), memberId: me().id, name, deletedAt: null });
+      save(); render(); document.getElementById("newItemName").value = "";
+      toast("เพิ่มรายการแล้ว: " + name);
+    };
+    A.deleteFocusItem = (id) => {
+      askConfirm("ลบรายการนี้ออกจากลิสต์?", "ลบรายการ", () => {
+        const it = state.focusItems.find(x => x.id === id); if (it) it.deletedAt = simNow();
+        save(); render(); toast("ลบรายการแล้ว");
+      });
+    };
 
-/* ==== Settings / Profile ==== */
-A.saveDefaultDuration = ()=>{
-  const f=parseInt(val("defFocus")), b=parseInt(val("defBreak"));
-  if(!f||f<1||f>180||!b||b<1||b>60){ showFieldError("durErr","กรอกค่าให้อยู่ในช่วงที่กำหนด (โฟกัส 1-180, พัก 1-60 นาที)"); return; }
-  me().settings.defaultFocus=f; me().settings.defaultBreak=b;
-  save(); toast("บันทึกระยะเวลาเริ่มต้นแล้ว"); navigate("settings");
-};
-A.pickProfilePic = (p)=>{ me().avatarPic=p; save(); render(); };
-A.saveProfile = ()=>{
-  const disp=val("profDisplay"), avaName=val("profAvatarName");
-  const errs=[];
-  if(disp && Object.values(state.members).some(m=>m.id!==me().id && (m.displayName||m.avatarName)===disp)) errs.push("ชื่อผู้ใช้แสดงผลนี้ถูกใช้แล้ว");
-  if(!avaName) errs.push("กรุณากรอกชื่ออวตาร");
-  else if(avaName.length<4||avaName.length>16) errs.push("ชื่ออวตารต้องยาว 4-16 ตัวอักษร");
-  else if(Object.values(state.members).some(m=>m.avatarName===avaName && m.id!==me().id)) errs.push("ชื่ออวตารซ้ำกับผู้ใช้อื่น");
-  if(errs.length){ showFieldError("profErr", errs.join(" · ")); return; }
-  me().displayName = disp || me().displayName;
-  me().avatarName = avaName;
-  save(); toast("บันทึกโปรไฟล์แล้ว"); navigate("settings");
-};
-A.changePassword = ()=>{
-  const old=val("oldPw"), n1=val("newPw1b"), n2=val("newPw2b");
-  const user = state.users.find(u=>u.id===state.currentUserId);
-  const errs=[];
-  if(user.password!==old) errs.push("รหัสผ่านเดิมไม่ถูกต้อง");
-  if(!n1||!n2||n1!==n2) errs.push("รหัสผ่านใหม่ไม่ตรงกับช่องยืนยัน");
-  else if(n1.length<6) errs.push("รหัสผ่านใหม่ต้องมีความยาวอย่างน้อย 6 ตัวอักษร");
-  if(errs.length){ showFieldError("pwErr", errs.join(" · ")); return; }
-  user.password=n1; save(); toast("เปลี่ยนรหัสผ่านสำเร็จ! อุปกรณ์อื่นถูกบังคับออกจากระบบ (จำลอง)"); navigate("settings");
-};
-A.submitFeedback = ()=>{
-  const cat=val("fbCategory")||"ข้อเสนอแนะ", msg=val("fbMessage");
-  if(!msg){ showFieldError("fbErr","กรุณากรอกข้อความ"); return; }
-  if(msg.length>1000){ showFieldError("fbErr","ข้อความยาวเกิน 1000 ตัวอักษร"); return; }
-  state.feedbacks.push({id:uid("fb"), memberId: me().id, category:cat, message:msg, status:"pending", answer:null, createdAt: simNow()});
-  save(); document.getElementById("fbMessage").value=""; render();
-  toast("ส่ง Feedback สำเร็จ!");
-};
+    /* ==== Settings / Profile ==== */
+    A.saveDefaultDuration = () => {
+      const f = parseInt(val("defFocus")), b = parseInt(val("defBreak"));
+      if (!f || f < 1 || f > 180 || !b || b < 1 || b > 60) { showFieldError("durErr", "กรอกค่าให้อยู่ในช่วงที่กำหนด (โฟกัส 1-180, พัก 1-60 นาที)"); return; }
+      me().settings.defaultFocus = f; me().settings.defaultBreak = b;
+      save(); toast("บันทึกระยะเวลาเริ่มต้นแล้ว"); navigate("settings");
+    };
+    A.pickProfilePic = (p) => { me().avatarPic = p; save(); render(); };
+    A.saveProfile = () => {
+      const disp = val("profDisplay"), avaName = val("profAvatarName");
+      const errs = [];
+      if (disp && Object.values(state.members).some(m => m.id !== me().id && (m.displayName || m.avatarName) === disp)) errs.push("ชื่อผู้ใช้แสดงผลนี้ถูกใช้แล้ว");
+      if (!avaName) errs.push("กรุณากรอกชื่ออวตาร");
+      else if (avaName.length < 4 || avaName.length > 16) errs.push("ชื่ออวตารต้องยาว 4-16 ตัวอักษร");
+      else if (Object.values(state.members).some(m => m.avatarName === avaName && m.id !== me().id)) errs.push("ชื่ออวตารซ้ำกับผู้ใช้อื่น");
+      if (errs.length) { showFieldError("profErr", errs.join(" · ")); return; }
+      me().displayName = disp || me().displayName;
+      me().avatarName = avaName;
+      save(); toast("บันทึกโปรไฟล์แล้ว"); navigate("settings");
+    };
+    A.changePassword = () => {
+      const old = val("oldPw"), n1 = val("newPw1b"), n2 = val("newPw2b");
+      const user = state.users.find(u => u.id === state.currentUserId);
+      const errs = [];
+      if (user.password !== old) errs.push("รหัสผ่านเดิมไม่ถูกต้อง");
+      if (!n1 || !n2 || n1 !== n2) errs.push("รหัสผ่านใหม่ไม่ตรงกับช่องยืนยัน");
+      else if (n1.length < 6) errs.push("รหัสผ่านใหม่ต้องมีความยาวอย่างน้อย 6 ตัวอักษร");
+      if (errs.length) { showFieldError("pwErr", errs.join(" · ")); return; }
+      user.password = n1; save(); toast("เปลี่ยนรหัสผ่านสำเร็จ! อุปกรณ์อื่นถูกบังคับออกจากระบบ (จำลอง)"); navigate("settings");
+    };
+    A.submitFeedback = () => {
+      const cat = val("fbCategory") || "ข้อเสนอแนะ", msg = val("fbMessage");
+      if (!msg) { showFieldError("fbErr", "กรุณากรอกข้อความ"); return; }
+      if (msg.length > 1000) { showFieldError("fbErr", "ข้อความยาวเกิน 1000 ตัวอักษร"); return; }
+      state.feedbacks.push({ id: uid("fb"), memberId: me().id, category: cat, message: msg, status: "pending", answer: null, createdAt: simNow() });
+      save(); document.getElementById("fbMessage").value = ""; render();
+      toast("ส่ง Feedback สำเร็จ!");
+    };
 
-/* ==== Session flow ==== */
-A.startSessionSetup = ()=> navigate("sessionSetup");
-A.beginSession = ()=>{
-  if(me().unconscious){ toast("อวตารหมดสติ ต้องชุบชีวิตก่อน"); navigate("revival"); return; }
-  const itemId = val("sessSelectItem");
-  const focusMin = parseInt(val("sessFocus")), breakMin = parseInt(val("sessBreak"));
-  if(!itemId){ showFieldError("sessErr","เลือกรายการที่จะโฟกัสก่อน"); return; }
-  if(!focusMin||focusMin<1||!breakMin||breakMin<1){ showFieldError("sessErr","กรอกระยะเวลาให้ถูกต้อง"); return; }
-  const item = state.focusItems.find(x=>x.id===itemId);
-  state.activeSession = {
-    memberId: me().id, itemId, itemName:item.name, focusMin, breakMin,
-    phase:"focus", phaseStartedSim: simNow(), mode:"solo", roomId:null,
-    bossMaxHp: focusMin*100,
-  };
-  save(); navigate("session");
-};
-A.beginRoomSession = (roomId)=>{
-  const room = state.rooms[roomId];
-  if(room.status==="active" && simNow()>=room.closesAt){ toast("เวลาห้องหมดแล้ว ไม่สามารถเริ่มเซสชันใหม่ได้"); navigate("roomView", roomId); return; }
-  if(me().unconscious){ toast("อวตารหมดสติ ต้องชุบชีวิตก่อน"); navigate("revival"); return; }
-  state.activeSession = {
-    memberId: me().id, itemId:null, itemName:"เซสชันในห้อง: "+room.name, focusMin:room.focusMin, breakMin:room.breakMin,
-    phase:"focus", phaseStartedSim: simNow(), mode:"room", roomId,
-    bossMaxHp: room.focusMin*100,
-  };
-  save(); navigate("session");
-};
-A.beginRevival = ()=>{
-  state.activeSession = {
-    memberId: me().id, itemId:null, itemName:"ภารกิจชุบชีวิต", focusMin:20, breakMin:5,
-    phase:"focus", phaseStartedSim: simNow(), mode:"solo", roomId:null,
-    bossMaxHp:2000, isRevival:true,
-  };
-  save(); navigate("session");
-};
-let holdTimer=null;
-A.holdCancelStart = ()=>{
-  holdTimer = setTimeout(()=>{ A.cancelSessionConfirmed(); }, 1200);
-};
-A.holdCancelEnd = ()=>{ if(holdTimer){ clearTimeout(holdTimer); holdTimer=null; } };
-A.cancelSessionConfirmed = ()=>{
-  const s = state.activeSession; if(!s) return;
-  const member = state.members[s.memberId];
-  const elapsedMin = clamp((simNow()-s.phaseStartedSim)/60000, 0, s.focusMin);
-  const heal = Math.round(member.maxHp*(elapsedMin/s.focusMin));
-  member.hp = clamp(member.hp+heal, 0, member.maxHp);
-  member.lastDecayCheckAt = simNow();
-  state.sessions.push({id:uid("ses"), memberId:s.memberId, itemName:s.itemName, focusMin:s.focusMin, status:"cancelled", endedAt:simNow(), mode:s.mode, roomId:s.roomId});
-  const roomId = s.roomId, mode=s.mode;
-  state.activeSession = null;
-  save();
-  toast("ยกเลิกเซสชันแล้ว คืน HP ตามสัดส่วน ไม่ได้กล่องสุ่ม");
-  navigate(mode==="room" ? "roomView" : "home", roomId);
-};
-A.skipBreak = ()=>{ commitRestStats(state.activeSession); state.activeSession=null; save(); navigate("sessionSetup"); };
-A.endBreakToHome = ()=>{
-  const mode = state.activeSession.mode, roomId = state.activeSession.roomId;
-  commitRestStats(state.activeSession);
-  state.activeSession = null; save();
-  navigate(mode==="room"?"roomView":"home", roomId);
-};
-A.startNewAfterBreak = (roomId)=>{
-  commitRestStats(state.activeSession);
-  state.activeSession = null;
-  if(roomId){ A.beginRoomSession(roomId); } else { navigate("sessionSetup"); }
-};
+    /* ==== Session flow ==== */
+    A.startSessionSetup = () => navigate("sessionSetup");
+    A.toggleHomeShowAll = () => { state.homeShowAll = !state.homeShowAll; render(); };
+    A.quickStartItem = (itemId) => {
+      if (me().unconscious) { toast("อวตารหมดสติ ต้องชุบชีวิตก่อน"); navigate("revival"); return; }
+      if (state.activeSession) { toast("มีเซสชันที่กำลังทำงานอยู่แล้ว"); navigate("session"); return; }
+      const item = state.focusItems.find(x => x.id === itemId);
+      if (!item) return;
+      const m = me();
+      const focusMin = m.settings.defaultFocus || 25;
+      const breakMin = m.settings.defaultBreak || 5;
+      state.activeSession = {
+        memberId: m.id, itemId, itemName: item.name, focusMin, breakMin,
+        phase: "focus", phaseStartedSim: simNow(), mode: "solo", roomId: null,
+        bossMaxHp: focusMin * 100,
+      };
+      save(); navigate("session");
+    };
+    A.beginSession = () => {
+      if (me().unconscious) { toast("อวตารหมดสติ ต้องชุบชีวิตก่อน"); navigate("revival"); return; }
+      const itemId = val("sessSelectItem");
+      const focusMin = parseInt(val("sessFocus")), breakMin = parseInt(val("sessBreak"));
+      if (!itemId) { showFieldError("sessErr", "เลือกรายการที่จะโฟกัสก่อน"); return; }
+      if (!focusMin || focusMin < 1 || !breakMin || breakMin < 1) { showFieldError("sessErr", "กรอกระยะเวลาให้ถูกต้อง"); return; }
+      const item = state.focusItems.find(x => x.id === itemId);
+      state.activeSession = {
+        memberId: me().id, itemId, itemName: item.name, focusMin, breakMin,
+        phase: "focus", phaseStartedSim: simNow(), mode: "solo", roomId: null,
+        bossMaxHp: focusMin * 100,
+      };
+      save(); navigate("session");
+    };
+    A.beginRoomSession = (roomId) => {
+      const room = state.rooms[roomId];
+      if (room.status === "active" && simNow() >= room.closesAt) { toast("เวลาห้องหมดแล้ว ไม่สามารถเริ่มเซสชันใหม่ได้"); navigate("roomView", roomId); return; }
+      if (me().unconscious) { toast("อวตารหมดสติ ต้องชุบชีวิตก่อน"); navigate("revival"); return; }
+      state.activeSession = {
+        memberId: me().id, itemId: null, itemName: "เซสชันในห้อง: " + room.name, focusMin: room.focusMin, breakMin: room.breakMin,
+        phase: "focus", phaseStartedSim: simNow(), mode: "room", roomId,
+        bossMaxHp: room.focusMin * 100,
+      };
+      save(); navigate("session");
+    };
+    A.beginRevival = () => {
+      state.activeSession = {
+        memberId: me().id, itemId: null, itemName: "ภารกิจชุบชีวิต", focusMin: 20, breakMin: 5,
+        phase: "focus", phaseStartedSim: simNow(), mode: "solo", roomId: null,
+        bossMaxHp: 2000, isRevival: true,
+      };
+      save(); navigate("session");
+    };
+    let holdTimer = null;
+    A.holdCancelStart = () => {
+      holdTimer = setTimeout(() => { A.cancelSessionConfirmed(); }, 1200);
+    };
+    A.holdCancelEnd = () => { if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; } };
+    A.cancelSessionConfirmed = () => {
+      const s = state.activeSession; if (!s) return;
+      const member = state.members[s.memberId];
+      const elapsedMin = clamp((simNow() - s.phaseStartedSim) / 60000, 0, s.focusMin);
+      const heal = Math.round(member.maxHp * (elapsedMin / s.focusMin));
+      member.hp = clamp(member.hp + heal, 0, member.maxHp);
+      member.lastDecayCheckAt = simNow();
+      state.sessions.push({ id: uid("ses"), memberId: s.memberId, itemName: s.itemName, focusMin: s.focusMin, status: "cancelled", endedAt: simNow(), mode: s.mode, roomId: s.roomId });
+      const roomId = s.roomId, mode = s.mode;
+      state.activeSession = null;
+      save();
+      toast("ยกเลิกเซสชันแล้ว คืน HP ตามสัดส่วน ไม่ได้กล่องสุ่ม");
+      navigate(mode === "room" ? "roomView" : "home", roomId);
+    };
+    A.skipBreak = () => { commitRestStats(state.activeSession); state.activeSession = null; save(); navigate("sessionSetup"); };
+    A.endBreakToHome = () => {
+      const mode = state.activeSession.mode, roomId = state.activeSession.roomId;
+      commitRestStats(state.activeSession);
+      state.activeSession = null; save();
+      navigate(mode === "room" ? "roomView" : "home", roomId);
+    };
+    A.startNewAfterBreak = (roomId) => {
+      commitRestStats(state.activeSession);
+      state.activeSession = null;
+      if (roomId) { A.beginRoomSession(roomId); } else { navigate("sessionSetup"); }
+    };
 
-/* ==== Inventory / Loot / Craft / Equip ==== */
-A.useShield = (key)=>{
-  const item = myInv().find(x=>x.key===key); if(!item) return;
-  invRemove(me().id, key, 1);
-  me().shieldUntil = simNow() + item.hours*3600000;
-  save(); render();
-  toast("เปิดใช้งานโล่เวลา "+item.hours+" ชม. แล้ว ✅");
-};
-A.openBox = (tier)=> openLootbox(tier);
-A.equipItem = (key)=>{
-  const item = myInv().find(x=>x.key===key); if(!item) return;
-  const slot = item.slot;
-  const prevKey = me().equip[slot];
-  if(prevKey){ const prevItem = state.itemCatalog.find(()=>false); invAdd(me().id, prevKey, {type:"equip", slot, rarity:prevKey.split("_")[2], name:decodeEquipName(prevKey)}, 1); }
-  invRemove(me().id, key, 1);
-  me().equip[slot] = key;
-  save(); render();
-  toast("สวมใส่ "+item.name+" แล้ว");
-};
-function decodeEquipName(key){
-  const parts = key.split("_"); const slot=parts[1], rarity=parts[2];
-  const c = state.itemCatalog.find(x=>x.type==="equip"&&x.slot===slot&&x.rarity===rarity);
-  return c? c.name : key;
-}
-A.unequipItem = (slot)=>{
-  const key = me().equip[slot]; if(!key) return;
-  invAdd(me().id, key, {type:"equip", slot, rarity:key.split("_")[2], name:decodeEquipName(key)}, 1);
-  me().equip[slot]=null;
-  save(); render();
-  toast("ถอดไอเทมแล้ว");
-};
-A.setHistoryPeriod = (p)=>{ state.historyPeriod=p; save(); render(); };
-A.setFriendPeriod = (p)=>{ state.friendPeriod=p; save(); render(); };
-A.craftUpgrade = (key)=> doCraftUpgrade(key);
-A.setInvFilter = (r)=>{ state.invFilterRarity=r; save(); render(); };
-A.craftShield24 = ()=> doCraftShield(24);
-A.craftShield48 = ()=> doCraftShield(48);
+    /* ==== Inventory / Loot / Craft / Equip ==== */
+    A.useShield = (key) => {
+      const item = myInv().find(x => x.key === key); if (!item) return;
+      invRemove(me().id, key, 1);
+      me().shieldUntil = simNow() + item.hours * 3600000;
+      save(); render();
+      toast("เปิดใช้งานโล่เวลา " + item.hours + " ชม. แล้ว ✅");
+    };
+    A.openBox = (tier) => openLootbox(tier);
+    A.equipItem = (key) => {
+      const item = myInv().find(x => x.key === key); if (!item) return;
+      const slot = item.slot;
+      const prevKey = me().equip[slot];
+      if (prevKey) { const prevItem = state.itemCatalog.find(() => false); invAdd(me().id, prevKey, { type: "equip", slot, rarity: prevKey.split("_")[2], name: decodeEquipName(prevKey) }, 1); }
+      invRemove(me().id, key, 1);
+      me().equip[slot] = key;
+      save(); render();
+      toast("สวมใส่ " + item.name + " แล้ว");
+    };
+    function decodeEquipName(key) {
+      const parts = key.split("_"); const slot = parts[1], rarity = parts[2];
+      const c = state.itemCatalog.find(x => x.type === "equip" && x.slot === slot && x.rarity === rarity);
+      return c ? c.name : key;
+    }
+    A.unequipItem = (slot) => {
+      const key = me().equip[slot]; if (!key) return;
+      invAdd(me().id, key, { type: "equip", slot, rarity: key.split("_")[2], name: decodeEquipName(key) }, 1);
+      me().equip[slot] = null;
+      save(); render();
+      toast("ถอดไอเทมแล้ว");
+    };
+    A.setHistoryPeriod = (p) => { state.historyPeriod = p; save(); render(); };
+    A.setFriendPeriod = (p) => { state.friendPeriod = p; save(); render(); };
+    A.craftUpgrade = (key) => doCraftUpgrade(key);
+    A.setInvFilter = (r) => { state.invFilterRarity = r; save(); render(); };
+    A.craftShield24 = () => doCraftShield(24);
+    A.craftShield48 = () => doCraftShield(48);
 
-/* ==== Rooms ==== */
-A.createRoomSubmit = ()=>{
-  const name=val("roomName"), dur=parseInt(val("roomDuration")), f=parseInt(val("roomFocus")), b=parseInt(val("roomBreak"));
-  if(!name||!dur||!f||!b){ showFieldError("roomErr","กรอกข้อมูลห้องให้ครบ"); return; }
-  createRoom(name,dur,f,b);
-};
-A.joinRoomSubmit = ()=>{
-  const code = val("joinCode");
-  if(!code){ showFieldError("joinErr","กรอกรหัสเชิญก่อน"); return; }
-  const err = joinRoomByCode(code);
-  if(err) showFieldError("joinErr", err);
-};
-A.startRoomAct = (id)=> startRoom(id);
-A.closeRoomAct = (id)=> askConfirm("ปิดห้องและสรุปผลตอนนี้เลยหรือไม่?","ปิดห้อง", ()=> closeRoom(id,false));
-A.leaveRoomAct = (id)=> askConfirm("ยืนยันออกจากห้องนี้?","ออกจากห้อง", ()=> leaveRoom(id));
-A.kickAct = (arg)=>{ const [roomId,memberId]=arg.split("|"); askConfirm("เตะสมาชิกคนนี้ออกจากห้อง?","เตะออก", ()=> kickFromRoom(roomId,memberId)); };
-A.addBotAct = (arg)=>{ const [roomId,name]=arg.split("|"); addBotToRoom(roomId,name); };
-A.refreshRoom = (id)=> navigate("roomView", id);
-A.editRoomDuration = (id)=>{
-  const f=parseInt(val("roomEditFocus")), b=parseInt(val("roomEditBreak"));
-  if(!f||!b){ showFieldError("roomEditErr","กรอกค่าให้ครบ"); return; }
-  const room = state.rooms[id]; room.focusMin=f; room.breakMin=b;
-  save(); render(); toast("อัพเดตระยะเวลาร่วมของห้องแล้ว");
-};
+    /* ==== Rooms ==== */
+    A.createRoomSubmit = () => {
+      const name = val("roomName"), dur = parseInt(val("roomDuration")), f = parseInt(val("roomFocus")), b = parseInt(val("roomBreak"));
+      if (!name || !dur || !f || !b) { showFieldError("roomErr", "กรอกข้อมูลห้องให้ครบ"); return; }
+      createRoom(name, dur, f, b);
+    };
+    A.joinRoomSubmit = () => {
+      const code = val("joinCode");
+      if (!code) { showFieldError("joinErr", "กรอกรหัสเชิญก่อน"); return; }
+      const err = joinRoomByCode(code);
+      if (err) showFieldError("joinErr", err);
+    };
+    A.startRoomAct = (id) => startRoom(id);
+    A.closeRoomAct = (id) => askConfirm("ปิดห้องและสรุปผลตอนนี้เลยหรือไม่?", "ปิดห้อง", () => closeRoom(id, false));
+    A.leaveRoomAct = (id) => askConfirm("ยืนยันออกจากห้องนี้?", "ออกจากห้อง", () => leaveRoom(id));
+    A.kickAct = (arg) => { const [roomId, memberId] = arg.split("|"); askConfirm("เตะสมาชิกคนนี้ออกจากห้อง?", "เตะออก", () => kickFromRoom(roomId, memberId)); };
+    A.addBotAct = (arg) => { const [roomId, name] = arg.split("|"); addBotToRoom(roomId, name); };
+    A.refreshRoom = (id) => navigate("roomView", id);
+    A.editRoomDuration = (id) => {
+      const f = parseInt(val("roomEditFocus")), b = parseInt(val("roomEditBreak"));
+      if (!f || !b) { showFieldError("roomEditErr", "กรอกค่าให้ครบ"); return; }
+      const room = state.rooms[id]; room.focusMin = f; room.breakMin = b;
+      save(); render(); toast("อัพเดตระยะเวลาร่วมของห้องแล้ว");
+    };
 
-/* ==== Friends ==== */
-A.sendFriendReq = ()=>{
-  const username = val("friendSearch");
-  const target = state.users.find(u=>u.username===username && u.role==="member" && u.id!==me().id);
-  if(!target){ showFieldError("friendErr","ไม่พบผู้ใช้นี้"); return; }
-  const exists = state.friendships.find(f=>(f.aId===me().id&&f.bId===target.id)||(f.aId===target.id&&f.bId===me().id));
-  if(exists){ showFieldError("friendErr","มีความสัมพันธ์กับผู้ใช้นี้อยู่แล้ว"); return; }
-  const fr = {id:uid("fr"), aId:me().id, bId:target.id, status:"pending"};
-  state.friendships.push(fr); save(); render();
-  toast("ส่งคำขอเป็นเพื่อนไปยัง "+target.username+" แล้ว");
-  const willAccept = target.username!=="ken_rpg";
-  setTimeout(()=>{
-    if(willAccept){ fr.status="accepted"; toast(target.username+" ตอบรับคำขอเป็นเพื่อนแล้ว! (จำลอง)"); }
-    else { state.friendships = state.friendships.filter(x=>x.id!==fr.id); toast(target.username+" ปฏิเสธคำขอเป็นเพื่อน (จำลอง)"); }
-    save(); render();
-  }, 2500);
-};
-A.cancelFriendReq = (id)=>{ state.friendships = state.friendships.filter(f=>f.id!==id); save(); render(); toast("ยกเลิกคำขอแล้ว"); };
-A.removeFriend = (id)=> askConfirm("ยืนยันลบเพื่อนคนนี้?","ลบเพื่อน", ()=>{
-  state.friendships = state.friendships.filter(f=>f.id!==id); save(); render(); toast("ลบเพื่อนแล้ว");
-});
+    /* ==== Friends ==== */
+    A.sendFriendReq = () => {
+      const username = val("friendSearch");
+      const target = state.users.find(u => u.username === username && u.role === "member" && u.id !== me().id);
+      if (!target) { showFieldError("friendErr", "ไม่พบผู้ใช้นี้"); return; }
+      const exists = state.friendships.find(f => (f.aId === me().id && f.bId === target.id) || (f.aId === target.id && f.bId === me().id));
+      if (exists) { showFieldError("friendErr", "มีความสัมพันธ์กับผู้ใช้นี้อยู่แล้ว"); return; }
+      const fr = { id: uid("fr"), aId: me().id, bId: target.id, status: "pending" };
+      state.friendships.push(fr); save(); render();
+      toast("ส่งคำขอเป็นเพื่อนไปยัง " + target.username + " แล้ว");
+      const willAccept = target.username !== "ken_rpg";
+      setTimeout(() => {
+        if (willAccept) { fr.status = "accepted"; toast(target.username + " ตอบรับคำขอเป็นเพื่อนแล้ว! (จำลอง)"); }
+        else { state.friendships = state.friendships.filter(x => x.id !== fr.id); toast(target.username + " ปฏิเสธคำขอเป็นเพื่อน (จำลอง)"); }
+        save(); render();
+      }, 2500);
+    };
+    A.cancelFriendReq = (id) => { state.friendships = state.friendships.filter(f => f.id !== id); save(); render(); toast("ยกเลิกคำขอแล้ว"); };
+    A.removeFriend = (id) => askConfirm("ยืนยันลบเพื่อนคนนี้?", "ลบเพื่อน", () => {
+      state.friendships = state.friendships.filter(f => f.id !== id); save(); render(); toast("ลบเพื่อนแล้ว");
+    });
 
-/* ==== Admin ==== */
-A.toggleAvatarTemplate = (id)=>{
-  const activeCount = state.avatarTemplates.filter(t=>t.active).length;
-  const tpl = state.avatarTemplates.find(t=>t.id===id);
-  if(tpl.active && activeCount<=3){ showFieldError("avaAdminErr","เหลือรูปแบบเปิดใช้งานน้อยกว่า 3 แบบ อาจไม่พอสำหรับสมาชิกใหม่ กดอีกครั้งเพื่อยืนยัน"); tpl._warned=true; if(!tpl._forceOff){ tpl._forceOff=true; render(); return; } }
-  tpl.active = !tpl.active; tpl._forceOff=false;
-  save(); render();
-};
-A.saveRecipeConfig = ()=>{
-  const uq=parseInt(val("recipeUpgradeQty")), sq=parseInt(val("recipeShieldQty"));
-  if(!uq||uq<1||!sq||sq<1){ showFieldError("recipeErr","กรอกจำนวนให้ถูกต้อง (อย่างน้อย 1 ชิ้น)"); return; }
-  state.recipeConfig = {upgradeQty:uq, shieldQty:sq};
-  save(); render(); toast("บันทึกสูตรผสมไอเทมแล้ว");
-};
-A.addAvatarTemplate = ()=>{
-  const name=val("newTplName"), emoji=val("newTplEmoji");
-  if(!name||!emoji){ showFieldError("newTplErr","กรุณากรอกชื่อและอีโมจิให้ครบ"); return; }
-  state.avatarTemplates.push({id:uid("tpl"), name, emoji, active:true});
-  save(); render(); toast("เพิ่มรูปแบบอวตาร \""+name+"\" แล้ว");
-};
-A.saveDropRates = (tier)=>{
-  const c=parseInt(val("dr_"+tier+"_common"))||0, r=parseInt(val("dr_"+tier+"_rare"))||0,
-        e=parseInt(val("dr_"+tier+"_epic"))||0, l=parseInt(val("dr_"+tier+"_legendary"))||0;
-  const sum=c+r+e+l;
-  if(sum!==100){ showFieldError("dr_"+tier+"_err","ผลรวมต้อง = 100% (ตอนนี้ "+sum+"%)"); return; }
-  state.dropRates[tier]={common:c,rare:r,epic:e,legendary:l};
-  save(); render(); toast("บันทึกอัตราดรอปกล่อง"+tier+"แล้ว");
-};
-A.answerFeedback = (id)=>{
-  const answer = val("fbAnswer_"+id);
-  if(!answer){ showFieldError("fbAdminErr","กรุณากรอกคำตอบ"); return; }
-  const fb = state.feedbacks.find(x=>x.id===id);
-  fb.status="answered"; fb.answer=answer;
-  save(); render(); toast("ตอบกลับ Feedback แล้ว");
-};
+    /* ==== Admin ==== */
+    A.toggleAvatarTemplate = (id) => {
+      const activeCount = state.avatarTemplates.filter(t => t.active).length;
+      const tpl = state.avatarTemplates.find(t => t.id === id);
+      if (tpl.active && activeCount <= 3) { showFieldError("avaAdminErr", "เหลือรูปแบบเปิดใช้งานน้อยกว่า 3 แบบ อาจไม่พอสำหรับสมาชิกใหม่ กดอีกครั้งเพื่อยืนยัน"); tpl._warned = true; if (!tpl._forceOff) { tpl._forceOff = true; render(); return; } }
+      tpl.active = !tpl.active; tpl._forceOff = false;
+      save(); render();
+    };
+    A.saveRecipeConfig = () => {
+      const uq = parseInt(val("recipeUpgradeQty")), sq = parseInt(val("recipeShieldQty"));
+      if (!uq || uq < 1 || !sq || sq < 1) { showFieldError("recipeErr", "กรอกจำนวนให้ถูกต้อง (อย่างน้อย 1 ชิ้น)"); return; }
+      state.recipeConfig = { upgradeQty: uq, shieldQty: sq };
+      save(); render(); toast("บันทึกสูตรผสมไอเทมแล้ว");
+    };
+    A.addAvatarTemplate = () => {
+      const name = val("newTplName"), emoji = val("newTplEmoji");
+      if (!name || !emoji) { showFieldError("newTplErr", "กรุณากรอกชื่อและอีโมจิให้ครบ"); return; }
+      state.avatarTemplates.push({ id: uid("tpl"), name, emoji, active: true });
+      save(); render(); toast("เพิ่มรูปแบบอวตาร \"" + name + "\" แล้ว");
+    };
+    A.saveDropRates = (tier) => {
+      const c = parseInt(val("dr_" + tier + "_common")) || 0, r = parseInt(val("dr_" + tier + "_rare")) || 0,
+        e = parseInt(val("dr_" + tier + "_epic")) || 0, l = parseInt(val("dr_" + tier + "_legendary")) || 0;
+      const sum = c + r + e + l;
+      if (sum !== 100) { showFieldError("dr_" + tier + "_err", "ผลรวมต้อง = 100% (ตอนนี้ " + sum + "%)"); return; }
+      state.dropRates[tier] = { common: c, rare: r, epic: e, legendary: l };
+      save(); render(); toast("บันทึกอัตราดรอปกล่อง" + tier + "แล้ว");
+    };
+    A.answerFeedback = (id) => {
+      const answer = val("fbAnswer_" + id);
+      if (!answer) { showFieldError("fbAdminErr", "กรุณากรอกคำตอบ"); return; }
+      const fb = state.feedbacks.find(x => x.id === id);
+      fb.status = "answered"; fb.answer = answer;
+      save(); render(); toast("ตอบกลับ Feedback แล้ว");
+    };
 
-/* ───────── Helpers for forms ───────── */
-function val(id){ const el=document.getElementById(id); return el? el.value.trim() : ""; }
-function showFieldError(id, msg){ const el=document.getElementById(id); if(el){ el.textContent=msg; el.classList.remove("hidden"); } }
+    /* ───────── Helpers for forms ───────── */
+    function val(id) { const el = document.getElementById(id); return el ? el.value.trim() : ""; }
+    function showFieldError(id, msg) { const el = document.getElementById(id); if (el) { el.textContent = msg; el.classList.remove("hidden"); } }
 
-/* ══════════════════════════════════════════════════════════════════
-   RENDER
-   ══════════════════════════════════════════════════════════════════ */
-function topbar(title, backTo){
-  return `<div class="topbar">
-    ${backTo? `<div class="backbtn" data-act="goto" data-arg="${backTo}">←</div>` : `<div style="width:32px"></div>`}
+    /* ══════════════════════════════════════════════════════════════════
+       RENDER
+       ══════════════════════════════════════════════════════════════════ */
+    function topbar(title, backTo) {
+      return `<div class="topbar">
+    ${backTo ? `<div class="backbtn" data-act="goto" data-arg="${backTo}">←</div>` : ``}
     <h1>${title}</h1>
-    <div style="width:32px"></div>
   </div>`;
-}
-function bottomNav(active){
-  const items = [
-    {k:"home", ico:"🏠", label:"หน้าหลัก"},
-    {k:"inventory", ico:"🎒", label:"กระเป๋า"},
-    {k:"roomList", ico:"🏰", label:"ห้อง"},
-    {k:"history", ico:"📊", label:"ประวัติ"},
-    {k:"settings", ico:"⚙️", label:"ตั้งค่า"},
-  ];
-  return `<div class="bottomnav">
-    ${items.map(it=>`<div class="navitem ${active===it.k?'active':''}" data-act="goto" data-arg="${it.k}">
+    }
+    function bottomNav(active) {
+      const items = [
+        { k: "home", ico: "🏠", label: "หน้าหลัก" },
+        { k: "inventory", ico: "🎒", label: "กระเป๋า" },
+        { k: "roomList", ico: "🏰", label: "ห้อง" },
+        { k: "history", ico: "📊", label: "ประวัติ" },
+        { k: "settings", ico: "⚙️", label: "ตั้งค่า" },
+      ];
+      return `<div class="bottomnav">
+    ${items.map(it => `<div class="navitem ${active === it.k ? 'active' : ''}" data-act="goto" data-arg="${it.k}">
       <div class="ico">${it.ico}</div><div>${it.label}</div>
     </div>`).join("")}
   </div>`;
-}
-function progressBar(pct, color){
-  return `<div class="bar-track"><div class="bar-fill" style="width:${clamp(pct,0,100)}%;background:${color}"></div></div>`;
-}
-function devToolbar(){
-  const el = document.getElementById("devbar");
-  el.innerHTML = `
+    }
+    function progressBar(pct, color) {
+      return `<div class="bar-track"><div class="bar-fill" style="width:${clamp(pct, 0, 100)}%;background:${color}"></div></div>`;
+    }
+    function devToolbar() {
+      const el = document.getElementById("devbar");
+      el.innerHTML = `
     <span style="opacity:.7">🎮 Dev:</span>
-    <button class="${state.currentRole==='guest'?'active':''}" data-act="loginAsRole" data-arg="guest">Guest</button>
-    <button class="${state.currentRole==='member'?'active':''}" data-act="loginAsRole" data-arg="member">Member (Nawa)</button>
-    <button class="${state.currentRole==='admin'?'active':''}" data-act="loginAsRole" data-arg="admin">Admin</button>
+    <button class="${state.currentRole === 'guest' ? 'active' : ''}" data-act="loginAsRole" data-arg="guest">Guest</button>
+    <button class="${state.currentRole === 'member' ? 'active' : ''}" data-act="loginAsRole" data-arg="member">Member (Nawa)</button>
+    <button class="${state.currentRole === 'admin' ? 'active' : ''}" data-act="loginAsRole" data-arg="admin">Admin</button>
     <button data-act="jumpHour">+1 ชม. (HP Decay)</button>
     <button data-act="jumpDay">+1 วัน (Streak Reset)</button>
     <button data-act="resetData" style="background:#8a0030">รีเซ็ตข้อมูล</button>
   `;
-}
-A.jumpHour = ()=> jumpSim(3600000);
-A.jumpDay = ()=> jumpSim(86400000);
-A.resetData = ()=> askConfirm("รีเซ็ตข้อมูลตัวอย่างทั้งหมดกลับสู่ค่าเริ่มต้น?","รีเซ็ต", resetAll);
+    }
+    A.jumpHour = () => jumpSim(3600000);
+    A.jumpDay = () => jumpSim(86400000);
+    A.resetData = () => askConfirm("รีเซ็ตข้อมูลตัวอย่างทั้งหมดกลับสู่ค่าเริ่มต้น?", "รีเซ็ต", resetAll);
 
-function render(){
-  devToolbar();
-  const el = document.getElementById("screen");
-  el.innerHTML = renderScreen();
-  const modalHost = document.querySelector(".screen-wrap");
-  let existingModal = document.getElementById("confirmModal");
-  if(existingModal) existingModal.remove();
-  if(state.pendingConfirm){
-    const m=document.createElement("div");
-    m.id="confirmModal"; m.className="modal-overlay";
-    m.innerHTML = `<div class="modal-box">
+    function render() {
+      devToolbar();
+      const el = document.getElementById("screen");
+      el.innerHTML = renderScreen();
+      const modalHost = document.querySelector(".screen-wrap");
+      let existingModal = document.getElementById("confirmModal");
+      if (existingModal) existingModal.remove();
+      if (state.pendingConfirm) {
+        const m = document.createElement("div");
+        m.id = "confirmModal"; m.className = "modal-overlay";
+        m.innerHTML = `<div class="modal-box">
       <p style="font-weight:700;color:#3a2b55;margin-bottom:16px">${state.pendingConfirm.msg}</p>
       <div style="display:flex;gap:8px">
         <button class="btn-outline" data-act="confirmNo">ยกเลิก</button>
         <button class="btn-primary" data-act="confirmYes">${state.pendingConfirm.yesLabel}</button>
       </div>
     </div>`;
-    modalHost.appendChild(m);
-  }
-}
-A.confirmYes = doConfirmYes; A.confirmNo = doConfirmNo;
+        modalHost.appendChild(m);
+      }
+    }
+    A.confirmYes = doConfirmYes; A.confirmNo = doConfirmNo;
 
-function renderScreen(){
-  const s = state.screen;
-  switch(s){
-    case "welcome": return screenWelcome();
-    case "register": return screenRegister();
-    case "login": return screenLogin();
-    case "forgot": return screenForgot();
-    case "forgotSent": return screenForgotSent();
-    case "resetPw": return screenResetPw();
-    case "createAvatar": return screenCreateAvatar();
-    case "home": return screenHome();
-    case "focusList": return screenFocusList();
-    case "settings": return screenSettings();
-    case "editProfile": return screenEditProfile();
-    case "changePw": return screenChangePw();
-    case "feedback": return screenFeedback();
-    case "sessionSetup": return screenSessionSetup();
-    case "session": return screenSession();
-    case "revival": return screenRevival();
-    case "inventory": return screenInventory();
-    case "lootResult": return screenLootResult();
-    case "crafting": return screenCrafting();
-    case "avatarEquip": return screenAvatarEquip();
-    case "roomList": return screenRoomList();
-    case "roomCreate": return screenRoomCreate();
-    case "roomJoin": return screenRoomJoin();
-    case "roomView": return screenRoomView();
-    case "roomSummary": return screenRoomSummary();
-    case "friends": return screenFriends();
-    case "friendProfile": return screenFriendProfile();
-    case "history": return screenHistory();
-    case "adminDash": return screenAdminDash();
-    case "adminItems": return screenAdminItems();
-    case "adminAvatars": return screenAdminAvatars();
-    case "adminFeedback": return screenAdminFeedback();
-    default: return screenWelcome();
-  }
-}
+    function renderScreen() {
+      const s = state.screen;
+      switch (s) {
+        case "welcome": return screenWelcome();
+        case "register": return screenRegister();
+        case "login": return screenLogin();
+        case "forgot": return screenForgot();
+        case "forgotSent": return screenForgotSent();
+        case "resetPw": return screenResetPw();
+        case "createAvatar": return screenCreateAvatar();
+        case "home": return screenHome();
+        case "focusList": return screenFocusList();
+        case "settings": return screenSettings();
+        case "editProfile": return screenEditProfile();
+        case "changePw": return screenChangePw();
+        case "feedback": return screenFeedback();
+        case "sessionSetup": return screenSessionSetup();
+        case "session": return screenSession();
+        case "revival": return screenRevival();
+        case "inventory": return screenInventory();
+        case "lootResult": return screenLootResult();
+        case "crafting": return screenCrafting();
+        case "avatarEquip": return screenAvatarEquip();
+        case "roomList": return screenRoomList();
+        case "roomCreate": return screenRoomCreate();
+        case "roomJoin": return screenRoomJoin();
+        case "roomView": return screenRoomView();
+        case "roomSummary": return screenRoomSummary();
+        case "friends": return screenFriends();
+        case "friendProfile": return screenFriendProfile();
+        case "history": return screenHistory();
+        case "adminDash": return screenAdminDash();
+        case "adminItems": return screenAdminItems();
+        case "adminAvatars": return screenAdminAvatars();
+        case "adminFeedback": return screenAdminFeedback();
+        default: return screenWelcome();
+      }
+    }
 
-/* ── Guest screens ── */
-function screenWelcome(){
-  return `<div class="p-6 h-full flex flex-col justify-center items-center text-center" style="min-height:100%">
+    /* ── Guest screens ── */
+    function screenWelcome() {
+      return `<div class="p-6 h-full flex flex-col justify-center items-center text-center" style="min-height:100%">
     <div style="font-size:72px">⚔️🔥</div>
     <h1 style="font-size:26px;font-weight:900;color:#3a2b55;margin:12px 0 4px">POMO RPG</h1>
-    <p style="color:#8a7d9c;font-size:13px;margin-bottom:32px">โฟกัสงานให้เหมือนตีบอส เก็บเลเวล ปลดล็อกไอเทม!</p>
     <div style="width:100%;display:flex;flex-direction:column;gap:10px">
       <button class="btn-primary" data-act="goto" data-arg="register">สมัครสมาชิก</button>
       <button class="btn-secondary" data-act="goto" data-arg="login">เข้าสู่ระบบ</button>
     </div>
   </div>`;
-}
-function screenRegister(){
-  return `${topbar("สมัครสมาชิก (UC-01)","welcome")}
+    }
+    function screenRegister() {
+      return `${topbar("สมัครสมาชิก", "welcome")}
   <div class="p-5 flex flex-col gap-3">
     <div><label class="field-label">อีเมล</label><input id="regEmail" class="input" placeholder="you@email.com"></div>
     <div><label class="field-label">ชื่อผู้ใช้</label><input id="regUsername" class="input" placeholder="username"></div>
@@ -1080,9 +1338,9 @@ function screenRegister(){
     <button class="btn-primary mt-2" data-act="doRegister">สมัครสมาชิก</button>
     <button class="btn-outline" data-act="goto" data-arg="welcome">ยกเลิก</button>
   </div>`;
-}
-function screenLogin(){
-  return `${topbar("เข้าสู่ระบบ (UC-09)","welcome")}
+    }
+    function screenLogin() {
+      return `${topbar("เข้าสู่ระบบ", "welcome")}
   <div class="p-5 flex flex-col gap-3">
     <div class="card" style="background:#fff7e6;font-size:11px;color:#8a6d00">Demo: nawa_dev / 123456 (member) หรือ admin / admin123 (admin)</div>
     <div><label class="field-label">อีเมล/ชื่อผู้ใช้</label><input id="loginId" class="input" value="nawa_dev"></div>
@@ -1091,9 +1349,9 @@ function screenLogin(){
     <button class="btn-primary mt-2" data-act="doLogin">เข้าสู่ระบบ</button>
     <button class="btn-outline" data-act="goto" data-arg="forgot">ลืมรหัสผ่าน?</button>
   </div>`;
-}
-function screenForgot(){
-  return `${topbar("ลืมรหัสผ่าน (UC-05)","login")}
+    }
+    function screenForgot() {
+      return `${topbar("ลืมรหัสผ่าน", "login")}
   <div class="p-5 flex flex-col gap-3">
     <p style="font-size:13px;color:#8a7d9c">กรอกอีเมลที่ลงทะเบียนไว้ เราจะส่งลิงก์รีเซ็ตรหัสผ่านให้ (จำลอง)</p>
     <input id="forgotEmail" class="input" placeholder="you@email.com">
@@ -1101,35 +1359,35 @@ function screenForgot(){
     <button class="btn-primary" data-act="doForgot">ส่งลิงก์รีเซ็ต</button>
     <button class="btn-outline" data-act="goto" data-arg="login">ยกเลิก</button>
   </div>`;
-}
-function screenForgotSent(){
-  return `${topbar("ตรวจสอบอีเมล","forgot")}
+    }
+    function screenForgotSent() {
+      return `${topbar("ตรวจสอบอีเมล", "forgot")}
   <div class="p-6 flex flex-col gap-3 items-center text-center">
     <div style="font-size:48px">📧</div>
     <p style="font-size:13px;color:#3a2b55">หากอีเมลนี้มีอยู่ในระบบ จะได้รับลิงก์รีเซ็ตรหัสผ่าน (มีอายุ 15 นาที) — (จำลองอีเมล)</p>
     <button class="btn-primary" data-act="goto" data-arg="resetPw">เปิดลิงก์รีเซ็ต (จำลอง)</button>
     <button class="btn-outline" data-act="goto" data-arg="login">กลับไปเข้าสู่ระบบ</button>
   </div>`;
-}
-function screenResetPw(){
-  return `${topbar("ตั้งรหัสผ่านใหม่","login")}
+    }
+    function screenResetPw() {
+      return `${topbar("ตั้งรหัสผ่านใหม่", "login")}
   <div class="p-5 flex flex-col gap-3">
     <input id="newPw1" type="password" class="input" placeholder="รหัสผ่านใหม่">
     <input id="newPw2" type="password" class="input" placeholder="ยืนยันรหัสผ่านใหม่">
     <div id="resetErr" class="errtext hidden"></div>
     <button class="btn-primary" data-act="doResetPassword">บันทึกรหัสผ่านใหม่</button>
   </div>`;
-}
+    }
 
-/* ── Avatar creation ── */
-function screenCreateAvatar(){
-  const tpl = state.screenArg || "knight";
-  return `${topbar("สร้างอวตาร (UC-02)")}
+    /* ── Avatar creation ── */
+    function screenCreateAvatar() {
+      const tpl = state.screenArg || "male";
+      return `${topbar("สร้างอวตาร")}
   <div class="p-5 flex flex-col gap-3">
     <p style="font-size:13px;color:#8a7d9c">เลือกรูปแบบอวตารเริ่มต้นของคุณ</p>
     <div class="grid grid-cols-2 gap-3">
-      ${state.avatarTemplates.filter(t=>t.active).map(t=>`
-        <div class="card" style="text-align:center;border:2px solid ${tpl===t.id?'var(--pink)':'transparent'};cursor:pointer" data-act="pickTemplate" data-arg="${t.id}">
+      ${state.avatarTemplates.filter(t => t.active).map(t => `
+        <div class="card" style="text-align:center;border:2px solid ${tpl === t.id ? 'var(--pink)' : 'transparent'};cursor:pointer" data-act="pickTemplate" data-arg="${t.id}">
           <div style="font-size:36px">${t.emoji}</div>
           <div style="font-weight:800;font-size:13px;margin-top:4px;color:#3a2b55">${t.name}</div>
         </div>`).join("")}
@@ -1139,66 +1397,121 @@ function screenCreateAvatar(){
     <div id="avatarErr" class="errtext hidden"></div>
     <button class="btn-primary mt-2" data-act="confirmAvatar">ยืนยันสร้างอวตาร</button>
   </div>`;
-}
+    }
 
-/* ── Home ── */
-function screenHome(){
-  const m = me(); settleDecay(m);
-  if(m.unconscious){ return screenRevivalRedirect(); }
-  const expPct = (m.exp/expNeeded(m.level))*100;
-  const hpPct = (m.hp/m.maxHp)*100;
-  const shieldActive = m.shieldUntil && m.shieldUntil>simNow();
-  return `${topbar("Pomo RPG")}
-  <div class="p-4 flex flex-col gap-3">
+    /* ── Home ── */
+    function screenHome() {
+      const m = me(); settleDecay(m);
+      if (m.unconscious) { return screenRevivalRedirect(); }
+      const expPct = (m.exp / expNeeded(m.level)) * 100;
+      const hpPct = (m.hp / m.maxHp) * 100;
+      const shieldActive = m.shieldUntil && m.shieldUntil > simNow();
+      const items = state.focusItems.filter(x => x.memberId === m.id && !x.deletedAt);
+      const inSession = !!state.activeSession;
+      return `${topbar("Pomo RPG")}
+  <div class="p-4 flex flex-col gap-3" style="padding-bottom:80px">
     <div class="card" style="background:linear-gradient(135deg,#fff,#fff7ea)">
       <div class="flex items-center gap-3">
         <div class="avatar-emoji">${equippedEmoji(m)}</div>
         <div style="flex:1">
           <div style="font-weight:900;color:#3a2b55;font-size:16px">${m.avatarName} <span class="pill" style="background:#eee2cf;color:#3a2b55">Lv.${m.level}</span></div>
-          <div style="font-size:11px;color:#8a7d9c">🔥 Streak ${m.streak} วัน ${shieldActive? ' · 🛡️ มีโล่คุ้มกัน':''}</div>
+          <div style="font-size:11px;color:#8a7d9c">🔥 Streak ${m.streak} วัน ${shieldActive ? ' · 🛡️ มีโล่คุ้มกัน' : ''}</div>
         </div>
       </div>
       <div class="mt-3">
         <div class="flex justify-between" style="font-size:11px;font-weight:700;color:#3a2b55"><span>💚 HP</span><span>${m.hp}/${m.maxHp}</span></div>
-        ${progressBar(hpPct,"var(--green)")}
+        ${progressBar(hpPct, "var(--green)")}
       </div>
       <div class="mt-2">
         <div class="flex justify-between" style="font-size:11px;font-weight:700;color:#3a2b55"><span>⭐ EXP</span><span>${m.exp}/${expNeeded(m.level)}</span></div>
-        ${progressBar(expPct,"var(--yellow)")}
+        ${progressBar(expPct, "var(--yellow)")}
       </div>
     </div>
-    <button class="btn-primary" data-act="startSessionSetup" style="font-size:16px">⚔️ เริ่มโฟกัส (ตีบอส)</button>
+
+    ${inSession ? `
+    <div class="card" style="background:#fff0f5;border:2px solid var(--pink);cursor:pointer" data-act="goto" data-arg="session">
+      <div class="flex items-center gap-2">
+        <span style="font-size:20px">⚔️</span>
+        <div style="flex:1">
+          <div style="font-weight:800;color:var(--pink);font-size:13px">กำลังโฟกัสอยู่!</div>
+          <div style="font-size:11px;color:#8a7d9c">${state.activeSession.itemName} · ${state.activeSession.focusMin} นาที</div>
+        </div>
+        <span style="font-size:20px">▶</span>
+      </div>
+    </div>` : ''}
+
     <div class="grid grid-cols-3 gap-2">
-      ${quickTile("📋","รายการ","focusList")}
-      ${quickTile("👗","แต่งตัว","avatarEquip")}
-      ${quickTile("👥","เพื่อน","friends")}
+      ${quickTile("👗", "แต่งตัว", "avatarEquip")}
+      ${quickTile("👥", "เพื่อน", "friends")}
+      ${quickTile("📋", "จัดการรายการ", "focusList")}
+    </div>
+
+    <div>
+      <div class="flex justify-between items-center" style="margin-bottom:8px">
+        <span style="font-weight:800;color:#3a2b55;font-size:13px">📋 รายการวันนี้</span>
+        <div class="flex gap-2">
+          <div style="font-size:11px;color:#8a7d9c;align-self:center">${m.settings.defaultFocus}น. / พัก ${m.settings.defaultBreak}น.</div>
+          <div style="cursor:pointer;font-size:18px;padding:2px 6px" data-act="goto" data-arg="sessionSetup" title="ตั้งค่าเซสชัน">⚙️</div>
+        </div>
+      </div>
+      ${items.length === 0 ? `
+        <div class="card" style="text-align:center">
+          <p style="color:#8a7d9c;font-size:13px;margin-bottom:10px">ยังไม่มีรายการ เพิ่มเลย!</p>
+          <button class="btn-secondary" style="font-size:12px;padding:8px" data-act="goto" data-arg="focusList">+ เพิ่มรายการ</button>
+        </div>` :
+        (() => {
+          const MAX = 3;
+          const showAll = !!state.homeShowAll;
+          const shown = showAll ? items : items.slice(0, MAX);
+          const hasMore = items.length > MAX;
+          return shown.map(it => `
+        <div class="card flex items-center gap-3" style="margin-bottom:6px;padding:10px 14px">
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;color:#3a2b55;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${it.name}</div>
+          </div>
+          <button data-act="quickStartItem" data-arg="${it.id}"
+            style="flex-shrink:0;width:38px;height:38px;border-radius:12px;background:${inSession ? '#eee' : 'var(--pink)'};border:none;cursor:pointer;
+                   display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;
+                   box-shadow:${inSession ? 'none' : '0 3px 0 #b3003a'};transition:all .15s"
+            ${inSession ? 'disabled' : ''}>▶</button>
+        </div>`).join("") +
+          (hasMore ? `
+        <div style="text-align:center;margin-top:2px">
+          <button data-act="toggleHomeShowAll"
+            style="background:none;border:none;color:var(--blue);font-size:12px;font-weight:700;cursor:pointer;padding:6px 12px">
+            ${showAll ? '▲ ย่อรายการ' : `▼ ดูทั้งหมด (${items.length} รายการ)`}
+          </button>
+        </div>` : '')
+        })()
+      }
+
     </div>
   </div>
   ${bottomNav("home")}`;
-}
-function equippedEmoji(m){
-  const tpl = state.avatarTemplates.find(t=>t.id===m.avatarTemplate);
-  return tpl? tpl.emoji.split("")[0] : "🙂";
-}
-function quickTile(ico,label,screen){
-  return `<div class="card" style="text-align:center;padding:12px 4px;cursor:pointer" data-act="goto" data-arg="${screen}">
+    }
+    function equippedEmoji(m) {
+      const tpl = state.avatarTemplates.find(t => t.id === m.avatarTemplate);
+      return tpl ? tpl.emoji : "🙂";
+    }
+    function quickTile(ico, label, screen) {
+      return `<div class="card" style="text-align:center;padding:12px 4px;cursor:pointer" data-act="goto" data-arg="${screen}">
     <div style="font-size:22px">${ico}</div><div style="font-size:11px;font-weight:700;color:#3a2b55;margin-top:2px">${label}</div>
   </div>`;
-}
-function screenRevivalRedirect(){
-  return `${topbar("อวตารหมดสติ")}
+    }
+    function screenRevivalRedirect() {
+      return `${topbar("อวตารหมดสติ")}
   <div class="p-6 flex flex-col gap-3 items-center text-center">
     <div style="font-size:56px">💀</div>
     <p style="font-weight:800;color:var(--pink)">อวตารของคุณหมดสติ! HP = 0</p>
     <p style="font-size:12px;color:#8a7d9c">ฟีเจอร์อื่นถูกล็อกจนกว่าจะชุบชีวิตสำเร็จ</p>
     <button class="btn-primary" data-act="goto" data-arg="revival">ไปหน้าชุบชีวิต</button>
   </div>`;
-}
+    }
 
-/* ── Focus list (UC-03) ── */
-function screenFocusList(){
-  const items = state.focusItems.filter(x=>x.memberId===me().id);
-  return `${topbar("รายการสิ่งที่โฟกัส (UC-03)","home")}
+    /* ── Focus list (UC-03) ── */
+    function screenFocusList() {
+      const items = state.focusItems.filter(x => x.memberId === me().id);
+      return `${topbar("รายการสิ่งที่โฟกัส", "home")}
   <div class="p-4 flex flex-col gap-3">
     <div class="flex gap-2">
       <input id="newItemName" class="input" placeholder="ชื่อรายการใหม่">
@@ -1206,23 +1519,23 @@ function screenFocusList(){
     </div>
     <div id="focusListErr" class="errtext hidden"></div>
     <div class="flex flex-col gap-2">
-      ${items.filter(x=>!x.deletedAt).map(it=>`
+      ${items.filter(x => !x.deletedAt).map(it => `
         <div class="card flex items-center justify-between">
           <span style="font-weight:700;color:#3a2b55;font-size:13px">${it.name}</span>
           <button class="btn-danger" style="width:auto;padding:6px 12px" data-act="deleteFocusItem" data-arg="${it.id}">ลบ</button>
         </div>`).join("") || `<p style="color:#8a7d9c;font-size:13px;text-align:center">ยังไม่มีรายการ</p>`}
     </div>
-    ${items.some(x=>x.deletedAt)? `<p style="font-size:11px;color:#bbb;margin-top:6px">รายการที่ลบแล้ว: ${items.filter(x=>x.deletedAt).map(x=>x.name).join(", ")}</p>`:""}
+    ${items.some(x => x.deletedAt) ? `<p style="font-size:11px;color:#bbb;margin-top:6px">รายการที่ลบแล้ว: ${items.filter(x => x.deletedAt).map(x => x.name).join(", ")}</p>` : ""}
   </div>`;
-}
+    }
 
-/* ── Settings / Profile / Password / Feedback ── */
-function screenSettings(){
-  const m = me();
-  return `${topbar("ตั้งค่า","home")}
+    /* ── Settings / Profile / Password / Feedback ── */
+    function screenSettings() {
+      const m = me();
+      return `${topbar("ตั้งค่า")}
   <div class="p-4 flex flex-col gap-3">
     <div class="card">
-      <label class="field-label">ระยะเวลาเริ่มต้น (UC-06)</label>
+      <label class="field-label">ระยะเวลาเริ่มต้น</label>
       <div class="flex gap-2">
         <input id="defFocus" type="number" class="input" value="${m.settings.defaultFocus}" placeholder="โฟกัส (นาที)">
         <input id="defBreak" type="number" class="input" value="${m.settings.defaultBreak}" placeholder="พัก (นาที)">
@@ -1233,30 +1546,29 @@ function screenSettings(){
     <button class="btn-outline" data-act="goto" data-arg="editProfile">✏️ แก้ไขโปรไฟล์</button>
     <button class="btn-outline" data-act="goto" data-arg="changePw">🔒 เปลี่ยนรหัสผ่าน</button>
     <button class="btn-outline" data-act="goto" data-arg="feedback">💬 ส่ง Feedback</button>
-    <button class="btn-outline" data-act="goto" data-arg="history">📊 ประวัติ/สถิติ</button>
-    <button class="btn-danger" data-act="logout">ออกจากระบบ (UC-10)</button>
+    <button class="btn-danger" data-act="logout">ออกจากระบบ</button>
   </div>
   ${bottomNav("settings")}`;
-}
-function screenEditProfile(){
-  const m = me();
-  const pics = ["🙂","😎","🥳","🤠","👻","🐱","🐸","🦊"];
-  return `${topbar("แก้ไขโปรไฟล์ (UC-04)","settings")}
+    }
+    function screenEditProfile() {
+      const m = me();
+      const pics = ["🙂", "😎", "🥳", "🤠", "👻", "🐱", "🐸", "🦊"];
+      return `${topbar("แก้ไขโปรไฟล์", "settings")}
   <div class="p-5 flex flex-col gap-3">
     <label class="field-label">ชื่อผู้ใช้แสดงผล</label>
-    <input id="profDisplay" class="input" value="${m.displayName||m.avatarName}">
+    <input id="profDisplay" class="input" value="${m.displayName || m.avatarName}">
     <label class="field-label">ชื่ออวตาร (4-16 ตัวอักษร)</label>
     <input id="profAvatarName" class="input" value="${m.avatarName}">
     <label class="field-label">รูปประจำตัว</label>
     <div class="flex gap-2 flex-wrap">
-      ${pics.map(p=>`<button class="btn-outline" style="width:auto;padding:6px 10px;font-size:18px;border-color:${m.avatarPic===p?'var(--pink)':'#3a2b55'}" data-act="pickProfilePic" data-arg="${p}">${p}</button>`).join("")}
+      ${pics.map(p => `<button class="btn-outline" style="width:auto;padding:6px 10px;font-size:18px;border-color:${m.avatarPic === p ? 'var(--pink)' : '#3a2b55'}" data-act="pickProfilePic" data-arg="${p}">${p}</button>`).join("")}
     </div>
     <div id="profErr" class="errtext hidden"></div>
     <button class="btn-primary" data-act="saveProfile">บันทึก</button>
   </div>`;
-}
-function screenChangePw(){
-  return `${topbar("เปลี่ยนรหัสผ่าน (UC-04)","settings")}
+    }
+    function screenChangePw() {
+      return `${topbar("เปลี่ยนรหัสผ่าน", "settings")}
   <div class="p-5 flex flex-col gap-3">
     <input id="oldPw" type="password" class="input" placeholder="รหัสผ่านเดิม">
     <input id="newPw1b" type="password" class="input" placeholder="รหัสผ่านใหม่">
@@ -1264,10 +1576,10 @@ function screenChangePw(){
     <div id="pwErr" class="errtext hidden"></div>
     <button class="btn-primary" data-act="changePassword">ยืนยันเปลี่ยนรหัสผ่าน</button>
   </div>`;
-}
-function screenFeedback(){
-  const list = state.feedbacks.filter(f=>f.memberId===me().id).sort((a,b)=>b.createdAt-a.createdAt);
-  return `${topbar("ส่ง Feedback (UC-07)","settings")}
+    }
+    function screenFeedback() {
+      const list = state.feedbacks.filter(f => f.memberId === me().id).sort((a, b) => b.createdAt - a.createdAt);
+      return `${topbar("ส่ง Feedback", "settings")}
   <div class="p-4 flex flex-col gap-3">
     <div class="card">
       <select id="fbCategory" class="input mb-2">
@@ -1278,32 +1590,32 @@ function screenFeedback(){
       <button class="btn-primary mt-2" data-act="submitFeedback">ส่ง</button>
     </div>
     <p style="font-weight:800;color:#3a2b55;font-size:13px">Feedback ของฉัน</p>
-    ${list.map(f=>`
+    ${list.map(f => `
       <div class="card">
         <div class="flex justify-between"><span class="pill" style="background:#eee2cf;color:#3a2b55">${f.category}</span>
-        <span class="pill" style="background:${f.status==='answered'?'#00C68D':'#FFD400'};color:#fff">${f.status==='answered'?'ตอบกลับแล้ว':'รอตรวจสอบ'}</span></div>
+        <span class="pill" style="background:${f.status === 'answered' ? '#00C68D' : '#FFD400'};color:#fff">${f.status === 'answered' ? 'ตอบกลับแล้ว' : 'รอตรวจสอบ'}</span></div>
         <p style="font-size:13px;margin:6px 0;color:#3a2b55">${f.message}</p>
-        ${f.answer? `<p style="font-size:12px;background:#f5f0ff;padding:6px;border-radius:8px;color:#5a3fa0">💬 ${f.answer}</p>`:""}
+        ${f.answer ? `<p style="font-size:12px;background:#f5f0ff;padding:6px;border-radius:8px;color:#5a3fa0">💬 ${f.answer}</p>` : ""}
       </div>`).join("") || `<p style="text-align:center;color:#8a7d9c;font-size:13px">ยังไม่มี Feedback</p>`}
   </div>`;
-}
+    }
 
-/* ── Session (UC-08) ── */
-function screenSessionSetup(){
-  const items = state.focusItems.filter(x=>x.memberId===me().id && !x.deletedAt);
-  const m = me();
-  if(items.length===0){
-    return `${topbar("เริ่มโฟกัส","home")}
+    /* ── Session (UC-08) ── */
+    function screenSessionSetup() {
+      const items = state.focusItems.filter(x => x.memberId === me().id && !x.deletedAt);
+      const m = me();
+      if (items.length === 0) {
+        return `${topbar("เริ่มโฟกัส", "home")}
     <div class="p-6 text-center flex flex-col gap-3">
       <p style="color:#8a7d9c;font-size:13px">ยังไม่มีรายการที่จะโฟกัส</p>
-      <button class="btn-primary" data-act="goto" data-arg="focusList">ไปเพิ่มรายการ (UC-03)</button>
+      <button class="btn-primary" data-act="goto" data-arg="focusList">ไปเพิ่มรายการ</button>
     </div>`;
-  }
-  return `${topbar("ตั้งค่าเซสชัน (UC-08)","home")}
+      }
+      return `${topbar("ตั้งค่าเซสชัน", "home")}
   <div class="p-5 flex flex-col gap-3">
     <label class="field-label">เลือกรายการที่จะโฟกัส</label>
     <select id="sessSelectItem" class="input">
-      ${items.map(it=>`<option value="${it.id}">${it.name}</option>`).join("")}
+      ${items.map(it => `<option value="${it.id}">${it.name}</option>`).join("")}
     </select>
     <label class="field-label">ระยะเวลาโฟกัส (นาที)</label>
     <input id="sessFocus" type="number" class="input" value="${m.settings.defaultFocus}">
@@ -1313,116 +1625,116 @@ function screenSessionSetup(){
     <p style="font-size:11px;color:#bbb">⏱ จำลองเวลา: 1 วินาทีจริง = 1 นาทีในเกม</p>
     <button class="btn-primary" data-act="beginSession">⚔️ เริ่มจับเวลา ตีบอส!</button>
   </div>`;
-}
-function screenSession(){
-  const sess = state.activeSession;
-  if(!sess) return screenHome();
-  const now = simNow();
-  if(sess.phase==="focus"){
-    const elapsedMin = clamp((now-sess.phaseStartedSim)/60000,0,sess.focusMin);
-    const remainSec = Math.max(0,(sess.focusMin*60) - elapsedMin*60);
-    const bossHp = Math.max(0, sess.bossMaxHp - elapsedMin*100);
-    const bossPct = (bossHp/sess.bossMaxHp)*100;
-    return `${topbar(sess.itemName)}
+    }
+    function screenSession() {
+      const sess = state.activeSession;
+      if (!sess) return screenHome();
+      const now = simNow();
+      if (sess.phase === "focus") {
+        const elapsedMin = clamp((now - sess.phaseStartedSim) / 60000, 0, sess.focusMin);
+        const remainSec = Math.max(0, (sess.focusMin * 60) - elapsedMin * 60);
+        const bossHp = Math.max(0, sess.bossMaxHp - elapsedMin * 100);
+        const bossPct = (bossHp / sess.bossMaxHp) * 100;
+        return `${topbar(sess.itemName)}
     <div class="p-6 flex flex-col items-center gap-3 text-center">
       <div class="boss-emoji">👹</div>
       <div style="width:100%">
         <div class="flex justify-between" style="font-size:11px;font-weight:800;color:#3a2b55"><span>บอส HP</span><span>${Math.round(bossHp)}/${sess.bossMaxHp}</span></div>
-        ${progressBar(bossPct,"var(--pink)")}
+        ${progressBar(bossPct, "var(--pink)")}
       </div>
       <div style="font-size:44px;font-weight:900;color:#3a2b55;font-family:monospace">${fmtMMSS(remainSec)}</div>
       <p style="font-size:12px;color:#8a7d9c">กำลังโฟกัส... (สลับแอปได้ ระบบจะหยุดนับให้ชั่วคราว)</p>
       <button class="btn-danger" style="margin-top:12px"
         onmousedown="A.holdCancelStart()" onmouseup="A.holdCancelEnd()" onmouseleave="A.holdCancelEnd()"
-        ontouchstart="event.preventDefault();A.holdCancelStart()" ontouchend="A.holdCancelEnd()">กดค้าง 1.2 วิ เพื่อยกเลิกเซสชัน</button>
+        ontouchstart="event.preventDefault();A.holdCancelStart()" ontouchend="A.holdCancelEnd()">กดค้างเพื่อยกเลิกเซสชัน</button>
     </div>`;
-  }
-  if(sess.phase==="break"){
-    const elapsedMin = (now-sess.phaseStartedSim)/60000;
-    const remainSec = Math.max(0,(sess.breakMin*60)-elapsedMin*60);
-    return `${topbar("ช่วงพัก")}
+      }
+      if (sess.phase === "break") {
+        const elapsedMin = (now - sess.phaseStartedSim) / 60000;
+        const remainSec = Math.max(0, (sess.breakMin * 60) - elapsedMin * 60);
+        return `${topbar("ช่วงพัก")}
     <div class="p-6 flex flex-col items-center gap-3 text-center">
       <div style="font-size:56px">☕</div>
       <p style="font-weight:800;color:var(--blue)">พักผ่อนก่อนนะ!</p>
       <div style="font-size:38px;font-weight:900;color:var(--blue);font-family:monospace">${fmtMMSS(remainSec)}</div>
-      <button class="btn-secondary" data-act="startNewAfterBreak" data-arg="${sess.roomId||''}">ข้ามช่วงพัก เริ่มใหม่เลย</button>
-      <button class="btn-outline" data-act="endBreakToHome">${sess.mode==='room'?'กลับไปหน้าห้อง':'กลับหน้าหลัก'} (พักต่อเบื้องหลัง)</button>
+      <button class="btn-secondary" data-act="startNewAfterBreak" data-arg="${sess.roomId || ''}">ข้ามช่วงพัก เริ่มใหม่เลย</button>
+      <button class="btn-outline" data-act="endBreakToHome">${sess.mode === 'room' ? 'กลับไปหน้าห้อง' : 'กลับหน้าหลัก'} (พักต่อเบื้องหลัง)</button>
     </div>`;
-  }
-  // overrest
-  const overMin = Math.floor((now-sess.phaseStartedSim)/60000);
-  return `${topbar("พักเกินกำหนด")}
+      }
+      // overrest
+      const overMin = Math.floor((now - sess.phaseStartedSim) / 60000);
+      return `${topbar("พักเกินกำหนด")}
   <div class="p-6 flex flex-col items-center gap-3 text-center">
     <div style="font-size:56px">⏰</div>
     <p style="font-weight:800;color:var(--pink)">พักเกินกำหนดแล้ว ${overMin} นาที</p>
     <p style="font-size:12px;color:#8a7d9c">ระบบนับเป็นสถิติ Over-rest</p>
-    <button class="btn-primary" data-act="startNewAfterBreak" data-arg="${sess.roomId||''}">เริ่มเซสชันใหม่</button>
-    <button class="btn-outline" data-act="endBreakToHome">${sess.mode==='room'?'กลับไปหน้าห้อง':'กลับหน้าหลัก'}</button>
+    <button class="btn-primary" data-act="startNewAfterBreak" data-arg="${sess.roomId || ''}">เริ่มเซสชันใหม่</button>
+    <button class="btn-outline" data-act="endBreakToHome">${sess.mode === 'room' ? 'กลับไปหน้าห้อง' : 'กลับหน้าหลัก'}</button>
   </div>`;
-}
+    }
 
-/* ── Revival (UC-16) ── */
-function screenRevival(){
-  const m = me();
-  if(!m.unconscious){
-    return `${topbar("ชุบชีวิต")}<div class="p-6 text-center"><p style="color:#8a7d9c">อวตารของคุณยังมีชีวิตอยู่ดี 🙂</p><button class="btn-primary mt-3" data-act="goto" data-arg="home">กลับหน้าหลัก</button></div>`;
-  }
-  return `${topbar("ภารกิจชุบชีวิต (UC-16)")}
+    /* ── Revival (UC-16) ── */
+    function screenRevival() {
+      const m = me();
+      if (!m.unconscious) {
+        return `${topbar("ชุบชีวิต")}<div class="p-6 text-center"><p style="color:#8a7d9c">อวตารของคุณยังมีชีวิตอยู่ดี 🙂</p><button class="btn-primary mt-3" data-act="goto" data-arg="home">กลับหน้าหลัก</button></div>`;
+      }
+      return `${topbar("ภารกิจชุบชีวิต")}
   <div class="p-6 flex flex-col items-center gap-3 text-center">
     <div style="font-size:56px">💀➡️❤️</div>
     <p style="font-weight:800;color:var(--pink)">อวตารหมดสติ!</p>
     <p style="font-size:12px;color:#8a7d9c">โฟกัสให้สำเร็จ 20 นาทีติดต่อกันเพื่อชุบชีวิต<br>บทลงโทษ: เลเวลลด 2 ระดับ (ต่ำสุด Lv.1) EXP รีเซ็ตเป็น 0</p>
     <button class="btn-primary" data-act="beginRevival">⚔️ เริ่มภารกิจชุบชีวิต (20 นาที)</button>
   </div>`;
-}
+    }
 
-/* ── Inventory (UC-13, UC-14) ── */
-function screenInventory(){
-  const inv = myInv();
-  const filterR = state.invFilterRarity||"all";
-  const boxes = inv.filter(x=>x.type==="lootbox");
-  const equips = inv.filter(x=>x.type==="equip" && (filterR==="all"||x.rarity===filterR));
-  const materials = inv.filter(x=>x.type==="material" && (filterR==="all"||x.rarity===filterR));
-  const shields = inv.filter(x=>x.type==="shield");
-  const m = me();
-  const shieldActive = m.shieldUntil && m.shieldUntil>simNow();
-  if(inv.length===0){
-    return `${topbar("กระเป๋าไอเทม (UC-13)","home")}
+    /* ── Inventory (UC-13, UC-14) ── */
+    function screenInventory() {
+      const inv = myInv();
+      const filterR = state.invFilterRarity || "all";
+      const boxes = inv.filter(x => x.type === "lootbox");
+      const equips = inv.filter(x => x.type === "equip" && (filterR === "all" || x.rarity === filterR));
+      const materials = inv.filter(x => x.type === "material" && (filterR === "all" || x.rarity === filterR));
+      const shields = inv.filter(x => x.type === "shield");
+      const m = me();
+      const shieldActive = m.shieldUntil && m.shieldUntil > simNow();
+      if (inv.length === 0) {
+        return `${topbar("กระเป๋าไอเทม")}
     <div class="p-6 text-center flex flex-col gap-3">
       <p style="color:#8a7d9c;font-size:13px">ยังไม่มีไอเทมในกระเป๋าเลย</p>
       <button class="btn-primary" data-act="startSessionSetup">ไปโฟกัสเพื่อรับกล่องสุ่ม (UC-08)</button>
     </div>
     ${bottomNav("inventory")}`;
-  }
-  return `${topbar("กระเป๋าไอเทม (UC-13)","home")}
+      }
+      return `${topbar("กระเป๋าไอเทม")}
   <div class="p-4 flex flex-col gap-4">
-    ${shieldActive? `<div class="card" style="background:#e6fff5;border:1px solid var(--green)"><b>🛡️ โล่กำลังใช้งาน</b> — หมดผลใน ${fmtDateTime(m.shieldUntil)}</div>`:""}
+    ${shieldActive ? `<div class="card" style="background:#e6fff5;border:1px solid var(--green)"><b>🛡️ โล่กำลังใช้งาน</b> — หมดผลใน ${fmtDateTime(m.shieldUntil)}</div>` : ""}
     <div>
       <label class="field-label">กรองตามความหายาก (ไอเทมแต่งตัว/วัตถุดิบ)</label>
       <select class="input" onchange="A.setInvFilter(this.value)">
-        <option value="all" ${filterR==='all'?'selected':''}>ทั้งหมด</option>
-        ${RARITY_ORDER.map(r=>`<option value="${r}" ${filterR===r?'selected':''}>${RARITY_LABEL[r]}</option>`).join("")}
+        <option value="all" ${filterR === 'all' ? 'selected' : ''}>ทั้งหมด</option>
+        ${RARITY_ORDER.map(r => `<option value="${r}" ${filterR === r ? 'selected' : ''}>${RARITY_LABEL[r]}</option>`).join("")}
       </select>
     </div>
     <div>
       <p style="font-weight:800;color:#3a2b55;font-size:13px;margin-bottom:6px">🎁 กล่องสุ่ม</p>
       <div class="grid grid-cols-3 gap-2">
-        ${["bronze","silver","gold"].map(tier=>{
-          const b = boxes.find(x=>x.tier===tier);
-          const label={bronze:"ต้น",silver:"กลาง",gold:"สูง"}[tier];
-          if(!b) return "";
-          return `<div class="card" style="text-align:center">
-            <div style="font-size:26px">${tier==='gold'?'🟨':tier==='silver'?'⬜':'🟫'}</div>
+        ${["bronze", "silver", "gold"].map(tier => {
+        const b = boxes.find(x => x.tier === tier);
+        const label = { bronze: "ต้น", silver: "กลาง", gold: "สูง" }[tier];
+        if (!b) return "";
+        return `<div class="card" style="text-align:center">
+            <div style="font-size:26px">${tier === 'gold' ? '🟨' : tier === 'silver' ? '⬜' : '🟫'}</div>
             <div style="font-size:11px;font-weight:700;color:#3a2b55">ระดับ${label} x${b.qty}</div>
             <button class="btn-secondary mt-1" style="font-size:11px;padding:6px" data-act="openBox" data-arg="${tier}">เปิด</button>
           </div>`;
-        }).join("") || `<p style="font-size:12px;color:#8a7d9c">ยังไม่มีกล่องสุ่ม</p>`}
+      }).join("") || `<p style="font-size:12px;color:#8a7d9c">ยังไม่มีกล่องสุ่ม</p>`}
       </div>
     </div>
     <div>
       <p style="font-weight:800;color:#3a2b55;font-size:13px;margin-bottom:6px">👗 ไอเทมแต่งตัว</p>
       <div class="flex flex-col gap-2">
-        ${equips.map(it=>`<div class="card flex justify-between items-center">
+        ${equips.map(it => `<div class="card flex justify-between items-center">
           <span style="font-size:12px" class="rarity-${it.rarity}">${it.name} <span style="color:#bbb">(${SLOT_LABEL[it.slot]}, x${it.qty})</span></span>
         </div>`).join("") || `<p style="font-size:12px;color:#8a7d9c">ไม่มีไอเทม</p>`}
       </div>
@@ -1430,48 +1742,48 @@ function screenInventory(){
     <div>
       <p style="font-weight:800;color:#3a2b55;font-size:13px;margin-bottom:6px">🧪 วัตถุดิบผสม</p>
       <div class="flex flex-col gap-2">
-        ${materials.map(it=>`<div class="card flex justify-between"><span style="font-size:12px" class="rarity-${it.rarity}">${it.name} x${it.qty}</span></div>`).join("") || `<p style="font-size:12px;color:#8a7d9c">ไม่มีวัตถุดิบ</p>`}
+        ${materials.map(it => `<div class="card flex justify-between"><span style="font-size:12px" class="rarity-${it.rarity}">${it.name} x${it.qty}</span></div>`).join("") || `<p style="font-size:12px;color:#8a7d9c">ไม่มีวัตถุดิบ</p>`}
       </div>
     </div>
     <div>
       <p style="font-weight:800;color:#3a2b55;font-size:13px;margin-bottom:6px">🛡️ โล่เวลา</p>
       <div class="flex flex-col gap-2">
-        ${shields.map(it=>`<div class="card flex justify-between items-center">
+        ${shields.map(it => `<div class="card flex justify-between items-center">
           <span style="font-size:12px">${it.name} x${it.qty}</span>
           <button class="btn-secondary" style="width:auto;padding:6px 12px;font-size:11px" data-act="useShield" data-arg="${it.key}">ใช้</button>
         </div>`).join("") || `<p style="font-size:12px;color:#8a7d9c">ไม่มีโล่เวลา</p>`}
       </div>
     </div>
-    <button class="btn-outline" data-act="goto" data-arg="crafting">🧵 ไปหน้าผสมไอเทม (UC-12)</button>
+    <button class="btn-outline" data-act="goto" data-arg="crafting">🧵 ไปหน้าผสมไอเทม</button>
   </div>
   ${bottomNav("inventory")}`;
-}
-function screenLootResult(){
-  const arg = state.screenArg;
-  if(!arg || !arg.lastResult) return screenInventory();
-  const it = arg.lastResult;
-  return `${topbar("ผลการเปิดกล่อง (UC-11)")}
+    }
+    function screenLootResult() {
+      const arg = state.screenArg;
+      if (!arg || !arg.lastResult) return screenInventory();
+      const it = arg.lastResult;
+      return `${topbar("ผลการเปิดกล่อง")}
   <div class="p-6 flex flex-col items-center gap-3 text-center">
     <div style="font-size:56px">🎉</div>
     <p class="rarity-${it.rarity}" style="font-weight:900;font-size:18px">${it.name}</p>
     <span class="pill rarity-${it.rarity}" style="background:#f2f2f2">${RARITY_LABEL[it.rarity]}</span>
-    ${arg.pityTriggered? `<p style="font-size:12px;color:var(--pink);font-weight:700">✨ Pity System การันตีของหายากรอบนี้!</p>`:""}
+    ${arg.pityTriggered ? `<p style="font-size:12px;color:var(--pink);font-weight:700">✨ Pity System การันตีของหายากรอบนี้!</p>` : ""}
     <p style="font-size:11px;color:#8a7d9c">ตัวนับ Pity กล่อง${arg.tier}ปัจจุบัน: ${me().pity[arg.tier]}/10 รอบ</p>
     <button class="btn-primary" data-act="goto" data-arg="inventory">กลับกระเป๋า</button>
   </div>`;
-}
-function screenCrafting(){
-  const inv = myInv();
-  const equips = inv.filter(x=>x.type==="equip");
-  const rc = state.recipeConfig||{upgradeQty:5,shieldQty:3};
-  return `${topbar("ผสมไอเทม (UC-12)","inventory")}
+    }
+    function screenCrafting() {
+      const inv = myInv();
+      const equips = inv.filter(x => x.type === "equip");
+      const rc = state.recipeConfig || { upgradeQty: 5, shieldQty: 3 };
+      return `${topbar("ผสมไอเทม", "inventory")}
   <div class="p-4 flex flex-col gap-4">
     <div class="card">
       <p style="font-weight:800;color:#3a2b55;font-size:13px">⬆️ อัพเกรดไอเทมแต่งตัว</p>
       <p style="font-size:11px;color:#8a7d9c;margin:4px 0">ต้องมีไอเทมช่อง+ระดับเดียวกัน ${rc.upgradeQty} ชิ้น</p>
-      ${equips.map(it=>`<div class="flex justify-between items-center py-1">
+      ${equips.map(it => `<div class="flex justify-between items-center py-1">
         <span style="font-size:12px" class="rarity-${it.rarity}">${it.name} (x${it.qty})</span>
-        <button class="btn-secondary" style="width:auto;padding:5px 10px;font-size:11px" ${canCraftUpgrade(it)?'':'disabled'} data-act="craftUpgrade" data-arg="${it.key}">ผสม</button>
+        <button class="btn-secondary" style="width:auto;padding:5px 10px;font-size:11px" ${canCraftUpgrade(it) ? '' : 'disabled'} data-act="craftUpgrade" data-arg="${it.key}">ผสม</button>
       </div>`).join("") || `<p style="font-size:12px;color:#8a7d9c">ไม่มีไอเทมแต่งตัว</p>`}
     </div>
     <div class="card">
@@ -1485,52 +1797,52 @@ function screenCrafting(){
       <button class="btn-secondary" data-act="craftShield48">ผสม</button>
     </div>
   </div>`;
-}
+    }
 
-/* ── Avatar Equip (UC-15) ── */
-function screenAvatarEquip(){
-  const m = me(); const inv = myInv();
-  const slots = ["head","body","legs","weapon"];
-  return `${topbar("แต่งตัวอวตาร (UC-15)","home")}
+    /* ── Avatar Equip (UC-15) ── */
+    function screenAvatarEquip() {
+      const m = me(); const inv = myInv();
+      const slots = ["head", "body", "legs", "weapon"];
+      return `${topbar("แต่งตัวอวตาร", "home")}
   <div class="p-4 flex flex-col gap-3 items-center">
     <div style="font-size:64px">${equippedEmoji(m)}</div>
-    ${slots.map(slot=>{
-      const equippedKey = m.equip[slot];
-      const options = inv.filter(x=>x.type==="equip"&&x.slot===slot);
-      return `<div class="card w-full">
+    ${slots.map(slot => {
+        const equippedKey = m.equip[slot];
+        const options = inv.filter(x => x.type === "equip" && x.slot === slot);
+        return `<div class="card w-full">
         <div class="flex justify-between items-center">
           <span style="font-weight:800;font-size:12px;color:#3a2b55">${SLOT_LABEL[slot]}</span>
-          ${equippedKey? `<button class="btn-danger" style="width:auto;padding:4px 10px;font-size:11px" data-act="unequipItem" data-arg="${slot}">ถอด</button>` : `<span style="font-size:11px;color:#bbb">ว่าง</span>`}
+          ${equippedKey ? `<button class="btn-danger" style="width:auto;padding:4px 10px;font-size:11px" data-act="unequipItem" data-arg="${slot}">ถอด</button>` : `<span style="font-size:11px;color:#bbb">ว่าง</span>`}
         </div>
-        ${equippedKey? `<p style="font-size:12px;margin-top:4px" class="rarity-${equippedKey.split('_')[2]}">${decodeEquipName(equippedKey)}</p>`:""}
-        ${options.length? `<div class="flex flex-wrap gap-2 mt-2">
-          ${options.map(o=>`<button class="btn-outline" style="width:auto;padding:5px 10px;font-size:11px" data-act="equipItem" data-arg="${o.key}">สวม: ${o.name}</button>`).join("")}
-        </div>`:""}
+        ${equippedKey ? `<p style="font-size:12px;margin-top:4px" class="rarity-${equippedKey.split('_')[2]}">${decodeEquipName(equippedKey)}</p>` : ""}
+        ${options.length ? `<div class="flex flex-wrap gap-2 mt-2">
+          ${options.map(o => `<button class="btn-outline" style="width:auto;padding:5px 10px;font-size:11px" data-act="equipItem" data-arg="${o.key}">สวม: ${o.name}</button>`).join("")}
+        </div>`: ""}
       </div>`;
-    }).join("")}
+      }).join("")}
   </div>`;
-}
+    }
 
-/* ── Rooms (UC-17,18,19,20) ── */
-function screenRoomList(){
-  const myRooms = Object.values(state.rooms).filter(r=>r.members.some(mm=>mm.memberId===state.currentUserId) || r.ownerId===state.currentUserId);
-  return `${topbar("ห้องโฟกัส","home")}
+    /* ── Rooms (UC-17,18,19,20) ── */
+    function screenRoomList() {
+      const myRooms = Object.values(state.rooms).filter(r => r.members.some(mm => mm.memberId === state.currentUserId) || r.ownerId === state.currentUserId);
+      return `${topbar("ห้องโฟกัส")}
   <div class="p-4 flex flex-col gap-3">
-    ${state.currentRoomId? `<button class="btn-primary" onclick="navigate('roomView','${state.currentRoomId}')">🏰 กลับไปห้องปัจจุบัน</button>`:""}
+    ${state.currentRoomId ? `<button class="btn-primary" onclick="navigate('roomView','${state.currentRoomId}')">🏰 กลับไปห้องปัจจุบัน</button>` : ""}
     <button class="btn-secondary" data-act="goto" data-arg="roomCreate">➕ สร้างห้องโฟกัส</button>
     <button class="btn-outline" data-act="goto" data-arg="roomJoin">🔑 เข้าร่วมห้องด้วยรหัส</button>
     <p style="font-weight:800;color:#3a2b55;font-size:13px;margin-top:8px">ห้องที่เคยเข้าร่วม</p>
-    ${myRooms.map(r=>`
-      <div class="card" style="cursor:pointer" onclick="navigate('${r.status==='closed'?'roomSummary':'roomView'}','${r.id}')">
-        <div class="flex justify-between"><b style="color:#3a2b55;font-size:13px">${r.name}</b><span class="pill" style="background:${r.status==='active'?'var(--green)':r.status==='closed'?'#bbb':'var(--yellow)'};color:#fff">${{waiting:'รอเริ่ม',active:'กำลังแข่ง',closed:'ปิดแล้ว'}[r.status]}</span></div>
+    ${myRooms.map(r => `
+      <div class="card" style="cursor:pointer" onclick="navigate('${r.status === 'closed' ? 'roomSummary' : 'roomView'}','${r.id}')">
+        <div class="flex justify-between"><b style="color:#3a2b55;font-size:13px">${r.name}</b><span class="pill" style="background:${r.status === 'active' ? 'var(--green)' : r.status === 'closed' ? '#bbb' : 'var(--yellow)'};color:#fff">${{ waiting: 'รอเริ่ม', active: 'กำลังแข่ง', closed: 'ปิดแล้ว' }[r.status]}</span></div>
         <p style="font-size:11px;color:#8a7d9c">สมาชิก ${r.members.length}/8 · รหัส ${r.code}</p>
       </div>`).join("") || `<p style="font-size:12px;color:#8a7d9c;text-align:center">ยังไม่มีห้อง</p>`}
   </div>
   ${bottomNav("roomList")}`;
-}
-function screenRoomCreate(){
-  const m = me();
-  return `${topbar("สร้างห้องโฟกัส (UC-17)","roomList")}
+    }
+    function screenRoomCreate() {
+      const m = me();
+      return `${topbar("สร้างห้องโฟกัส", "roomList")}
   <div class="p-5 flex flex-col gap-3">
     <input id="roomName" class="input" placeholder="ชื่อห้อง">
     <label class="field-label">เวลาห้องทั้งหมด (นาที)</label>
@@ -1543,52 +1855,52 @@ function screenRoomCreate(){
     <p style="font-size:11px;color:#bbb">⏱ จำลอง: 1 วินาทีจริง = 1 นาทีในเกม เพื่อ demo เร็ว</p>
     <button class="btn-primary" data-act="createRoomSubmit">สร้างห้อง</button>
   </div>`;
-}
-function screenRoomJoin(){
-  return `${topbar("เข้าร่วมห้อง (UC-17)","roomList")}
+    }
+    function screenRoomJoin() {
+      return `${topbar("เข้าร่วมห้อง", "roomList")}
   <div class="p-5 flex flex-col gap-3">
     <input id="joinCode" class="input" placeholder="กรอกรหัสเชิญ 6 หลัก" style="text-transform:uppercase">
     <div id="joinErr" class="errtext hidden"></div>
     <button class="btn-primary" data-act="joinRoomSubmit">เข้าร่วมห้อง</button>
   </div>`;
-}
-function screenRoomView(){
-  const roomId = state.screenArg || state.currentRoomId;
-  const room = state.rooms[roomId];
-  if(!room) return screenRoomList();
-  const isOwner = room.ownerId===state.currentUserId;
-  const now = simNow();
-  const remainMin = room.status==="active"? Math.max(0,(room.closesAt-now)/60000) : room.durationMin;
-  const ranked = room.members.slice().sort((a,b)=>b.focusSec-a.focusSec);
-  const inSessionHere = state.activeSession && state.activeSession.roomId===roomId;
-  const pastDeadline = room.status==="active" && now>=room.closesAt;
-  return `${topbar(room.name,"roomList")}
+    }
+    function screenRoomView() {
+      const roomId = state.screenArg || state.currentRoomId;
+      const room = state.rooms[roomId];
+      if (!room) return screenRoomList();
+      const isOwner = room.ownerId === state.currentUserId;
+      const now = simNow();
+      const remainMin = room.status === "active" ? Math.max(0, (room.closesAt - now) / 60000) : room.durationMin;
+      const ranked = room.members.slice().sort((a, b) => b.focusSec - a.focusSec);
+      const inSessionHere = state.activeSession && state.activeSession.roomId === roomId;
+      const pastDeadline = room.status === "active" && now >= room.closesAt;
+      return `${topbar(room.name, "roomList")}
   <div class="p-4 flex flex-col gap-3">
     <div class="card" style="background:#f5f0ff">
       <div class="flex justify-between" style="font-size:12px;font-weight:800;color:#3a2b55">
-        <span>รหัสเชิญ: ${room.code}</span><span>${room.status==='waiting'?'รอเริ่ม':room.status==='active'?'กำลังแข่ง':'ปิดแล้ว'}</span>
+        <span>รหัสเชิญ: ${room.code}</span><span>${room.status === 'waiting' ? 'รอเริ่ม' : room.status === 'active' ? 'กำลังแข่ง' : 'ปิดแล้ว'}</span>
       </div>
-      <div style="font-size:11px;color:#8a7d9c;margin-top:2px">โฟกัส/พักร่วม: ${room.focusMin}/${room.breakMin} นาที · เวลาห้องเหลือ: ${room.status==='active'? Math.ceil(remainMin)+' นาที'+(pastDeadline?' (รอเซสชันที่กำลังทำอยู่จบก่อนปิด)':'') : room.durationMin+' นาที (ยังไม่เริ่ม)'}</div>
+      <div style="font-size:11px;color:#8a7d9c;margin-top:2px">โฟกัส/พักร่วม: ${room.focusMin}/${room.breakMin} นาที · เวลาห้องเหลือ: ${room.status === 'active' ? Math.ceil(remainMin) + ' นาที' + (pastDeadline ? ' (รอเซสชันที่กำลังทำอยู่จบก่อนปิด)' : '') : room.durationMin + ' นาที (ยังไม่เริ่ม)'}</div>
       <p style="font-size:10px;color:#bbb;margin-top:4px">📌 ตัวเลขในหน้านี้เป็นค่า ณ ตอนเปิด/รีเฟรชหน้าล่าสุด ไม่ใช่เรียลไทม์ — กดรีเฟรชเพื่อดูความคืบหน้าล่าสุดของคนอื่น</p>
     </div>
     <button class="btn-outline" data-act="refreshRoom" data-arg="${room.id}">🔄 รีเฟรชหน้าห้อง</button>
-    ${isOwner && room.status==="waiting"? `
+    ${isOwner && room.status === "waiting" ? `
       <button class="btn-primary" data-act="startRoomAct" data-arg="${room.id}">▶️ เริ่มห้อง</button>
       <button class="btn-outline" data-act="addBotAct" data-arg="${room.id}|Ploy">➕ เชิญเพื่อนจำลอง (Ploy)</button>
       <button class="btn-outline" data-act="addBotAct" data-arg="${room.id}|Ken">➕ เชิญเพื่อนจำลอง (Ken)</button>
     ` : ""}
-    ${room.status==="active" && !inSessionHere && !pastDeadline? `<button class="btn-primary" data-act="beginRoomSession" data-arg="${room.id}">⚔️ เริ่มโฟกัสในห้องนี้</button>`:""}
-    ${room.status==="active" && inSessionHere? `<button class="btn-secondary" data-act="goto" data-arg="session">↩️ กลับไปหน้าเซสชันที่กำลังทำ</button>`:""}
-    <p style="font-weight:800;color:#3a2b55;font-size:13px;margin-top:6px">🏆 Ranking (UC-18) — โฟกัส / พัก / พักเกินกำหนด</p>
+    ${room.status === "active" && !inSessionHere && !pastDeadline ? `<button class="btn-primary" data-act="beginRoomSession" data-arg="${room.id}">⚔️ เริ่มโฟกัสในห้องนี้</button>` : ""}
+    ${room.status === "active" && inSessionHere ? `<button class="btn-secondary" data-act="goto" data-arg="session">↩️ กลับไปหน้าเซสชันที่กำลังทำ</button>` : ""}
+    <p style="font-weight:800;color:#3a2b55;font-size:13px;margin-top:6px">🏆 Ranking — โฟกัส / พัก / พักเกินกำหนด</p>
     <div class="flex flex-col gap-2">
-      ${ranked.map((mm,i)=>`
+      ${ranked.map((mm, i) => `
         <div class="card flex justify-between items-center">
-          <span style="font-size:12px;font-weight:700;color:#3a2b55">${i+1}. ${mm.name}${mm.memberId===room.ownerId?' 👑':''}${mm.memberId===state.currentUserId?' (คุณ)':''}</span>
-          <span style="font-size:10px;color:#8a7d9c">🟢${Math.floor(mm.focusSec/60)}น · ☕${Math.floor((mm.breakSec||0)/60)}น · ⏰${Math.floor((mm.overrestSec||0)/60)}น</span>
-          ${isOwner && mm.memberId!==state.currentUserId? `<button class="btn-danger" style="width:auto;padding:4px 8px;font-size:10px" data-act="kickAct" data-arg="${room.id}|${mm.memberId}">เตะ</button>`:""}
+          <span style="font-size:12px;font-weight:700;color:#3a2b55">${i + 1}. ${mm.name}${mm.memberId === room.ownerId ? ' 👑' : ''}${mm.memberId === state.currentUserId ? ' (คุณ)' : ''}</span>
+          <span style="font-size:10px;color:#8a7d9c">🟢${Math.floor(mm.focusSec / 60)}น · ☕${Math.floor((mm.breakSec || 0) / 60)}น · ⏰${Math.floor((mm.overrestSec || 0) / 60)}น</span>
+          ${isOwner && mm.memberId !== state.currentUserId ? `<button class="btn-danger" style="width:auto;padding:4px 8px;font-size:10px" data-act="kickAct" data-arg="${room.id}|${mm.memberId}">เตะ</button>` : ""}
         </div>`).join("")}
     </div>
-    ${isOwner && room.status==="waiting"? `
+    ${isOwner && room.status === "waiting" ? `
       <div class="card mt-2">
         <p style="font-weight:800;font-size:12px;color:#3a2b55">แก้ไขระยะเวลาร่วม</p>
         <div class="flex gap-2 mt-1">
@@ -1597,74 +1909,74 @@ function screenRoomView(){
         </div>
         <div id="roomEditErr" class="errtext hidden"></div>
         <button class="btn-secondary mt-2" data-act="editRoomDuration" data-arg="${room.id}">บันทึก</button>
-      </div>`:""}
+      </div>`: ""}
     <div class="flex gap-2 mt-2">
-      ${room.status!=="closed"? `<button class="btn-outline" data-act="leaveRoomAct" data-arg="${room.id}">ออกจากห้อง (UC-19)</button>`:""}
-      ${isOwner && room.status!=="closed"? `<button class="btn-danger" data-act="closeRoomAct" data-arg="${room.id}">ปิดห้องตอนนี้</button>`:""}
+      ${room.status !== "closed" ? `<button class="btn-outline" data-act="leaveRoomAct" data-arg="${room.id}">ออกจากห้อง</button>` : ""}
+      ${isOwner && room.status !== "closed" ? `<button class="btn-danger" data-act="closeRoomAct" data-arg="${room.id}">ปิดห้องตอนนี้</button>` : ""}
     </div>
   </div>`;
-}
-function screenRoomSummary(){
-  const roomId = state.screenArg || state.currentRoomId;
-  const room = state.rooms[roomId];
-  if(!room) return screenRoomList();
-  const ranked = room.ranking || room.members.slice().sort((a,b)=>b.focusSec-a.focusSec);
-  return `${topbar("สรุปผลห้อง (UC-17)","roomList")}
+    }
+    function screenRoomSummary() {
+      const roomId = state.screenArg || state.currentRoomId;
+      const room = state.rooms[roomId];
+      if (!room) return screenRoomList();
+      const ranked = room.ranking || room.members.slice().sort((a, b) => b.focusSec - a.focusSec);
+      return `${topbar("สรุปผลห้อง", "roomList")}
   <div class="p-4 flex flex-col gap-3">
     <div class="card text-center" style="background:#fff7e6">
       <div style="font-size:36px">🏆</div>
-      <p style="font-weight:900;color:#3a2b55">${ranked[0]? ranked[0].name+' ชนะการแข่งขัน!' : 'ไม่มีผู้เข้าร่วม'}</p>
+      <p style="font-weight:900;color:#3a2b55">${ranked[0] ? ranked[0].name + ' ชนะการแข่งขัน!' : 'ไม่มีผู้เข้าร่วม'}</p>
     </div>
-    ${ranked.map((mm,i)=>`
+    ${ranked.map((mm, i) => `
       <div class="card flex justify-between items-center">
-        <span style="font-weight:700;font-size:13px;color:#3a2b55">#${i+1} ${mm.name}</span>
-        <span style="font-size:10px;color:#8a7d9c">🟢${Math.floor(mm.focusSec/60)}น · ☕${Math.floor((mm.breakSec||0)/60)}น · ⏰${Math.floor((mm.overrestSec||0)/60)}น</span>
+        <span style="font-weight:700;font-size:13px;color:#3a2b55">#${i + 1} ${mm.name}</span>
+        <span style="font-size:10px;color:#8a7d9c">🟢${Math.floor(mm.focusSec / 60)}น · ☕${Math.floor((mm.breakSec || 0) / 60)}น · ⏰${Math.floor((mm.overrestSec || 0) / 60)}น</span>
       </div>`).join("")}
     <button class="btn-primary" data-act="goto" data-arg="roomList">กลับไปรายการห้อง</button>
   </div>`;
-}
+    }
 
-/* ── Friends (UC-21,22,23) ── */
-function screenFriends(){
-  const mine = state.friendships.filter(f=>f.aId===me().id||f.bId===me().id);
-  const accepted = mine.filter(f=>f.status==="accepted");
-  const sentPending = mine.filter(f=>f.status==="pending" && f.aId===me().id);
-  return `${topbar("เพื่อน (UC-21, UC-22)","home")}
+    /* ── Friends (UC-21,22,23) ── */
+    function screenFriends() {
+      const mine = state.friendships.filter(f => f.aId === me().id || f.bId === me().id);
+      const accepted = mine.filter(f => f.status === "accepted");
+      const sentPending = mine.filter(f => f.status === "pending" && f.aId === me().id);
+      return `${topbar("เพื่อน", "home")}
   <div class="p-4 flex flex-col gap-3">
     <div class="card">
       <input id="friendSearch" class="input" placeholder="ค้นหาด้วยชื่อผู้ใช้ (เช่น ploy_focus, ken_rpg)">
       <div id="friendErr" class="errtext hidden mt-1"></div>
       <button class="btn-secondary mt-2" data-act="sendFriendReq">ส่งคำขอเป็นเพื่อน</button>
     </div>
-    ${sentPending.length? `<p style="font-weight:800;color:#3a2b55;font-size:13px">คำขอที่ส่งไป (รอตอบรับ)</p>`:""}
-    ${sentPending.map(f=>{
-      const otherId = f.aId===me().id? f.bId : f.aId;
-      const other = state.users.find(u=>u.id===otherId);
-      return `<div class="card flex justify-between items-center">
+    ${sentPending.length ? `<p style="font-weight:800;color:#3a2b55;font-size:13px">คำขอที่ส่งไป (รอตอบรับ)</p>` : ""}
+    ${sentPending.map(f => {
+        const otherId = f.aId === me().id ? f.bId : f.aId;
+        const other = state.users.find(u => u.id === otherId);
+        return `<div class="card flex justify-between items-center">
         <span style="font-size:12px;color:#3a2b55">${other.username}</span>
         <button class="btn-danger" style="width:auto;padding:5px 10px;font-size:11px" data-act="cancelFriendReq" data-arg="${f.id}">ยกเลิก</button>
       </div>`;
-    }).join("")}
+      }).join("")}
     <p style="font-weight:800;color:#3a2b55;font-size:13px">รายชื่อเพื่อน</p>
-    ${accepted.map(f=>{
-      const otherId = f.aId===me().id? f.bId : f.aId;
-      const other = state.members[otherId] || {avatarName:"?"};
-      return `<div class="card flex justify-between items-center" style="cursor:pointer" onclick="navigate('friendProfile','${otherId}')">
-        <span style="font-size:13px;font-weight:700;color:#3a2b55">${other.avatarName} · Lv.${other.level||1}</span>
+    ${accepted.map(f => {
+        const otherId = f.aId === me().id ? f.bId : f.aId;
+        const other = state.members[otherId] || { avatarName: "?" };
+        return `<div class="card flex justify-between items-center" style="cursor:pointer" onclick="navigate('friendProfile','${otherId}')">
+        <span style="font-size:13px;font-weight:700;color:#3a2b55">${other.avatarName} · Lv.${other.level || 1}</span>
         <button class="btn-danger" style="width:auto;padding:5px 10px;font-size:11px" data-act="removeFriend" data-arg="${f.id}">ลบ</button>
       </div>`;
-    }).join("") || `<p style="font-size:12px;color:#8a7d9c;text-align:center">ยังไม่มีเพื่อน</p>`}
+      }).join("") || `<p style="font-size:12px;color:#8a7d9c;text-align:center">ยังไม่มีเพื่อน</p>`}
   </div>
   ${bottomNav("friends")}`;
-}
-function screenFriendProfile(){
-  const id = state.screenArg;
-  const friendship = state.friendships.find(f=>((f.aId===me().id&&f.bId===id)||(f.aId===id&&f.bId===me().id))&&f.status==="accepted");
-  if(!friendship){ toast("ไม่ได้เป็นเพื่อนกันแล้ว"); return screenFriends(); }
-  const fmem = state.members[id];
-  const period = state.friendPeriod||"all";
-  const stats = computeStats(id, period);
-  return `${topbar(fmem.avatarName+" (UC-23)","friends")}
+    }
+    function screenFriendProfile() {
+      const id = state.screenArg;
+      const friendship = state.friendships.find(f => ((f.aId === me().id && f.bId === id) || (f.aId === id && f.bId === me().id)) && f.status === "accepted");
+      if (!friendship) { toast("ไม่ได้เป็นเพื่อนกันแล้ว"); return screenFriends(); }
+      const fmem = state.members[id];
+      const period = state.friendPeriod || "all";
+      const stats = computeStats(id, period);
+      return `${topbar(fmem.avatarName, "friends")}
   <div class="p-5 flex flex-col gap-3 items-center">
     <div class="avatar-emoji">${equippedEmoji(fmem)}</div>
     <p style="font-weight:900;color:#3a2b55">${fmem.avatarName} · Lv.${fmem.level}</p>
@@ -1672,12 +1984,12 @@ function screenFriendProfile(){
     <div class="card w-full">
       <p style="font-weight:800;font-size:12px;color:#3a2b55">อุปกรณ์ที่สวมใส่</p>
       <div class="grid grid-cols-2 gap-1 mt-1">
-        ${["head","body","legs","weapon"].map(slot=>`<div style="font-size:11px;color:#8a7d9c">${SLOT_LABEL[slot]}: ${fmem.equip[slot]? decodeEquipName(fmem.equip[slot]) : 'ว่าง'}</div>`).join("")}
+        ${["head", "body", "legs", "weapon"].map(slot => `<div style="font-size:11px;color:#8a7d9c">${SLOT_LABEL[slot]}: ${fmem.equip[slot] ? decodeEquipName(fmem.equip[slot]) : 'ว่าง'}</div>`).join("")}
       </div>
     </div>
     <div class="w-full">
       <label class="field-label">ช่วงเวลาสถิติ</label>
-      ${periodSelectorHtml(period,"setFriendPeriod")}
+      ${periodSelectorHtml(period, "setFriendPeriod")}
     </div>
     <div class="grid grid-cols-3 gap-2 w-full">
       <div class="card text-center" style="padding:10px"><p style="font-size:10px;color:#8a7d9c">🟢 โฟกัส</p><p style="font-size:16px;font-weight:900;color:var(--green)">${stats.totalFocus}<span style="font-size:10px">น.</span></p></div>
@@ -1685,68 +1997,68 @@ function screenFriendProfile(){
       <div class="card text-center" style="padding:10px"><p style="font-size:10px;color:#8a7d9c">⏰ พักเกิน</p><p style="font-size:16px;font-weight:900;color:var(--pink)">${stats.totalOverrest}<span style="font-size:10px">น.</span></p></div>
     </div>
   </div>`;
-}
+    }
 
-/* ── History (UC-24) ── */
-function screenHistory(){
-  const period = state.historyPeriod||"all";
-  const stats = computeStats(me().id, period);
-  const deletedNames = new Set(state.focusItems.filter(x=>x.deletedAt).map(x=>x.name));
-  return `${topbar("ประวัติ / สถิติ (UC-24)","home")}
+    /* ── History (UC-24) ── */
+    function screenHistory() {
+      const period = state.historyPeriod || "all";
+      const stats = computeStats(me().id, period);
+      const deletedNames = new Set(state.focusItems.filter(x => x.deletedAt).map(x => x.name));
+      return `${topbar("ประวัติ")}
   <div class="p-4 flex flex-col gap-3">
     <label class="field-label">เลือกช่วงเวลา</label>
-    ${periodSelectorHtml(period,"setHistoryPeriod")}
+    ${periodSelectorHtml(period, "setHistoryPeriod")}
     <div class="grid grid-cols-3 gap-2">
       <div class="card text-center" style="padding:10px"><p style="font-size:10px;color:#8a7d9c">🟢 โฟกัส</p><p style="font-size:18px;font-weight:900;color:var(--green)">${stats.totalFocus}<span style="font-size:10px">น.</span></p></div>
       <div class="card text-center" style="padding:10px"><p style="font-size:10px;color:#8a7d9c">☕ พัก</p><p style="font-size:18px;font-weight:900;color:var(--blue)">${stats.totalBreak}<span style="font-size:10px">น.</span></p></div>
       <div class="card text-center" style="padding:10px"><p style="font-size:10px;color:#8a7d9c">⏰ พักเกิน</p><p style="font-size:18px;font-weight:900;color:var(--pink)">${stats.totalOverrest}<span style="font-size:10px">น.</span></p></div>
     </div>
     <p style="font-weight:800;color:#3a2b55;font-size:13px">แยกตามรายการ (เวลาโฟกัส)</p>
-    ${Object.entries(stats.byItem).map(([name,min])=>`
+    ${Object.entries(stats.byItem).map(([name, min]) => `
       <div class="card flex justify-between">
-        <span style="font-size:12px;color:#3a2b55">${name}${deletedNames.has(name)?' <span style="color:#bbb">(ลบแล้ว)</span>':''}</span>
+        <span style="font-size:12px;color:#3a2b55">${name}${deletedNames.has(name) ? ' <span style="color:#bbb">(ลบแล้ว)</span>' : ''}</span>
         <span style="font-size:12px;font-weight:700;color:var(--blue)">${min} นาที</span>
       </div>`).join("") || `<p style="font-size:12px;color:#8a7d9c;text-align:center">ยังไม่มีข้อมูลในช่วงเวลานี้</p>`}
-    <p style="font-weight:800;color:#3a2b55;font-size:13px;margin-top:6px">รายการเซสชันย้อนหลัง (รวมสรุปห้องที่ปิดแล้ว)</p>
-    ${stats.allInPeriod.slice().reverse().map(s=>`
+    <p style="font-weight:800;color:#3a2b55;font-size:13px;margin-top:6px">รายการเซสชันย้อนหลัง</p>
+    ${stats.allInPeriod.slice().reverse().map(s => `
       <div class="card flex justify-between items-center">
-        <div><div style="font-size:12px;font-weight:700;color:#3a2b55">${s.itemName||'ไม่ระบุ'}</div><div style="font-size:10px;color:#bbb">${fmtDateTime(s.endedAt)}</div></div>
-        <span class="pill" style="background:${s.status==='success'?'var(--green)':'#bbb'};color:#fff">${s.status==='success'?(s.isRoomSummaryOnly?'สรุปห้อง':'สำเร็จ'):'ยกเลิก'}</span>
+        <div><div style="font-size:12px;font-weight:700;color:#3a2b55">${s.itemName || 'ไม่ระบุ'}</div><div style="font-size:10px;color:#bbb">${fmtDateTime(s.endedAt)}</div></div>
+        <span class="pill" style="background:${s.status === 'success' ? 'var(--green)' : '#bbb'};color:#fff">${s.status === 'success' ? (s.isRoomSummaryOnly ? 'สรุปห้อง' : 'สำเร็จ') : 'ยกเลิก'}</span>
       </div>`).join("") || `<p style="font-size:12px;color:#8a7d9c;text-align:center">ไม่มีเซสชันในช่วงเวลานี้</p>`}
   </div>
   ${bottomNav("history")}`;
-}
+    }
 
-/* ── Admin (UC-25,26,27) ── */
-function screenAdminDash(){
-  return `${topbar("แดชบอร์ดผู้ดูแลระบบ")}
+    /* ── Admin (UC-25,26,27) ── */
+    function screenAdminDash() {
+      return `${topbar("แดชบอร์ดผู้ดูแลระบบ")}
   <div class="p-5 flex flex-col gap-3">
     <div class="card" style="background:#f5f0ff">
       <p style="font-size:12px;color:#8a7d9c">สมาชิกทั้งหมด</p>
       <p style="font-size:22px;font-weight:900;color:#3a2b55">${Object.keys(state.members).length} คน</p>
     </div>
-    <button class="btn-outline" data-act="goto" data-arg="adminItems">🎁 จัดการไอเทม/อัตราดรอป (UC-25)</button>
-    <button class="btn-outline" data-act="goto" data-arg="adminAvatars">👤 จัดการรูปแบบอวตาร (UC-26)</button>
-    <button class="btn-outline" data-act="goto" data-arg="adminFeedback">💬 ดู/ตอบกลับ Feedback (UC-27)</button>
+    <button class="btn-outline" data-act="goto" data-arg="adminItems">🎁 จัดการไอเทม/อัตราดรอป</button>
+    <button class="btn-outline" data-act="goto" data-arg="adminAvatars">👤 จัดการรูปแบบอวตาร</button>
+    <button class="btn-outline" data-act="goto" data-arg="adminFeedback">💬 ดู/ตอบกลับ Feedback</button>
     <button class="btn-danger" data-act="logout">ออกจากระบบ</button>
   </div>`;
-}
-function screenAdminItems(){
-  return `${topbar("จัดการไอเทม/อัตราดรอป (UC-25)","adminDash")}
+    }
+    function screenAdminItems() {
+      return `${topbar("จัดการไอเทม/อัตราดรอป", "adminDash")}
   <div class="p-4 flex flex-col gap-4">
-    ${["bronze","silver","gold"].map(tier=>{
-      const r = state.dropRates[tier];
-      return `<div class="card">
-        <p style="font-weight:800;color:#3a2b55;font-size:13px">กล่องระดับ${{bronze:'ต้น',silver:'กลาง',gold:'สูง'}[tier]}</p>
+    ${["bronze", "silver", "gold"].map(tier => {
+        const r = state.dropRates[tier];
+        return `<div class="card">
+        <p style="font-weight:800;color:#3a2b55;font-size:13px">กล่องระดับ${{ bronze: 'ต้น', silver: 'กลาง', gold: 'สูง' }[tier]}</p>
         <div class="grid grid-cols-2 gap-2 mt-2">
-          ${RARITY_ORDER.map(rk=>`<div><label class="field-label">${RARITY_LABEL[rk]} %</label><input id="dr_${tier}_${rk}" type="number" class="input" value="${r[rk]}"></div>`).join("")}
+          ${RARITY_ORDER.map(rk => `<div><label class="field-label">${RARITY_LABEL[rk]} %</label><input id="dr_${tier}_${rk}" type="number" class="input" value="${r[rk]}"></div>`).join("")}
         </div>
         <div id="dr_${tier}_err" class="errtext hidden mt-1"></div>
         <button class="btn-secondary mt-2" data-act="saveDropRates" data-arg="${tier}">บันทึก (ต้องรวม = 100%)</button>
       </div>`;
-    }).join("")}
+      }).join("")}
     <div class="card">
-      <p style="font-weight:800;color:#3a2b55;font-size:13px">🧵 สูตรผสมไอเทม (UC-12 Recipe Table)</p>
+      <p style="font-weight:800;color:#3a2b55;font-size:13px">🧵 สูตรผสมไอเทม</p>
       <label class="field-label mt-2">จำนวนไอเทมที่ต้องใช้อัพเกรด (ชิ้น/ระดับ)</label>
       <input id="recipeUpgradeQty" type="number" class="input" value="${state.recipeConfig.upgradeQty}">
       <label class="field-label mt-2">จำนวนวัตถุดิบที่ต้องใช้ผสมโล่เวลา (ชิ้น)</label>
@@ -1756,21 +2068,21 @@ function screenAdminItems(){
     </div>
     <p style="font-weight:800;color:#3a2b55;font-size:13px">แคตตาล็อกไอเทม (${state.itemCatalog.length} รายการ)</p>
     <div class="flex flex-col gap-1" style="max-height:180px;overflow:auto">
-      ${state.itemCatalog.map(it=>`<div class="card flex justify-between" style="padding:8px">
+      ${state.itemCatalog.map(it => `<div class="card flex justify-between" style="padding:8px">
         <span style="font-size:11px" class="rarity-${it.rarity}">${it.name}</span>
-        <span style="font-size:10px;color:#8a7d9c">${it.type==='equip'?SLOT_LABEL[it.slot]:'วัตถุดิบ'}</span>
+        <span style="font-size:10px;color:#8a7d9c">${it.type === 'equip' ? SLOT_LABEL[it.slot] : 'วัตถุดิบ'}</span>
       </div>`).join("")}
     </div>
   </div>`;
-}
-function screenAdminAvatars(){
-  return `${topbar("จัดการรูปแบบอวตาร (UC-26)","adminDash")}
+    }
+    function screenAdminAvatars() {
+      return `${topbar("จัดการรูปแบบอวตาร", "adminDash")}
   <div class="p-4 flex flex-col gap-2">
     <div id="avaAdminErr" class="errtext hidden"></div>
-    ${state.avatarTemplates.map(t=>`
+    ${state.avatarTemplates.map(t => `
       <div class="card flex justify-between items-center">
         <span style="font-size:13px">${t.emoji} ${t.name}</span>
-        <button class="${t.active?'btn-danger':'btn-secondary'}" style="width:auto;padding:6px 12px;font-size:11px" data-act="toggleAvatarTemplate" data-arg="${t.id}">${t.active?'ปิดใช้งาน':'เปิดใช้งาน'}</button>
+        <button class="${t.active ? 'btn-danger' : 'btn-secondary'}" style="width:auto;padding:6px 12px;font-size:11px" data-act="toggleAvatarTemplate" data-arg="${t.id}">${t.active ? 'ปิดใช้งาน' : 'เปิดใช้งาน'}</button>
       </div>`).join("")}
     <div class="card mt-2">
       <p style="font-weight:800;color:#3a2b55;font-size:13px">➕ เพิ่มรูปแบบอวตารใหม่</p>
@@ -1782,39 +2094,40 @@ function screenAdminAvatars(){
       <button class="btn-secondary mt-2" data-act="addAvatarTemplate">เพิ่มรูปแบบ</button>
     </div>
   </div>`;
-}
-function screenAdminFeedback(){
-  const list = state.feedbacks.slice().sort((a,b)=>b.createdAt-a.createdAt);
-  return `${topbar("ดู/ตอบกลับ Feedback (UC-27)","adminDash")}
+    }
+    function screenAdminFeedback() {
+      const list = state.feedbacks.slice().sort((a, b) => b.createdAt - a.createdAt);
+      return `${topbar("ดู/ตอบกลับ Feedback", "adminDash")}
   <div class="p-4 flex flex-col gap-3">
     <div id="fbAdminErr" class="errtext hidden"></div>
-    ${list.map(f=>`
+    ${list.map(f => `
       <div class="card">
         <div class="flex justify-between"><span class="pill" style="background:#eee2cf;color:#3a2b55">${f.category}</span>
-        <span class="pill" style="background:${f.status==='answered'?'var(--green)':'var(--yellow)'};color:#fff">${f.status==='answered'?'ตอบกลับแล้ว':'รอตรวจสอบ'}</span></div>
+        <span class="pill" style="background:${f.status === 'answered' ? 'var(--green)' : 'var(--yellow)'};color:#fff">${f.status === 'answered' ? 'ตอบกลับแล้ว' : 'รอตรวจสอบ'}</span></div>
         <p style="font-size:13px;margin:6px 0;color:#3a2b55">${f.message}</p>
-        ${f.status==='answered'? `<p style="font-size:12px;background:#f5f0ff;padding:6px;border-radius:8px;color:#5a3fa0">💬 ${f.answer}</p>` : `
+        ${f.status === 'answered' ? `<p style="font-size:12px;background:#f5f0ff;padding:6px;border-radius:8px;color:#5a3fa0">💬 ${f.answer}</p>` : `
           <textarea id="fbAnswer_${f.id}" class="input" rows="2" placeholder="พิมพ์คำตอบ..."></textarea>
           <button class="btn-secondary mt-1" data-act="answerFeedback" data-arg="${f.id}">บันทึกคำตอบ</button>
         `}
       </div>`).join("") || `<p style="text-align:center;color:#8a7d9c">ยังไม่มี Feedback</p>`}
   </div>`;
-}
+    }
 
-/* ══════════════════════════════════════════════════════════════════
-   INIT
-   ══════════════════════════════════════════════════════════════════ */
-load();
-render();
-setInterval(tick, 1000);
-setInterval(()=>{
-  // เฉพาะหน้าเซสชันเท่านั้นที่ต้องเป็นเรียลไทม์ (นาฬิกาถอยหลัง) — ห้องโฟกัส (UC-18) ตามสเปคคือ
-  // "อัพเดตเมื่อเปิด/รีเฟรชหน้าห้อง ไม่ใช่การนับถอยหลังแบบเรียลไทม์ต่อเนื่อง" จึงไม่ auto-refresh ที่นี่
-  const liveScreens=["session"];
-  if(liveScreens.includes(state.screen)) render();
-}, 1000);
-window.navigate = navigate;
-window.__debug = {A, get state(){return state;}, me, tick, simNow, jumpSim, openLootbox, save, load}; // เผื่อกรรมการ/QA ตรวจสอบ state ผ่าน console (ไม่กระทบการทำงานหลัก)
-</script>
+    /* ══════════════════════════════════════════════════════════════════
+       INIT
+       ══════════════════════════════════════════════════════════════════ */
+    load();
+    render();
+    setInterval(tick, 1000);
+    setInterval(() => {
+      // เฉพาะหน้าเซสชันเท่านั้นที่ต้องเป็นเรียลไทม์ (นาฬิกาถอยหลัง) — ห้องโฟกัส (UC-18) ตามสเปคคือ
+      // "อัพเดตเมื่อเปิด/รีเฟรชหน้าห้อง ไม่ใช่การนับถอยหลังแบบเรียลไทม์ต่อเนื่อง" จึงไม่ auto-refresh ที่นี่
+      const liveScreens = ["session"];
+      if (liveScreens.includes(state.screen)) render();
+    }, 1000);
+    window.navigate = navigate;
+    window.__debug = { A, get state() { return state; }, me, tick, simNow, jumpSim, openLootbox, save, load }; // เผื่อกรรมการ/QA ตรวจสอบ state ผ่าน console (ไม่กระทบการทำงานหลัก)
+  </script>
 </body>
+
 </html>
