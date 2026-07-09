@@ -62,9 +62,9 @@ state "ยังไม่เข้าสู่ระบบ" as PreAuth {
   Welcome --> Login : กด "เข้าสู่ระบบ"
   Register --> Welcome : ยกเลิกกลางคัน
   Register --> CreateAvatar : สมัครสำเร็จ\n(include UC-02)
-  Login --> Login : ข้อมูลผิด /\nบัญชีถูกระงับ (UC-28)
+  Login --> Login : ข้อมูลผิด
   Login --> ForgotPassword : กด "ลืมรหัสผ่าน" (UC-38)
-  ForgotPassword --> Login : รีเซ็ตรหัสผ่านสำเร็จ /\nยกเลิกกลางทาง /\nบัญชีถูกระงับ (UC-28)
+  ForgotPassword --> Login : รีเซ็ตรหัสผ่านสำเร็จ /\nยกเลิกกลางทาง
 }
 
 ' ═════════ โซนสมาชิก (M2–M6) ═════════
@@ -152,14 +152,11 @@ state "ผู้ดูแลระบบ" as Admin {
   state "แดชบอร์ดสถิติระบบ" as AdminDash
   state "จัดการไอเทม / อัตราดรอป\n(UC-26)" as ItemMgmt
   state "จัดการรูปแบบอวตาร\n(UC-27)" as AvatarMgmt
-  state "จัดการบัญชีผู้ใช้\n(UC-28)" as UserMgmt
 
   AdminDash --> ItemMgmt : เมนูไอเทม
   ItemMgmt --> AdminDash : กลับ
   AdminDash --> AvatarMgmt : เมนูอวตาร
   AvatarMgmt --> AdminDash : กลับ
-  AdminDash --> UserMgmt : เมนูผู้ใช้
-  UserMgmt --> AdminDash : กลับ
 }
 
 ' ═════════ ข้ามโซน ═════════

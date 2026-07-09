@@ -1,0 +1,56 @@
+@startuml M6_activity_ดูประวัติและสถิติการโฟกัส
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-24 ดูประวัติและสถิติการโฟกัส — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดหน้าประวัติ/สถิติ;
+
+|ระบบ|
+:แสดงตัวกรองช่วงเวลา (รวมตัวเลือก "ทั้งหมด" สำหรับดูสถิติสะสมทุกช่วงเวลาตั้งแต่เริ่มใช้งาน);
+
+|สมาชิก|
+:เลือกช่วงเวลาที่ต้องการดู หรือเลือก "ทั้งหมด";
+
+|ระบบ|
+if (มีข้อมูลเซสชันในช่วงเวลาที่เลือกหรือไม่?) then (ไม่มี)
+  :แจ้งเตือนว่าไม่มีข้อมูลในช่วงเวลานี้;
+  stop
+else (มี)
+endif
+
+:สรุปเวลาโฟกัส/พัก/เบรกเกินรวมในช่วงที่เลือก (หรือทั้งหมด) แยกออกจากกันชัดเจน\n(เวลาโฟกัสรวมนับเฉพาะนาทีจากเซสชันที่จบสำเร็จเท่านั้น — เกณฑ์เดียวกับ EXP ใน UC-08 และ Ranking ใน UC-18\nเซสชันที่ถูกยกเลิกกลางทางไม่ถูกนับรวมในตัวเลขนี้);
+:แสดงรายละเอียดแยกตามแต่ละรายการที่โฟกัส (UC-03) โดยแต่ละรายการแสดงเวลาโฟกัส/พัก/เบรกเกินแยกกันตามเกณฑ์เดียวกัน\n(รายการที่ถูกลบไปแล้ว (UC-03) ยังแสดงอยู่ตามชื่อเดิมพร้อมสถิติสะสม กำกับป้าย "ลบแล้ว" ต่อท้ายชื่อ ไม่ถูกซ่อนหรือลบทิ้ง);
+:แสดงรายการเซสชันย้อนหลังทั้งหมดพร้อมสถานะ\n(เซสชันที่ถูกยกเลิกกลางทางยังคงแสดงอยู่พร้อมป้ายกำกับ "ยกเลิก" เพื่อความโปร่งใส แม้จะไม่ถูกนับในตัวเลขสรุปด้านบนก็ตาม)\nรวมสรุปห้องที่เคยปิดไปแล้ว (UC-17);
+
+|สมาชิก|
+if (แตะรายการใดรายการหนึ่งหรือไม่?) then (แตะ)
+  |ระบบ|
+  :แสดงรายละเอียดเซสชันย่อยของรายการนั้น;
+else (ไม่แตะ)
+endif
+
+stop
+
+@enduml

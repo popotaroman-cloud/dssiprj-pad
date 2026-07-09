@@ -255,10 +255,10 @@ function seedDB(){
   const day = 24*3600000;
   return {
     users: [
-      { id:1, username:'nan', email:'nan@example.com', password:'1234', role:'member', suspended:false, suspendReason:null, suspendUntil:null },
-      { id:2, username:'ploy', email:'ploy@example.com', password:'1234', role:'member', suspended:false, suspendReason:null, suspendUntil:null },
-      { id:3, username:'admin', email:'admin@example.com', password:'admin', role:'admin', suspended:false, suspendReason:null, suspendUntil:null },
-      { id:4, username:'gun', email:'gun@example.com', password:'1234', role:'member', suspended:true, suspendReason:'สแปมข้อความในห้องโฟกัส', suspendUntil:null }
+      { id:1, username:'nan', email:'nan@example.com', password:'1234', role:'member' },
+      { id:2, username:'ploy', email:'ploy@example.com', password:'1234', role:'member' },
+      { id:3, username:'admin', email:'admin@example.com', password:'admin', role:'admin' },
+      { id:4, username:'gun', email:'gun@example.com', password:'1234', role:'member' }
     ],
     nextUserId:5,
     avatarSkins: [
@@ -431,12 +431,7 @@ function removeFromInventory(userId, itemId, qty){
 function invQty(userId, itemId){ const row=(db.inventory[userId]||[]).find(r=>r.itemId===itemId); return row?row.qty:0; }
 function itemById(id){ return db.itemCatalog.find(i=>i.id===id); }
 
-// ── Auth/Streak/Suspend (UC-28, UC-31) ──
-function checkAutoUnsuspend(u){
-  if(u.suspended && u.suspendUntil && Date.now() >= u.suspendUntil){
-    u.suspended = false; u.suspendReason = null; u.suspendUntil = null; saveDB();
-  }
-}
+// ── Auth/Streak (UC-31) ──
 function applyLoginStreak(userId){
   const av = db.avatars[userId];
   if(!av) return;
@@ -477,8 +472,6 @@ function simulateTimePass(days){
 function quickLogin(username){
   const u = db.users.find(x=>x.username===username);
   if(!u) return;
-  checkAutoUnsuspend(u);
-  if(u.suspended){ showToast('บัญชีนี้ถูกระงับ: '+u.suspendReason); return; }
   performLogin(u);
 }
 
@@ -507,8 +500,7 @@ function adminNav(active){
   const items = [
     {k:'adminDash', ic:'📈', label:'แดชบอร์ด'},
     {k:'itemMgmt', ic:'🧪', label:'ไอเทม'},
-    {k:'avatarMgmt', ic:'🧑‍🚀', label:'อวตาร'},
-    {k:'userMgmt', ic:'🛠️', label:'ผู้ใช้'}
+    {k:'avatarMgmt', ic:'🧑‍🚀', label:'อวตาร'}
   ];
   return `<div class="bottom-nav">${items.map(i=>`
     <button class="${active===i.k?'active':''}" onclick="nav('${i.k}')">
@@ -561,7 +553,7 @@ function submitRegister(){
   else if(password.length < 4) err = 'รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษร';
   else if(db.users.some(u=>u.email===email || u.username===username)) err = 'อีเมลหรือชื่อผู้ใช้นี้ถูกใช้แล้ว';
   if(err){ document.getElementById('regError').innerHTML = fieldError(err); return; }
-  const newUser = { id: db.nextUserId++, username, email, password, role:'member', suspended:false, suspendReason:null, suspendUntil:null };
+  const newUser = { id: db.nextUserId++, username, email, password, role:'member' };
   db.users.push(newUser);
   db.avatars[newUser.id] = null; // ยังไม่มีอวตาร จนกว่าจะทำ UC-02
   db.focusItems[newUser.id] = [];
@@ -590,7 +582,7 @@ function renderLogin(){
     <button class="btn btn-primary btn-block" onclick="submitLogin()">เข้าสู่ระบบ</button>
   </div>
   <p style="text-align:center; font-size:11px; color:var(--ink-soft); margin-top:14px;">
-    ทดลอง: nan/1234 (สมาชิก) · admin/admin (ผู้ดูแล) · gun/1234 (บัญชีถูกระงับ)
+    ทดลอง: nan/1234 (สมาชิก) · admin/admin (ผู้ดูแล)
   </p>`;
 }
 function submitLogin(){
@@ -599,11 +591,6 @@ function submitLogin(){
   const u = db.users.find(x=>x.username===idVal || x.email===idVal);
   if(!u || u.password !== pw){
     document.getElementById('loginError').innerHTML = fieldError('อีเมล/ชื่อผู้ใช้ หรือรหัสผ่านไม่ถูกต้อง');
-    return;
-  }
-  checkAutoUnsuspend(u);
-  if(u.suspended){
-    document.getElementById('loginError').innerHTML = fieldError('บัญชีนี้ถูกระงับ: ' + u.suspendReason);
     return;
   }
   performLogin(u);
@@ -638,12 +625,6 @@ function renderForgotPassword(){
 }
 function submitForgotEmail(){
   const idVal = document.getElementById('forgotId').value.trim();
-  // ตาม activity diagram UC-38: เช็คบัญชีถูกระงับ (UC-28) ทันทีหลังกรอกอีเมล ก่อนเช็คว่าอีเมลตรงกับบัญชีหรือไม่
-  const u = db.users.find(x=>x.username.toLowerCase()===idVal.toLowerCase() || x.email.toLowerCase()===idVal.toLowerCase());
-  if(u){
-    checkAutoUnsuspend(u);
-    if(u.suspended){ showToast('บัญชีนี้ถูกระงับ: '+u.suspendReason+' — ไม่อนุญาตให้รีเซ็ตรหัสผ่าน'); return; }
-  }
   ui._forgotTarget = idVal;
   ui._forgotStep = 2; saveUI();
   showToast('หากอีเมลนี้มีอยู่ในระบบ จะได้รับลิงก์รีเซ็ตรหัสผ่าน (จำลอง: ไปขั้นตอนถัดไปได้เลย)');
@@ -1758,7 +1739,7 @@ function renderHistory(){
 function setHistoryPeriod(p){ ui._historyPeriod = p; render(); }
 
 /* ══════════════════════════════════════════════════════════════════
-   12. SCREENS — ผู้ดูแลระบบ (UC-26 ไอเทม/อัตราดรอป, UC-27 รูปแบบอวตาร, UC-28 ระงับบัญชี)
+   12. SCREENS — ผู้ดูแลระบบ (UC-26 ไอเทม/อัตราดรอป, UC-27 รูปแบบอวตาร)
    ══════════════════════════════════════════════════════════════════ */
 function renderAdminDash(){
   const s = db.adminStatsSeed;
@@ -1851,67 +1832,6 @@ function toggleSkinActive(id){
   s.active = !s.active; saveDB(); render();
 }
 
-function renderUserMgmt(){
-  return `
-  ${appbar('จัดการบัญชีผู้ใช้')}
-  <div class="card">
-    <div class="field"><label>ค้นหาผู้ใช้ (username/อีเมล)</label><input id="userSearch" type="text" placeholder="เช่น gun"></div>
-    <div style="height:10px;"></div>
-    <button class="btn btn-primary btn-block" onclick="searchUser()">ค้นหา</button>
-  </div>
-  <div id="userMgmtResult" style="margin-top:14px;"></div>
-  ${adminNav('userMgmt')}`;
-}
-function searchUser(){
-  const q = document.getElementById('userSearch').value.trim().toLowerCase();
-  const u = db.users.find(x=>x.username.toLowerCase()===q || x.email.toLowerCase()===q);
-  const box = document.getElementById('userMgmtResult');
-  if(!u){ box.innerHTML = `<div class="card">${fieldError('ไม่พบบัญชีที่ค้นหา')}</div>`; return; }
-  checkAutoUnsuspend(u);
-  const untilLabel = u.suspendUntil ? new Date(u.suspendUntil).toLocaleString('th-TH') : 'ถาวร';
-  box.innerHTML = `
-  <div class="card">
-    <div style="font-weight:800;">${u.username}</div>
-    <div style="font-size:12px; color:var(--ink-soft);">${u.email}</div>
-    <div style="height:6px;"></div>
-    <span class="chip ${u.suspended?'chip-red':'chip-green'}">${u.suspended? 'ถูกระงับ: '+u.suspendReason+' (ถึง '+untilLabel+')' : 'ใช้งานได้ปกติ'}</span>
-    <div style="height:12px;"></div>
-    ${u.suspended
-      ? `<button class="btn btn-success btn-block" onclick="unsuspendUser(${u.id})">ยกเลิกการระงับ</button>`
-      : `<div class="field"><label>เหตุผลการระงับ</label><input id="suspendReason" type="text" placeholder="เช่น สแปม / ละเมิดเงื่อนไข"></div>
-         <div style="height:8px;"></div>
-         <div class="field"><label>ระยะเวลาระงับ</label>
-           <select id="suspendDuration">
-             <option value="1">1 วัน</option>
-             <option value="7">7 วัน</option>
-             <option value="30">30 วัน</option>
-             <option value="permanent">ถาวร</option>
-           </select>
-         </div>
-         <div style="height:8px;"></div>
-         <button class="btn btn-danger btn-block" onclick="suspendUser(${u.id})">ระงับบัญชี</button>`}
-  </div>`;
-}
-function suspendUser(id){
-  const reason = document.getElementById('suspendReason').value.trim();
-  const duration = document.getElementById('suspendDuration').value;
-  if(!reason){ showToast('กรุณากรอกเหตุผล'); return; }
-  if(!confirm('ยืนยันระงับบัญชีนี้?')) return;
-  const u = db.users.find(x=>x.id===id);
-  u.suspended = true; u.suspendReason = reason;
-  u.suspendUntil = duration==='permanent' ? null : Date.now() + parseInt(duration)*24*3600000;
-  saveDB();
-  showToast('ระงับบัญชีแล้ว — ส่งอีเมลแจ้งเจ้าของบัญชี (จำลอง)');
-  searchUser();
-}
-function unsuspendUser(id){
-  const u = db.users.find(x=>x.id===id);
-  u.suspended = false; u.suspendReason = null; u.suspendUntil = null;
-  saveDB();
-  showToast('ยกเลิกการระงับแล้ว');
-  searchUser();
-}
-
 /* ══════════════════════════════════════════════════════════════════
    13. ROUTER
    ══════════════════════════════════════════════════════════════════ */
@@ -1922,7 +1842,7 @@ const renderers = {
   inventory: renderInventory, lootbox: renderLootbox, crafting: renderCrafting,
   roomList: renderRoomList, createRoom: renderCreateRoom, joinRoom: renderJoinRoom, roomView: renderRoomView, roomSummary: renderRoomSummary,
   friends: renderFriends, history: renderHistory,
-  adminDash: renderAdminDash, itemMgmt: renderItemMgmt, avatarMgmt: renderAvatarMgmt, userMgmt: renderUserMgmt
+  adminDash: renderAdminDash, itemMgmt: renderItemMgmt, avatarMgmt: renderAvatarMgmt
 };
 function render(){
   if(ui.screen!=='session') clearInterval(sessionTicker);

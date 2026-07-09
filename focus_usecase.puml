@@ -79,7 +79,6 @@ rectangle "แอปพลิเคชัน Focus" {
   package "Admin — การจัดการระบบ" {
     usecase "UC-26\nจัดการข้อมูลไอเทม\nและอัตราดรอป" as UC26
     usecase "UC-27\nจัดการรูปแบบอวตาร" as UC27
-    usecase "UC-28\nจัดการบัญชีผู้ใช้\n(ระงับ/ปลดระงับ)" as UC28
     usecase "UC-29\nเรียกดูแดชบอร์ด\nสถิติการใช้งานระบบ" as UC29
   }
 }
@@ -107,7 +106,6 @@ Admin -- UC31
 Admin -- UC32
 Admin -- UC26
 Admin -- UC27
-Admin -- UC28
 Admin -- UC29
 
 ' ===== ความสัมพันธ์ระหว่าง use case =====

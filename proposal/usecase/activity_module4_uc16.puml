@@ -1,0 +1,54 @@
+@startuml M4_activity_ระบบชุบชีวิต
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-16 ระบบชุบชีวิต (Revival System) — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดแอป;
+
+|ระบบ|
+:ตรวจสอบสถานะอวตาร พบว่าอยู่ในสถานะ "หมดสติ" (HP = 0 ตาม Business Rules ของ UC-08)\nแสดงหน้าจอภารกิจชุบชีวิต (เซสชันโฟกัสความยาวคงที่ 20 นาที ไม่อิงความยาวเซสชันที่ทำให้หมดสติ);
+
+repeat
+  |สมาชิก|
+  :เริ่มเซสชันโฟกัสภารกิจชุบชีวิต (<<include>> UC-08)\n(ระหว่างสถานะหมดสติไม่ได้รับกล่องสุ่ม/EXP จากเซสชันนี้);
+
+  |ระบบ|
+  :ตรวจสอบว่าเซสชันภารกิจจบสำเร็จครบ 20 นาที หรือถูกยกเลิกกลางทาง (alt flow "ยกเลิกกลางทาง" ของ UC-08);
+repeat while (เซสชันภารกิจจบสำเร็จหรือไม่?) is (ยกเลิกกลางทาง — ภารกิจไม่สำเร็จ อวตารยังหมดสติ ลองใหม่ได้ไม่จำกัดจำนวนครั้ง) not (สำเร็จ)
+
+|ระบบ|
+:ลดเลเวลลง 2 ระดับจากเลเวลก่อนหมดสติ (ต่ำสุดคือเลเวล 1 ห้ามติดลบ);
+:รีเซ็ต EXP ของเลเวลใหม่เป็น 0 (ไม่ใช่ EXP สะสมเดิม);
+:ปรับ Max HP ลดลงตาม Level Scaling ของเลเวลใหม่\n(ส่วนต่าง 2 ระดับ × 5 หน่วย/ระดับ ตาม Business Rules ของ UC-08);
+:ชุบชีวิตอวตาร คืน HP ปัจจุบันเต็มเท่ากับ Max HP ใหม่นั้น;
+:ปลดล็อกฟีเจอร์ที่ถูกล็อกระหว่างหมดสติ (ไอเทมในกระเป๋ายังคงอยู่ครบ);
+:บันทึกผลการชุบชีวิตและแจ้งยืนยันความสำเร็จ;
+
+|สมาชิก|
+:เห็นการยืนยันความสำเร็จ ใช้งานฟีเจอร์ที่เคยถูกล็อกได้ตามปกติ;
+
+stop
+
+@enduml

@@ -1,0 +1,80 @@
+@startuml M1_activity_ลืมรหัสผ่าน
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-05 ลืมรหัสผ่าน (Forgot Password / Reset Password) — Activity Diagram
+
+|Guest|
+start
+:ที่หน้าล็อกอิน (UC-09) กด "ลืมรหัสผ่าน";
+
+|ระบบ|
+:แสดงฟอร์มกรอกอีเมล/ชื่อผู้ใช้ที่ลงทะเบียนไว้;
+
+|Guest|
+if (ต้องการยกเลิกกลางทางหรือไม่?) then (ยกเลิก)
+  :กลับไปหน้าล็อกอินตามเดิม (บัญชียังใช้รหัสผ่านเดิม);
+  stop
+else (ทำต่อ)
+endif
+:กรอกอีเมลและกดยืนยัน;
+
+|ระบบ|
+if (อีเมลตรงกับบัญชีในระบบหรือไม่?) then (ไม่ตรงกับบัญชีใด)
+  :แสดงข้อความทั่วไปว่า\n"หากอีเมลนี้มีอยู่ในระบบ จะได้รับลิงก์รีเซ็ตรหัสผ่าน"\n(ข้อความเดียวกันกับกรณีอีเมลถูกต้อง — ไม่ยืนยัน/ปฏิเสธ\nการมีอยู่ของบัญชี เพื่อป้องกัน account enumeration);
+  stop
+else (ตรงกับบัญชี)
+  :ส่งลิงก์/รหัส OTP รีเซ็ตรหัสผ่านไปยังอีเมลที่ลงทะเบียน\n(มีอายุจำกัด เช่น 15 นาที);
+  :แสดงข้อความทั่วไปเดียวกันว่า\n"หากอีเมลนี้มีอยู่ในระบบ จะได้รับลิงก์รีเซ็ตรหัสผ่าน";
+endif
+
+|Guest|
+if (ลิงก์/OTP หมดอายุหรือถูกใช้ไปแล้วหรือไม่?) then (หมดอายุ/ใช้แล้ว)
+  |ระบบ|
+  :แจ้งเตือนให้ขอลิงก์ใหม่;
+  stop
+else (ยังใช้ได้)
+endif
+
+repeat
+  :เปิดลิงก์/กรอกรหัส OTP แล้วตั้งรหัสผ่านใหม่\nพร้อมกรอกยืนยันรหัสผ่านใหม่;
+  |ระบบ|
+  if (รหัสผ่านใหม่ตรงกับช่องยืนยัน และผ่านเงื่อนไข\nความปลอดภัยของรหัสผ่านหรือไม่?) then (ไม่ผ่าน)
+    :แจ้งเตือน ไม่บันทึก;
+    |Guest|
+  else (ผ่าน)
+  endif
+repeat while (บันทึกสำเร็จหรือไม่?) is (ไม่สำเร็จ — กรอกใหม่) not (สำเร็จ)
+
+|ระบบ|
+:บันทึกรหัสผ่านใหม่;
+:เพิกถอน token เดิมในทุกอุปกรณ์;
+:พากลับไปหน้าล็อกอิน (UC-09);
+
+stop
+
+legend right
+  |<back:white>    </back>| Actor ภายนอก (human) |
+  |<back:#F5F5F5>    </back>| ระบบ (monolith — เลนเดียว) |
+endlegend
+
+@enduml

@@ -1,0 +1,86 @@
+@startuml UC09_เข้าสู่ระบบ
+' ══════════════════════════════════════════════════════════════════
+' รองรับภาษาไทย — อ่านก่อน render:
+' 1. บันทึกไฟล์นี้เป็น UTF-8 (ไม่ต้องมี BOM) เสมอ
+' 2. ถ้า render ผ่าน CLI (plantuml.jar) ต้องระบุ flag encoding ด้วย:
+'      java -Dfile.encoding=UTF-8 -jar plantuml.jar -charset UTF-8 activity_module2_uc09.puml
+' 3. บังคับใช้ Smetana (pure-Java layout engine) แทน Graphviz/dot
+!pragma layout smetana
+' 4. ฟอนต์ที่มีสระ/วรรณยุกต์ไทยครบและ render ผ่าน Java ได้เสถียร
+'    - Windows: "TH Sarabun New" หรือ "Tahoma"
+'    - Linux / PlantUML online server: เปลี่ยนเป็น "Noto Sans Thai" หรือ "Loma"
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+' ══════════════════════════════════════════════════════════════════
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+' ===== Monochrome เท่านั้น — ไม่มี partition ไหนสีต่างจากที่อื่น =====
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+skinparam note {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+}
+
+title UC-09 เข้าสู่ระบบ — Activity Diagram
+
+note as N1
+  UC-09 มี Actor หลัก 2 คนตามแผนภาพ use case โมดูล 2: สมาชิก และ ผู้ดูแลระบบ
+  ทั้งสองทำขั้นตอนเดียวกันทุกประการ จึงรวมแสดงเป็นเลนเดียว "สมาชิก / ผู้ดูแลระบบ"
+  การล็อกอินคือ use case นี้เอง จึงไม่ใช่ pre-condition ที่ถูกละไว้เหมือนไดอะแกรมอื่น
+end note
+
+|สมาชิก / ผู้ดูแลระบบ|
+start
+:เปิดแอป เห็นหน้าล็อกอิน;
+:กรอกอีเมล/ชื่อผู้ใช้และรหัสผ่าน;
+:กดยืนยันเข้าสู่ระบบ;
+
+|ระบบ|
+:ตรวจสอบข้อมูลกับฐานข้อมูลผู้ใช้;
+
+if (อีเมล/ชื่อผู้ใช้และรหัสผ่านถูกต้องหรือไม่?) then (ไม่ถูกต้อง)
+  :แจ้งเตือน ไม่ออก token;
+  stop
+else (ถูกต้อง)
+endif
+
+:ออก token ยืนยันตัวตน;
+
+if (ขาดล็อกอินมาแล้ว ≥ 1 วันเต็ม นับจากวันที่ล็อกอินล่าสุดหรือไม่?\n(ไม่นับช่วงที่ไอเทมโล่เวลา (UC-14) มีผลอยู่)) then (ขาด — รีเซ็ต)
+  :รีเซ็ต Streak ไฟกลับเป็น 0 ทันที\n(มีผลตอนล็อกอินครั้งนี้เลย ไม่มีเกรซพีเรียด);
+else (ไม่ขาด)
+endif
+
+if (เป็นการเข้าสู่ระบบครั้งแรกของวันนี้หรือไม่?) then (ใช่ — ครั้งแรกของวัน)
+  :เพิ่ม Streak ไฟ 1 ระดับ\n(ไม่เพิ่มหลังจบเซสชันโฟกัส — เพิ่มเฉพาะตอน login เท่านั้น);
+else (ไม่ใช่ — เคยล็อกอินมาแล้ววันนี้)
+endif
+
+:พาเข้าสู่หน้าหลัก;
+
+|สมาชิก / ผู้ดูแลระบบ|
+:ได้รับสิทธิ์เข้าถึงฟีเจอร์ที่ต้อง login ทั้งหมด;
+
+stop
+
+legend right
+  |<back:white>    </back>| Actor ภายนอก (สมาชิก / ผู้ดูแลระบบ) |
+  |<back:#F5F5F5>    </back>| ระบบ (monolith — เลนเดียว) |
+endlegend
+
+@enduml

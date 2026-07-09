@@ -1,7 +1,7 @@
-' โมดูล 4: อวตารและความต่อเนื่อง (เหลือ UC-30 เท่านั้น)
-' UC-14 (เลเวลอัพ), UC-15 (HP Decay), UC-16 (Streak), UC-17 (หมดสติ)
-' ถูกยุบรวมเป็น business rules ของ UC-04 (โมดูล 2) แล้ว — ดู usecase_description.md
-' UC-30 เป็น use case เดียวในโมดูลนี้ที่ actor ริเริ่มเองจริง (ทำภารกิจชุบชีวิต)
+' โมดูล 4: อวตารและความต่อเนื่อง (ระบบชุบชีวิต) — เหลือ UC-16 เท่านั้น
+' กลไกเลเวลอัพ, HP Decay, และสถานะหมดสติ ถูกยุบรวมเป็น business rules ของ UC-08 (โมดูล 2) แล้ว
+' กลไก Streak ถูกยุบรวมเป็น business rules ของ UC-09 (โมดูล 2) โดยเฉพาะ — ดู usecase_description.md
+' UC-16 เป็น use case เดียวในโมดูลนี้ที่ actor ริเริ่มเองจริง (ทำภารกิจชุบชีวิต)
 @startuml usecase_module4
 !theme plain
 skinparam defaultFontName TH Sarabun New
@@ -40,16 +40,16 @@ actor "สมาชิก\n(Member)" as Member
 
 rectangle "โมดูล 4 · อวตารและความต่อเนื่อง" {
   package "E1 · ระบบชุบชีวิต" {
-    usecase "UC-30\nระบบชุบชีวิต\n(Revival System)" as UC30
+    usecase "UC-16\nระบบชุบชีวิต\n(Revival System)" as UC16
   }
 
   package "อ้างอิงจากโมดูลอื่น" {
-    usecase "UC-04\nเริ่มจับเวลาโฟกัส (ตีบอส)\n(โมดูล 2)" as UC04 <<external>>
+    usecase "UC-08\nเริ่มจับเวลาโฟกัส (ตีบอส)\n(โมดูล 2)" as UC08 <<external>>
   }
 }
 
-Member -- UC30
+Member -- UC16
 
-UC30 ..> UC04 : <<include>>
+UC16 ..> UC08 : <<include>>
 
 @enduml

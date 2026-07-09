@@ -1,0 +1,64 @@
+@startuml M1_activity_ส่งFeedback
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-07 ส่ง Feedback — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดหน้าตั้งค่า เลือกเมนู "ส่ง Feedback";
+
+repeat
+  :เลือกหมวดหมู่ (ข้อเสนอแนะ / แจ้งปัญหา / อื่นๆ) และกรอกข้อความ;
+  :กดส่ง;
+  |ระบบ|
+  if (กรอกข้อความหรือไม่?) then (ไม่กรอก)
+    :แจ้งเตือนให้กรอกข้อความ;
+    |สมาชิก|
+  elseif (ข้อความยาวเกินที่ระบบกำหนดหรือไม่?\n(เช่น เกิน 1000 ตัวอักษร)) then (เกินกำหนด)
+    :แจ้งเตือน ไม่ให้ส่ง;
+    |สมาชิก|
+  else (ผ่านเงื่อนไข)
+  endif
+repeat while (ส่งสำเร็จหรือไม่?) is (ไม่สำเร็จ — แก้ไขใหม่) not (สำเร็จ)
+
+|ระบบ|
+:บันทึก Feedback ด้วยสถานะเริ่มต้น "รอตรวจสอบ";
+:แสดงข้อความยืนยันว่าส่งสำเร็จ;
+
+|สมาชิก|
+:ดูรายการ Feedback ที่เคยส่งพร้อมสถานะ\n("รอตรวจสอบ" / "ตอบกลับแล้ว" พร้อมคำตอบ) จากหน้าเดียวกัน;
+
+note right
+  ข้อมูลที่บันทึกถูกใช้ต่อใน UC-27
+  (ผู้ดูแลระบบตรวจสอบและตอบกลับ) เชิงข้อมูลเท่านั้น
+  ไม่ใช่ include/extend เชิง flow
+end note
+
+stop
+
+legend right
+  |<back:white>    </back>| Actor ภายนอก (human) |
+  |<back:#F5F5F5>    </back>| ระบบ (monolith — เลนเดียว) |
+endlegend
+
+@enduml

@@ -1,6 +1,7 @@
-' โมดูล 2: เซสชันโฟกัส (Core Loop) — UC-04, UC-31, UC-32
-' UC-31 (เข้าสู่ระบบ)/UC-32 (ออกจากระบบ) ย้ายมาจากโมดูล 1 ตามรหัส FN-SES-002/003
-' (ดูหมายเหตุข้อ 8(ข) ใน usecase_description.md)
+' โมดูล 2: เซสชันโฟกัส (Core Loop) — UC-08, UC-09, UC-10
+' UC-09 (เข้าสู่ระบบ)/UC-10 (ออกจากระบบ) อยู่ในโมดูลนี้ตามรหัส FN-SES-002/003
+' (ดู usecase_description.md — E1 · วงจรเซสชันโฟกัส และ E3 · การเข้าสู่ระบบและออกจากระบบ)
+' รับความสัมพันธ์ <<include>> เข้ามาจาก UC-16 (โมดูล 4) — วาดไว้ที่ไฟล์โมดูล 4 แทน ไม่วาดซ้ำที่นี่
 @startuml usecase_module2
 !theme plain
 skinparam defaultFontName TH Sarabun New
@@ -27,19 +28,19 @@ actor "ผู้ดูแลระบบ\n(Admin)" as Admin
 
 rectangle "โมดูล 2 · เซสชันโฟกัส (Core Loop)" {
   package "E1 · วงจรเซสชันโฟกัส" {
-    usecase "UC-04\nเริ่มจับเวลาโฟกัส\n(ตีบอส)" as UC04
+    usecase "UC-08\nเริ่มจับเวลาโฟกัส\n(ตีบอส)" as UC08
   }
 
   package "E3 · การเข้าสู่ระบบและออกจากระบบ" {
-    usecase "UC-31\nเข้าสู่ระบบ" as UC31
-    usecase "UC-32\nออกจากระบบ" as UC32
+    usecase "UC-09\nเข้าสู่ระบบ" as UC09
+    usecase "UC-10\nออกจากระบบ" as UC10
   }
 }
 
-Member -- UC04
-Member -- UC31
-Member -- UC32
-Admin -- UC31
-Admin -- UC32
+Member -- UC08
+Member -- UC09
+Member -- UC10
+Admin -- UC09
+Admin -- UC10
 
 @enduml

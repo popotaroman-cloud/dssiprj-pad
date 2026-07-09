@@ -1,7 +1,11 @@
 @startuml M5_activity_ยกเลิกคำขอเป็นเพื่อนหรือลบเพื่อน
+' ══════════════════════════════════════════════════════════════════
+' รองรับภาษาไทย — บันทึกไฟล์นี้เป็น UTF-8 (ไม่ต้องมี BOM) เสมอ
+' บังคับใช้ Smetana (pure-Java layout engine) แทน Graphviz/dot
 !pragma layout smetana
 skinparam defaultFontName "TH Sarabun New"
 skinparam defaultFontSize 14
+' ══════════════════════════════════════════════════════════════════
 
 !theme plain
 skinparam titleFontName "TH Sarabun New"
@@ -12,6 +16,7 @@ skinparam ArrowFontSize 12
 skinparam swimlaneTitleFontName "TH Sarabun New"
 skinparam swimlaneTitleFontSize 14
 
+' ===== Monochrome เท่านั้น — ไม่มี partition ไหนสีต่างจากที่อื่น =====
 skinparam activity {
   BackgroundColor #F5F5F5
   BorderColor #424242
@@ -21,7 +26,7 @@ skinparam activity {
   DiamondBorderColor #616161
 }
 
-title UC-35 ยกเลิกคำขอเป็นเพื่อน / ลบเพื่อน — Activity Diagram
+title UC-22 ยกเลิกคำขอเป็นเพื่อน / ลบเพื่อน — Activity Diagram
 
 |สมาชิก|
 start
@@ -45,9 +50,14 @@ else (ลบเพื่อน)
   else (ยืนยัน)
   endif
   |ระบบ|
-  :นำออกจากลิสต์เพื่อนของทั้งสองฝ่าย;
+  :นำออกจากลิสต์เพื่อนของทั้งสองฝ่าย\n(ปิดสิทธิ์เข้าถึงโปรไฟล์/สถิติของกันและกัน (UC-23) ทันที);
 endif
 
 stop
+
+legend right
+  |<back:white>    </back>| Actor ภายนอก (สมาชิก) |
+  |<back:#F5F5F5>    </back>| ระบบ (monolith — เลนเดียว) |
+endlegend
 
 @enduml

@@ -1,0 +1,85 @@
+@startuml M1_activity_แก้ไขโปรไฟล์และเปลี่ยนรหัสผ่าน
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-04 แก้ไขโปรไฟล์และเปลี่ยนรหัสผ่าน — Activity Diagram
+
+|สมาชิก|
+start
+if (ต้องการทำรายการใด?) then (แก้ไขโปรไฟล์)
+
+  :เปิดหน้าตั้งค่าบัญชี;
+  repeat
+    :แก้ไขชื่อผู้ใช้แสดงผล, รูปประจำตัว หรือชื่ออวตาร;
+    :กดบันทึก;
+    |ระบบ|
+    if (ชื่อผู้ใช้แสดงผลถูกใช้แล้วหรือไม่?) then (ถูกใช้แล้ว)
+      :แจ้งเตือนให้แก้ไข;
+      |สมาชิก|
+    elseif (ชื่ออวตารเว้นว่างหรือไม่?) then (เว้นว่าง)
+      :แจ้งเตือนให้กรอกชื่ออวตาร ไม่บันทึก;
+      |สมาชิก|
+    elseif (ชื่ออวตารสั้นกว่า 4 ตัวอักษรหรือเกิน 16 ตัวอักษรหรือไม่?) then (นอกช่วงความยาว)
+      :แจ้งเตือน ไม่บันทึก;
+      |สมาชิก|
+    elseif (ชื่ออวตารใหม่ซ้ำกับที่มีอยู่แล้วในระบบหรือไม่?) then (ซ้ำ)
+      :แจ้งเตือนให้แก้ไข ไม่บันทึก;
+      |สมาชิก|
+    else (ผ่านทุกเงื่อนไข)
+    endif
+  repeat while (บันทึกสำเร็จหรือไม่?) is (ไม่สำเร็จ — แก้ไขใหม่) not (สำเร็จ)
+
+  |ระบบ|
+  :บันทึกข้อมูลโปรไฟล์ (รวมชื่ออวตารหากมีการแก้ไข);
+
+else (เปลี่ยนรหัสผ่าน)
+
+  |สมาชิก|
+  :เปิดหน้าเปลี่ยนรหัสผ่าน;
+  repeat
+    :กรอกรหัสผ่านเดิม รหัสผ่านใหม่ และยืนยันรหัสผ่านใหม่;
+    :กดยืนยัน;
+    |ระบบ|
+    if (รหัสผ่านเดิมถูกต้องหรือไม่?) then (ไม่ถูกต้อง)
+      :แจ้งเตือน ไม่บันทึก;
+      |สมาชิก|
+    elseif (รหัสผ่านใหม่ตรงกับช่องยืนยันหรือไม่?) then (ไม่ตรงกัน)
+      :แจ้งเตือน;
+      |สมาชิก|
+    else (ถูกต้องและตรงกัน)
+    endif
+  repeat while (บันทึกสำเร็จหรือไม่?) is (ไม่สำเร็จ — กรอกใหม่) not (สำเร็จ)
+
+  |ระบบ|
+  :บันทึกรหัสผ่านใหม่;
+  :เพิกถอน token เดิมในอุปกรณ์อื่นทั้งหมด\n(ต้องล็อกอินใหม่ตาม UC-09);
+
+endif
+
+stop
+
+legend right
+  |<back:white>    </back>| Actor ภายนอก (human) |
+  |<back:#F5F5F5>    </back>| ระบบ (monolith — เลนเดียว) |
+endlegend
+
+@enduml

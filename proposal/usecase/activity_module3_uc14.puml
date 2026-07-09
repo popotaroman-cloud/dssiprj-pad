@@ -1,0 +1,61 @@
+@startuml M3_activity_ใช้ไอเทมโล่เวลา
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-14 ใช้ไอเทมโล่เวลา — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดกระเป๋าไอเทม (UC-13);
+
+|ระบบ|
+if (มีไอเทมโล่เวลาในกระเป๋าหรือไม่?) then (ไม่มี)
+  :ไม่แสดงตัวเลือกนี้;
+  stop
+else (มี)
+endif
+:แสดงไอเทมโล่เวลาที่มีอยู่ในกระเป๋า;
+
+|สมาชิก|
+:เลือกไอเทมโล่เวลาที่ต้องการใช้;
+:กดใช้ไอเทม;
+
+|ระบบ|
+if (ระดับความหายากของไอเทมโล่เวลาที่เลือก?) then (สามัญ/หายาก)
+  :เปิดใช้งานสถานะป้องกัน HP/streak เป็นเวลา 24 ชั่วโมง;
+else (หายากมาก/ตำนาน)
+  :เปิดใช้งานสถานะป้องกัน HP/streak เป็นเวลา 48 ชั่วโมง;
+endif
+
+:นำไอเทมโล่เวลาที่ใช้ออกจากกระเป๋า;
+:แจ้งยืนยันว่าโล่มีผลแล้วพร้อมเวลาหมดอายุ;
+:ระหว่างที่โล่มีผล — ไม่มีการหัก HP (Business Rules ของ UC-08)\nและไม่มีการรีเซ็ต Streak (Business Rules ของ UC-09);
+:ครบเวลาที่โล่มีผล กลับไปคำนวณ HP/streak ตามปกติ;
+
+stop
+
+legend right
+  |<back:white>    </back>| Actor ภายนอก (สมาชิก) |
+  |<back:#F5F5F5>    </back>| ระบบ (monolith — เลนเดียว) |
+endlegend
+
+@enduml

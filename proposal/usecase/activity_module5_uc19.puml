@@ -1,0 +1,67 @@
+@startuml M5_activity_ออกจากห้องโฟกัส
+' ══════════════════════════════════════════════════════════════════
+' รองรับภาษาไทย — บันทึกไฟล์นี้เป็น UTF-8 (ไม่ต้องมี BOM) เสมอ
+' บังคับใช้ Smetana (pure-Java layout engine) แทน Graphviz/dot
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+' ══════════════════════════════════════════════════════════════════
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+' ===== Monochrome เท่านั้น — ไม่มี partition ไหนสีต่างจากที่อื่น =====
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-19 ออกจากห้องโฟกัส — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดหน้าห้อง กดออกจากห้อง;
+
+|ระบบ|
+:ขอคำยืนยัน;
+
+|สมาชิก|
+if (ยืนยันหรือไม่?) then (ไม่ยืนยัน)
+  :ยังอยู่ในห้องตามเดิม;
+  stop
+else (ยืนยัน)
+endif
+
+|ระบบ|
+:นำสมาชิกออกจากรายชื่อห้อง;
+:บันทึกสถิติที่ทำไปแล้วในห้องระหว่างที่ยังอยู่ลงประวัติส่วนตัว (UC-24);
+
+if (ผู้ที่ออกเป็นเจ้าของห้องหรือไม่?) then (เป็นเจ้าของห้อง)
+  if (ยังมีสมาชิกคนอื่นเหลืออยู่ในห้องหรือไม่?) then (มีเหลือ)
+    :โอนสิทธิ์เจ้าของห้องให้สมาชิกที่เข้าร่วมนานที่สุดในห้องโดยอัตโนมัติ;
+  else (เป็นคนสุดท้าย)
+    :ปิดห้องอัตโนมัติโดยไม่มีการสรุป Ranking\n(เพราะไม่มีผู้ร่วมเหลือให้จัดอันดับ);
+  endif
+else (ไม่ใช่เจ้าของห้อง)
+endif
+
+:สมาชิกไม่อยู่ในรายชื่อห้องนั้นอีกต่อไป\nไม่เห็นความคืบหน้า/สถิติ (UC-18) ของห้องนั้นอีกต่อไป;
+
+stop
+
+legend right
+  |<back:white>    </back>| Actor ภายนอก (สมาชิก) |
+  |<back:#F5F5F5>    </back>| ระบบ (monolith — เลนเดียว) |
+endlegend
+
+@enduml

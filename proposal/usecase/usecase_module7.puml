@@ -1,9 +1,6 @@
-' โมดูล 7: Admin — การจัดการระบบ (UC-26, UC-27, UC-28)
-' UC-29 (เดิม "เรียกดูแดชบอร์ดสถิติการใช้งานระบบ") ไม่มีอยู่จริงใน usecase_description.md
-' (เนื้อหาต้นฉบับขาดหายตั้งแต่หลัง UC-27 — ดูหมายเหตุข้อ 12; มีแต่ UC-28 ที่ถูกเติมกลับมา)
-' จึงตัดออกจากไดอะแกรมนี้ไว้ก่อน ยังเป็น backlog ค้างจนกว่าจะเขียน use case จริง
-' UC-28 อยู่ภายใต้ epic E2 · การจัดการบัญชีผู้ใช้ (แก้ตามหมายเหตุข้อ 13 — เดิมอยู่ผิด epic E1)
-' ไม่มีความสัมพันธ์ข้ามโมดูล
+' โมดูล 7: Admin — การจัดการระบบ (UC-25, UC-26, UC-27)
+' ไม่มีความสัมพันธ์ข้ามโมดูลเชิง include/extend
+' UC-27 (ดูและตอบกลับ Feedback) เกี่ยวข้องกับ UC-07 (โมดูล 1) เชิงข้อมูลเท่านั้น (ใช้ข้อมูล Feedback ร่วมกัน)
 @startuml usecase_module7
 !theme plain
 skinparam defaultFontName TH Sarabun New
@@ -37,17 +34,17 @@ actor "ผู้ดูแลระบบ\n(Admin)" as Admin
 
 rectangle "โมดูล 7 · Admin — การจัดการระบบ" {
   package "E1 · การจัดการเนื้อหาเกม" {
-    usecase "UC-26\nจัดการข้อมูลไอเทม\nและอัตราดรอป" as UC26
-    usecase "UC-27\nจัดการรูปแบบอวตาร" as UC27
+    usecase "UC-25\nจัดการข้อมูลไอเทม\nและอัตราดรอป" as UC25
+    usecase "UC-26\nจัดการรูปแบบอวตาร" as UC26
   }
 
-  package "E2 · การจัดการบัญชีผู้ใช้" {
-    usecase "UC-28\nระงับ/เพิกถอนสิทธิ์\nบัญชีผู้ใช้" as UC28
+  package "E2 · การจัดการ Feedback ผู้ใช้" {
+    usecase "UC-27\nดูและตอบกลับ Feedback" as UC27
   }
 }
 
+Admin -- UC25
 Admin -- UC26
 Admin -- UC27
-Admin -- UC28
 
 @enduml
