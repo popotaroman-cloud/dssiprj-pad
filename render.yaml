@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: pomo-rpg-mockup
+    env: static
+    buildCommand: ""
+    publishPath: "."
+    headers:
+      - path: /*
+        headers:
+          - key: Cache-Control
+            value: no-cache, no-store, must-revalidate
+          - key: Pragma
+            value: no-cache
+          - key: Expires
+            value: "0"

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Pomo RPG Project Portal - Explore Mockups, Diagrams, and System Specifications.">
+  <title>Pomo RPG · Portal Dashboard</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              pink: '#FF0052',
+              yellow: '#FFD400',
+              green: '#00C68D',
+              blue: '#0055DA',
+              cream: '#FFFAF0',
+              dark: '#2b2340',
+              card: '#3a2b55',
+              border: '#4d3b70',
+            }
+          },
+          fontFamily: {
+            outfit: ['Outfit', 'sans-serif'],
+            inter: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    body {
+      background: radial-gradient(circle at 50% 50%, #3e325c 0%, #2b2340 100%);
+      font-family: 'Inter', sans-serif;
+    }
+    
+    .glow-effect {
+      position: absolute;
+      top: -10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(255, 0, 82, 0.15) 0%, rgba(0, 85, 218, 0.05) 50%, transparent 100%);
+      filter: blur(80px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.1);
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+  </style>
+</head>
+<body class="text-brand-cream min-height-screen relative overflow-x-hidden flex flex-col justify-between">
+  
+  <!-- Glowing Background Effect -->
+  <div class="glow-effect"></div>
+
+  <!-- Header Section -->
+  <header class="w-full max-w-6xl mx-auto px-6 pt-12 pb-6 z-10 relative flex flex-col sm:flex-row items-center justify-between gap-4">
+    <div class="flex items-center gap-4">
+      <!-- Animated Logo Icon -->
+      <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-brand-pink to-brand-blue flex items-center justify-center shadow-lg shadow-brand-pink/20 animate-pulse">
+        <span class="text-2xl font-bold font-outfit text-white">P</span>
+      </div>
+      <div>
+        <h1 class="text-3xl font-extrabold font-outfit tracking-tight text-white flex items-center gap-2">
+          Pomo RPG
+          <span class="text-xs font-semibold px-2 py-0.5 bg-brand-pink text-white rounded-full uppercase tracking-wider font-inter">Portal</span>
+        </h1>
+        <p class="text-sm text-gray-400 font-inter mt-0.5">Interactive Mockup & Documentation Dashboard</p>
+      </div>
+    </div>
+    
+    <!-- Render Badge Status -->
+    <div class="flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-card/60 border border-brand-border backdrop-blur-md">
+      <span class="w-2.5 h-2.5 rounded-full bg-brand-green animate-ping"></span>
+      <span class="w-2.5 h-2.5 rounded-full bg-brand-green absolute"></span>
+      <span class="text-xs font-semibold tracking-wide font-inter text-brand-green pl-1.5">DEPLOYED ON RENDER</span>
+    </div>
+  </header>
+
+  <!-- Main Content Dashboard -->
+  <main class="w-full max-w-6xl mx-auto px-6 py-8 flex-1 z-10 relative grid grid-cols-1 lg:grid-cols-3 gap-8">
+    
+    <!-- left & middle columns: Mockup Links -->
+    <div class="lg:col-span-2 flex flex-col gap-8">
+      
+      <!-- Primary Card: Mockup v2 -->
+      <section id="card-mockup-v2" class="group relative rounded-3xl bg-brand-card/40 border-2 border-brand-pink/40 hover:border-brand-pink p-8 transition-all duration-300 shadow-xl hover:shadow-brand-pink/10 backdrop-blur-md flex flex-col justify-between overflow-hidden">
+        <!-- Accent Glow in Card -->
+        <div class="absolute -right-20 -top-20 w-48 h-48 rounded-full bg-brand-pink/10 filter blur-3xl group-hover:bg-brand-pink/20 transition-all duration-300"></div>
+        
+        <div>
+          <div class="flex justify-between items-start mb-6">
+            <span class="text-xs font-bold tracking-widest text-brand-pink uppercase bg-brand-pink/10 px-3 py-1 rounded-lg">Version 2.0 (Latest)</span>
+            <span class="text-xs font-semibold text-brand-yellow flex items-center gap-1">
+              ⭐ Recommended Simulation
+            </span>
+          </div>
+          
+          <h2 class="text-4xl font-extrabold font-outfit text-white tracking-tight mb-3">Pomo RPG Simulator v2</h2>
+          <p class="text-gray-300 leading-relaxed text-sm mb-6 max-w-xl">
+            อินเตอร์เฟซจำลองแอปพลิเคชันระบบ Pomodoro RPG แบบเต็มรูปแบบในระบบสมาร์ทโฟน 
+            ครอบคลุมทุกลูปการทำงานหลัก (Core Loop) ได้แก่ การทำงานเก็บแต้ม, การอัปเลเวลแฮปปี้เนส, 
+            การจัดการไอเท็มสวมใส่ และโหมดกู้คืนตัวละคร (Revival)
+          </p>
+
+          <!-- Key Features Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+            <div class="flex items-start gap-3 bg-brand-dark/40 border border-brand-border p-3.5 rounded-xl">
+              <span class="text-lg">⏱️</span>
+              <div>
+                <h3 class="text-xs font-bold text-white uppercase tracking-wider">Pomodoro Engine</h3>
+                <p class="text-xs text-gray-400 mt-0.5">จำลองลูป Focus & Break สมจริง</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 bg-brand-dark/40 border border-brand-border p-3.5 rounded-xl">
+              <span class="text-lg">🛡️</span>
+              <div>
+                <h3 class="text-xs font-bold text-white uppercase tracking-wider">Avatar & Gear</h3>
+                <p class="text-xs text-gray-400 mt-0.5">ระบบสวมใส่ อาวุธ สกิน และเสื้อผ้า</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 bg-brand-dark/40 border border-brand-border p-3.5 rounded-xl">
+              <span class="text-lg">📋</span>
+              <div>
+                <h3 class="text-xs font-bold text-white uppercase tracking-wider">Focus Tasks</h3>
+                <p class="text-xs text-gray-400 mt-0.5">หน้าจัดการงานและปรับแต่งเป้าหมาย</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 bg-brand-dark/40 border border-brand-border p-3.5 rounded-xl">
+              <span class="text-lg">💖</span>
+              <div>
+                <h3 class="text-xs font-bold text-white uppercase tracking-wider">Revival System</h3>
+                <p class="text-xs text-gray-400 mt-0.5">ระบบช่วยเหลือเมื่อล้มเหลวในการโฟกัส</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <a href="mockup_v2.html" id="btn-launch-v2" class="w-full inline-flex items-center justify-center gap-2 bg-brand-pink text-white font-extrabold font-outfit py-4 px-6 rounded-2xl transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-brand-pink/30 hover:shadow-brand-pink/50 text-center">
+          เปิดจำลองระบบ Mockup v2 (Latest)
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </a>
+      </section>
+
+      <!-- Secondary Card: Mockup v1 -->
+      <section id="card-mockup-v1" class="group relative rounded-3xl bg-brand-card/25 border border-brand-border hover:border-brand-blue/60 p-6 transition-all duration-300 shadow-md flex flex-col sm:flex-row items-center justify-between gap-6 backdrop-blur-sm">
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-[10px] font-bold tracking-widest text-brand-blue uppercase bg-brand-blue/10 px-2.5 py-0.5 rounded">Version 1.0</span>
+            <span class="text-xs text-gray-500">Legacy Architecture</span>
+          </div>
+          <h2 class="text-xl font-extrabold font-outfit text-white mb-1">Pomo RPG Mockup v1</h2>
+          <p class="text-gray-400 text-xs">
+            เวอร์ชันก่อนหน้าซึ่งเป็นพื้นฐานหลักของระบบโครงสร้างแบบจำลองฉบับแรกสุด
+          </p>
+        </div>
+        <a href="mockup.html" id="btn-launch-v1" class="whitespace-nowrap bg-brand-dark hover:bg-brand-blue text-white hover:text-white font-bold text-xs py-3 px-5 rounded-xl border border-brand-border hover:border-brand-blue transition-all duration-200">
+          เปิดจำลอง Mockup v1
+        </a>
+      </section>
+
+    </div>
+
+    <!-- Right column: Documentation & Repository Specs -->
+    <div class="flex flex-col gap-6">
+      
+      <!-- Specifications Panel -->
+      <section id="panel-docs" class="rounded-3xl bg-brand-card/30 border border-brand-border p-6 backdrop-blur-md flex flex-col h-full justify-between">
+        <div>
+          <h2 class="text-lg font-bold font-outfit text-white mb-4 pb-2 border-b border-brand-border/60 flex items-center gap-2">
+            <span>📄</span> เอกสารประกอบโครงการ
+          </h2>
+          
+          <div class="space-y-3.5 overflow-y-auto max-h-[350px] pr-1.5 custom-scrollbar">
+            
+            <!-- Doc Item: Usecase Spec -->
+            <a href="usecase_spec.md.md" target="_blank" class="block p-3 rounded-xl bg-brand-dark/20 border border-brand-border/40 hover:border-brand-pink/50 hover:bg-brand-dark/40 transition-all duration-200">
+              <h3 class="text-xs font-bold text-white truncate">usecase_spec.md.md</h3>
+              <p class="text-[11px] text-gray-400 mt-0.5">คำอธิบายรายละเอียดกรณีใช้งานระบบทั้งหมด</p>
+            </a>
+
+            <!-- Doc Item: Activity Diagrams -->
+            <div class="p-3 rounded-xl bg-brand-dark/10 border border-brand-border/20">
+              <h3 class="text-xs font-bold text-gray-300">UML & Activity Diagrams</h3>
+              <p class="text-[11px] text-gray-500 mt-0.5">ในรูปแบบ PlantUML (.puml) ภายใต้โฟลเดอร์โครงการ</p>
+              <div class="mt-2 flex flex-wrap gap-1.5">
+                <span class="text-[10px] px-2 py-0.5 bg-brand-dark/50 text-gray-400 rounded">focus_usecase.puml</span>
+                <span class="text-[10px] px-2 py-0.5 bg-brand-dark/50 text-gray-400 rounded">overview.puml</span>
+              </div>
+            </div>
+
+            <!-- Doc Item: Guide Files -->
+            <div class="p-3 rounded-xl bg-brand-dark/10 border border-brand-border/20">
+              <h3 class="text-xs font-bold text-gray-300">Generator Guides & Templates</h3>
+              <p class="text-[11px] text-gray-500 mt-0.5">คู่มือแนะนำการพัฒนาและการสร้าง Activity Diagrams</p>
+              <div class="mt-2 space-y-1">
+                <div class="text-[10px] text-gray-400 flex items-center gap-1">
+                  <span>📂</span> generator/guide/
+                </div>
+                <div class="text-[10px] text-gray-400 flex items-center gap-1">
+                  <span>📂</span> generator/template/
+                </div>
+              </div>
+            </div>
+
+            <!-- Doc Item: Review Details -->
+            <a href="mockup_v2_review.md" target="_blank" class="block p-3 rounded-xl bg-brand-dark/20 border border-brand-border/40 hover:border-brand-pink/50 hover:bg-brand-dark/40 transition-all duration-200">
+              <h3 class="text-xs font-bold text-white truncate">mockup_v2_review.md</h3>
+              <p class="text-[11px] text-gray-400 mt-0.5">บันทึกรีวิวคุณสมบัติและความถูกต้องของ Mockup v2</p>
+            </a>
+
+          </div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-brand-border/40">
+          <div class="flex items-center justify-between text-xs text-gray-400 bg-brand-dark/30 p-3 rounded-xl border border-brand-border/30">
+            <span>🗂️ Git Workspace</span>
+            <span class="font-mono text-[11px]">dssiprj-pad</span>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Footer Section -->
+  <footer class="w-full max-w-6xl mx-auto px-6 py-8 mt-12 border-t border-brand-border/30 z-10 relative flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-400">
+    <p>© 2026 Pomo RPG System Project. All rights reserved.</p>
+    <div class="flex items-center gap-4">
+      <a href="https://render.com" target="_blank" class="hover:text-white transition-colors">Powered by Render</a>
+      <span class="text-gray-600">•</span>
+      <span class="text-gray-500">Local time: 2026-07-10 22:58</span>
+    </div>
+  </footer>
+
+</body>
+</html>
