@@ -354,6 +354,114 @@
       margin-bottom: 4px;
       display: block;
     }
+
+    /* ═══ Admin — เว็บเพจปกติ ไม่ใช่กรอบมือถือ (เน้นฟังก์ชันครบ ไม่เน้นความสวย) ═══ */
+    .phone.admin-mode {
+      width: 100%;
+      max-width: 1200px;
+      height: auto;
+      min-height: 90vh;
+      background: #fff;
+      border-radius: 8px;
+      padding: 0;
+    }
+
+    .admin-mode .screen-wrap {
+      border-radius: 8px;
+      background: #eef0f4;
+      height: auto;
+      min-height: 90vh;
+      overflow: visible;
+    }
+
+    .admin-mode #screen {
+      overflow: visible;
+    }
+
+    .admin-topnav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #24304a;
+      color: #fff;
+      padding: 12px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      flex-wrap: wrap;
+    }
+
+    .admin-brand {
+      font-weight: 900;
+      font-size: 15px;
+      margin-right: 24px;
+      white-space: nowrap;
+    }
+
+    .admin-navlink {
+      padding: 8px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      color: #b9c2d4;
+    }
+
+    .admin-navlink.active,
+    .admin-navlink:hover {
+      background: #3a4a6b;
+      color: #fff;
+    }
+
+    .admin-content {
+      padding: 20px;
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .admin-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      align-items: start;
+    }
+
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: #fff;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .admin-table th {
+      background: #f0f0f5;
+      text-align: left;
+      padding: 8px 10px;
+      font-size: 11px;
+      color: #666;
+    }
+
+    .admin-table td {
+      padding: 8px 10px;
+      border-top: 1px solid #eee;
+      vertical-align: middle;
+    }
+
+    .admin-table input.input {
+      padding: 6px 8px;
+      font-size: 12px;
+    }
+
+    .admin-btn {
+      width: auto;
+      padding: 6px 10px;
+      font-size: 11px;
+    }
   </style>
 </head>
 
@@ -1305,6 +1413,19 @@
     </div>`).join("")}
   </div>`;
     }
+    /* ── Admin: top nav แบบเว็บเพจ (แทน topbar/bottomNav ของฝั่งมือถือ) ── */
+    function adminTopNav(active) {
+      const items = [
+        { k: "adminDash", label: "แดชบอร์ด" },
+        { k: "adminItems", label: "จัดการไอเทม/อัตราดรอป" },
+        { k: "adminFeedback", label: "Feedback" },
+      ];
+      return `<div class="admin-topnav">
+    <span class="admin-brand">🛠️ Pomo RPG — Admin</span>
+    ${items.map(it => `<span class="admin-navlink ${active === it.k ? 'active' : ''}" data-act="goto" data-arg="${it.k}">${it.label}</span>`).join("")}
+    <button class="btn-danger" style="width:auto;padding:8px 16px;margin-left:auto" data-act="logout">ออกจากระบบ</button>
+  </div>`;
+    }
     function progressBar(pct, color) {
       return `<div class="bar-track"><div class="bar-fill" style="width:${clamp(pct, 0, 100)}%;background:${color}"></div></div>`;
     }
@@ -1326,6 +1447,8 @@
 
     function render() {
       devToolbar();
+      // ฝั่งแอดมิน: แสดงเป็นเว็บเพจปกติ (กว้างเต็มจอ) ไม่ใช้กรอบมือถือ
+      document.querySelector(".phone").classList.toggle("admin-mode", state.currentRole === "admin");
       const el = document.getElementById("screen");
       el.innerHTML = renderScreen();
       const modalHost = document.querySelector(".screen-wrap");
@@ -2093,42 +2216,55 @@
 
     /* ── Admin (UC-25,26,27) ── */
     function screenAdminDash() {
-      return `${topbar("แดชบอร์ดผู้ดูแลระบบ")}
-  <div class="p-5 flex flex-col gap-3">
-    <div class="card" style="background:#f5f0ff">
-      <p style="font-size:12px;color:#8a7d9c">สมาชิกทั้งหมด</p>
-      <p style="font-size:22px;font-weight:900;color:#3a2b55">${Object.keys(state.members).length} คน</p>
-    </div>
-    <button class="btn-outline" data-act="goto" data-arg="adminItems">🎁 จัดการไอเทม/อัตราดรอป</button>
-    <button class="btn-outline" data-act="goto" data-arg="adminFeedback">💬 ดู/ตอบกลับ Feedback</button>
-    <button class="btn-danger" data-act="logout">ออกจากระบบ</button>
-  </div>`;
+      const totalMembers = Object.keys(state.members).length;
+      const pendingFb = state.feedbacks.filter(f => f.status !== "answered").length;
+      const totalItems = state.itemCatalog.length;
+      const activeItems = state.itemCatalog.filter(it => it.active !== false).length;
+      return `${adminTopNav("adminDash")}
+<div class="admin-content">
+  <h2 style="font-size:18px;font-weight:900;color:#24304a;margin:0">แดชบอร์ดสถิติระบบ</h2>
+  <div class="admin-grid">
+    <div class="card"><p style="font-size:12px;color:#8a7d9c">สมาชิกทั้งหมด</p><p style="font-size:26px;font-weight:900;color:#24304a">${totalMembers} คน</p></div>
+    <div class="card"><p style="font-size:12px;color:#8a7d9c">ไอเทมในแคตตาล็อก (เปิดใช้งาน/ทั้งหมด)</p><p style="font-size:26px;font-weight:900;color:#24304a">${activeItems}/${totalItems}</p></div>
+    <div class="card"><p style="font-size:12px;color:#8a7d9c">Feedback รอตรวจสอบ</p><p style="font-size:26px;font-weight:900;color:#24304a">${pendingFb} รายการ</p></div>
+  </div>
+  <div class="flex gap-2" style="flex-wrap:wrap">
+    <button class="btn-outline admin-btn" style="padding:10px 18px" data-act="goto" data-arg="adminItems">🎁 จัดการไอเทม/อัตราดรอป</button>
+    <button class="btn-outline admin-btn" style="padding:10px 18px" data-act="goto" data-arg="adminFeedback">💬 ดู/ตอบกลับ Feedback</button>
+  </div>
+</div>`;
     }
     function screenAdminItems() {
-      return `${topbar("จัดการไอเทม/อัตราดรอป", "adminDash")}
-  <div class="p-4 flex flex-col gap-4">
+      return `${adminTopNav("adminItems")}
+<div class="admin-content">
+  <h2 style="font-size:18px;font-weight:900;color:#24304a;margin:0">จัดการไอเทม/อัตราดรอป</h2>
+
+  <div class="admin-grid">
     ${["bronze", "silver", "gold"].map(tier => {
         const r = state.dropRates[tier];
         return `<div class="card">
-        <p style="font-weight:800;color:#3a2b55;font-size:13px">กล่องระดับ${{ bronze: 'ต้น', silver: 'กลาง', gold: 'สูง' }[tier]}</p>
+        <p style="font-weight:800;color:#24304a;font-size:13px">กล่องระดับ${{ bronze: 'ต้น', silver: 'กลาง', gold: 'สูง' }[tier]}</p>
         <div class="grid grid-cols-2 gap-2 mt-2">
           ${RARITY_ORDER.map(rk => `<div><label class="field-label">${RARITY_LABEL[rk]} %</label><input id="dr_${tier}_${rk}" type="number" class="input" value="${r[rk]}"></div>`).join("")}
         </div>
         <div id="dr_${tier}_err" class="errtext hidden mt-1"></div>
-        <button class="btn-secondary mt-2" data-act="saveDropRates" data-arg="${tier}">บันทึก (ต้องรวม = 100%)</button>
+        <button class="btn-secondary admin-btn mt-2" data-act="saveDropRates" data-arg="${tier}">บันทึก (ต้องรวม = 100%)</button>
       </div>`;
       }).join("")}
+  </div>
+
+  <div class="admin-grid">
     <div class="card">
-      <p style="font-weight:800;color:#3a2b55;font-size:13px">🧵 สูตรผสมไอเทม</p>
+      <p style="font-weight:800;color:#24304a;font-size:13px">🧵 สูตรผสมไอเทม</p>
       <label class="field-label mt-2">จำนวนไอเทมที่ต้องใช้อัพเกรด (ชิ้น/ระดับ)</label>
       <input id="recipeUpgradeQty" type="number" class="input" value="${state.recipeConfig.upgradeQty}">
       <label class="field-label mt-2">จำนวนวัตถุดิบที่ต้องใช้ผสมโล่เวลา (ชิ้น)</label>
       <input id="recipeShieldQty" type="number" class="input" value="${state.recipeConfig.shieldQty}">
       <div id="recipeErr" class="errtext hidden mt-1"></div>
-      <button class="btn-secondary mt-2" data-act="saveRecipeConfig">บันทึกสูตรผสม</button>
+      <button class="btn-secondary admin-btn mt-2" data-act="saveRecipeConfig">บันทึกสูตรผสม</button>
     </div>
     <div class="card">
-      <p style="font-weight:800;color:#3a2b55;font-size:13px">➕ เพิ่มไอเทมใหม่</p>
+      <p style="font-weight:800;color:#24304a;font-size:13px">➕ เพิ่มไอเทมใหม่</p>
       <label class="field-label mt-2">ประเภท</label>
       <select id="newItemCatType" class="input" onchange="A.toggleNewItemSlotField(this.value)">
         <option value="equip">ไอเทมแต่งตัว (Equip)</option>
@@ -2147,32 +2283,39 @@
       <label class="field-label mt-2">ชื่อไอเทม</label>
       <input id="newItemCatName" class="input" placeholder="เช่น หมวกเงา">
       <div id="newItemCatErr" class="errtext hidden mt-1"></div>
-      <button class="btn-secondary mt-2" data-act="addCatalogItem">เพิ่มไอเทม</button>
+      <button class="btn-secondary admin-btn mt-2" data-act="addCatalogItem">เพิ่มไอเทม</button>
     </div>
-    <p style="font-weight:800;color:#3a2b55;font-size:13px">แคตตาล็อกไอเทม (${state.itemCatalog.length} รายการ)</p>
-    <div id="itemCatalogErr" class="errtext hidden"></div>
-    <div class="flex flex-col gap-1" style="max-height:260px;overflow:auto">
-      ${state.itemCatalog.map(it => `<div class="card" style="padding:8px">
-        <div class="flex gap-2 items-center">
-          <input id="itemName_${it.id}" class="input" style="flex:1;font-size:11px;padding:6px" value="${it.name}">
-          <button class="btn-secondary" style="width:auto;padding:6px 8px;font-size:10px" data-act="renameItem" data-arg="${it.id}">💾</button>
-        </div>
-        <div class="flex justify-between items-center mt-1">
-          <span style="font-size:10px;color:#8a7d9c" class="rarity-${it.rarity}">${it.type === 'equip' ? SLOT_LABEL[it.slot] : 'วัตถุดิบ'} · ${RARITY_LABEL[it.rarity]}${it.active === false ? ' · ปิดใช้งานอยู่' : ''}</span>
-          <div class="flex gap-1">
-            <button class="${it.active === false ? 'btn-secondary' : 'btn-outline'}" style="width:auto;padding:5px 8px;font-size:10px" data-act="toggleItemActive" data-arg="${it.id}">${it.active === false ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}</button>
-            <button class="btn-danger" style="width:auto;padding:5px 8px;font-size:10px" data-act="deleteItemCatalog" data-arg="${it.id}">ลบถาวร</button>
+  </div>
+
+  <p style="font-weight:800;color:#24304a;font-size:13px">แคตตาล็อกไอเทม (${state.itemCatalog.length} รายการ)</p>
+  <div id="itemCatalogErr" class="errtext hidden"></div>
+  <table class="admin-table">
+    <thead><tr><th>ชื่อ</th><th>ประเภท/ช่อง</th><th>ความหายาก</th><th>สถานะ</th><th>จัดการ</th></tr></thead>
+    <tbody>
+      ${state.itemCatalog.map(it => `<tr>
+        <td><input id="itemName_${it.id}" class="input" style="min-width:140px" value="${it.name}"></td>
+        <td>${it.type === 'equip' ? SLOT_LABEL[it.slot] : 'วัตถุดิบ'}</td>
+        <td class="rarity-${it.rarity}">${RARITY_LABEL[it.rarity]}</td>
+        <td>${it.active === false ? '<span class="pill" style="background:#ccc;color:#333">ปิดใช้งาน</span>' : '<span class="pill" style="background:var(--green);color:#fff">เปิดใช้งาน</span>'}</td>
+        <td>
+          <div class="flex gap-1" style="flex-wrap:wrap">
+            <button class="btn-secondary admin-btn" data-act="renameItem" data-arg="${it.id}">💾 บันทึกชื่อ</button>
+            <button class="${it.active === false ? 'btn-secondary' : 'btn-outline'} admin-btn" data-act="toggleItemActive" data-arg="${it.id}">${it.active === false ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}</button>
+            <button class="btn-danger admin-btn" data-act="deleteItemCatalog" data-arg="${it.id}">ลบถาวร</button>
           </div>
-        </div>
-      </div>`).join("")}
-    </div>
-  </div>`;
+        </td>
+      </tr>`).join("")}
+    </tbody>
+  </table>
+</div>`;
     }
     function screenAdminFeedback() {
       const list = state.feedbacks.slice().sort((a, b) => b.createdAt - a.createdAt);
-      return `${topbar("ดู/ตอบกลับ Feedback", "adminDash")}
-  <div class="p-4 flex flex-col gap-3">
-    <div id="fbAdminErr" class="errtext hidden"></div>
+      return `${adminTopNav("adminFeedback")}
+<div class="admin-content">
+  <h2 style="font-size:18px;font-weight:900;color:#24304a;margin:0">ดู/ตอบกลับ Feedback</h2>
+  <div id="fbAdminErr" class="errtext hidden"></div>
+  <div class="admin-grid">
     ${list.map(f => `
       <div class="card">
         <div class="flex justify-between"><span class="pill" style="background:#eee2cf;color:#3a2b55">${f.category}</span>
@@ -2180,10 +2323,11 @@
         <p style="font-size:13px;margin:6px 0;color:#3a2b55">${f.message}</p>
         ${f.status === 'answered' ? `<p style="font-size:12px;background:#f5f0ff;padding:6px;border-radius:8px;color:#5a3fa0">💬 ${f.answer}</p>` : `
           <textarea id="fbAnswer_${f.id}" class="input" rows="2" placeholder="พิมพ์คำตอบ..."></textarea>
-          <button class="btn-secondary mt-1" data-act="answerFeedback" data-arg="${f.id}">บันทึกคำตอบ</button>
+          <button class="btn-secondary admin-btn mt-1" data-act="answerFeedback" data-arg="${f.id}">บันทึกคำตอบ</button>
         `}
       </div>`).join("") || `<p style="text-align:center;color:#8a7d9c">ยังไม่มี Feedback</p>`}
-  </div>`;
+  </div>
+</div>`;
     }
 
     /* ══════════════════════════════════════════════════════════════════
