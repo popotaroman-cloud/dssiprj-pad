@@ -458,7 +458,7 @@
         hp: maxHp, maxHp, streak, lastLoginDate: todayStr(Date.now()),
         lastDecayCheckAt: Date.now() - 1800000,
         equip: { head: null, body: null, legs: null, weapon: null },
-        settings: { defaultFocus: 25, defaultBreak: 5 },
+        settings: { defaultFocus: 25, defaultBreak: 5, soundEnabled: true, vibrationEnabled: true },
         pity: { bronze: 0, silver: 0, gold: 0 },
         shieldUntil: null, unconscious: false, displayName: name, avatarPic: "🙂",
       };
@@ -727,11 +727,15 @@
       const isMaterial = Math.random() < 0.35;
       let resultItem;
       if (isMaterial) {
-        resultItem = { type: "material", rarity, name: "วัตถุดิบผสม (" + RARITY_LABEL[rarity] + ")" };
+        const matCatalogItem = state.itemCatalog.find(x => x.type === "material" && x.rarity === rarity && x.active !== false)
+          || state.itemCatalog.find(x => x.type === "material" && x.rarity === rarity);
+        resultItem = { type: "material", rarity, name: matCatalogItem ? matCatalogItem.name : ("วัตถุดิบผสม (" + RARITY_LABEL[rarity] + ")") };
         invAdd(member.id, "material_" + rarity, resultItem, 1);
       } else {
         const slots = ["head", "body", "legs", "weapon"]; const slot = slots[Math.floor(Math.random() * 4)];
-        const catalogItem = state.itemCatalog.find(x => x.type === "equip" && x.slot === slot && x.rarity === rarity);
+        // UC-24: ใช้ไอเทมที่ยังเปิดใช้งานอยู่ก่อน (ไอเทมที่ถูกปิดใช้งานไม่ควรดรอปอีก) — fallback กันพังถ้าปิดหมดทุกตัว
+        const catalogItem = state.itemCatalog.find(x => x.type === "equip" && x.slot === slot && x.rarity === rarity && x.active !== false)
+          || state.itemCatalog.find(x => x.type === "equip" && x.slot === slot && x.rarity === rarity);
         resultItem = { type: "equip", slot, rarity, name: catalogItem.name };
         invAdd(member.id, "equip_" + slot + "_" + rarity, resultItem, 1);
       }
@@ -753,7 +757,8 @@
       if (!item || !canCraftUpgrade(item)) { toast("ไอเทมไม่ครบ " + qtyNeeded + " ชิ้น"); return; }
       const nextRarity = RARITY_ORDER[RARITY_ORDER.indexOf(item.rarity) + 1];
       invRemove(me().id, key, qtyNeeded);
-      const catalogItem = state.itemCatalog.find(x => x.type === "equip" && x.slot === item.slot && x.rarity === nextRarity);
+      const catalogItem = state.itemCatalog.find(x => x.type === "equip" && x.slot === item.slot && x.rarity === nextRarity && x.active !== false)
+        || state.itemCatalog.find(x => x.type === "equip" && x.slot === item.slot && x.rarity === nextRarity);
       invAdd(me().id, "equip_" + item.slot + "_" + nextRarity, { type: "equip", slot: item.slot, rarity: nextRarity, name: catalogItem.name }, 1);
       save(); render();
       toast("✨ อัพเกรดสำเร็จ! ได้ " + catalogItem.name + " (" + RARITY_LABEL[nextRarity] + ")");
@@ -1002,6 +1007,8 @@
       if (errs.length) { showFieldError("pwErr", errs.join(" · ")); return; }
       user.password = n1; save(); toast("เปลี่ยนรหัสผ่านสำเร็จ! อุปกรณ์อื่นถูกบังคับออกจากระบบ (จำลอง)"); navigate("settings");
     };
+    A.toggleNotifSound = () => { me().settings.soundEnabled = !me().settings.soundEnabled; save(); render(); };
+    A.toggleNotifVibration = () => { me().settings.vibrationEnabled = !me().settings.vibrationEnabled; save(); render(); };
     A.submitFeedback = () => {
       const cat = val("fbCategory") || "ข้อเสนอแนะ", msg = val("fbMessage");
       if (!msg) { showFieldError("fbErr", "กรุณากรอกข้อความ"); return; }
@@ -1203,6 +1210,66 @@
       state.dropRates[tier] = { common: c, rare: r, epic: e, legendary: l };
       save(); render(); toast("บันทึกอัตราดรอปกล่อง" + tier + "แล้ว");
     };
+    // UC-24: ไอเทม "ถูกอ้างอิงในสูตรผสม" หมายถึงเป็นไอเทมตัวจริงที่ระบบเปิดกล่อง/อัพเกรด/ผสม
+    // จะ lookup เจอสำหรับ slot+rarity (หรือ rarity สำหรับวัตถุดิบ) นั้น — ถ้ามีไอเทมซ้ำ slot+rarity
+    // กัน ตัวที่ไม่ใช่ตัวแรกจะไม่ถูกระบบอ้างอิงจริง จึงลบถาวรได้อย่างปลอดภัย
+    function isCanonicalCatalogItem(item) {
+      if (item.type === "equip") return state.itemCatalog.find(x => x.type === "equip" && x.slot === item.slot && x.rarity === item.rarity) === item;
+      if (item.type === "material") return state.itemCatalog.find(x => x.type === "material" && x.rarity === item.rarity) === item;
+      return false;
+    }
+    function isItemHeldByAnyone(item) {
+      const key = item.type === "equip" ? ("equip_" + item.slot + "_" + item.rarity) : ("material_" + item.rarity);
+      const heldInInv = Object.values(state.inventory).some(inv => inv.some(x => x.key === key && x.qty > 0));
+      const heldEquipped = item.type === "equip" && Object.values(state.members).some(m => m.equip[item.slot] === key);
+      return heldInInv || heldEquipped;
+    }
+    A.toggleNewItemSlotField = (type) => {
+      const wrap = document.getElementById("newItemSlotWrap");
+      if (wrap) wrap.classList.toggle("hidden", type !== "equip");
+    };
+    A.addCatalogItem = () => {
+      const type = val("newItemCatType") || "equip", rarity = val("newItemRarity") || "common", name = val("newItemCatName");
+      if (!name) { showFieldError("newItemCatErr", "กรุณากรอกชื่อไอเทม"); return; }
+      if (type === "equip") {
+        const slot = val("newItemSlot") || "head";
+        state.itemCatalog.push({ id: uid("it"), type: "equip", slot, rarity, name, active: true });
+      } else {
+        state.itemCatalog.push({ id: uid("it"), type: "material", rarity, name, active: true });
+      }
+      save(); render();
+      toast("เพิ่มไอเทม \"" + name + "\" เข้าแคตตาล็อกแล้ว");
+    };
+    A.renameItem = (id) => {
+      const it = state.itemCatalog.find(x => x.id === id); if (!it) return;
+      const name = val("itemName_" + id);
+      if (!name) { showFieldError("itemCatalogErr", "ชื่อไอเทมห้ามว่าง"); return; }
+      it.name = name; save(); render();
+      toast("แก้ไขชื่อไอเทมแล้ว");
+    };
+    A.toggleItemActive = (id) => {
+      const it = state.itemCatalog.find(x => x.id === id); if (!it) return;
+      const isActive = it.active !== false;
+      if (isActive && isCanonicalCatalogItem(it)) {
+        askConfirm("ไอเทม \"" + it.name + "\" ถูกอ้างอิงอยู่ในสูตรผสม/อัพเกรดไอเทม การปิดใช้งานจะกระทบสูตรที่เกี่ยวข้อง ยืนยันปิดใช้งานหรือไม่?", "ปิดใช้งาน", () => {
+          it.active = false; save(); render(); toast("ปิดใช้งาน \"" + it.name + "\" แล้ว");
+        });
+        return;
+      }
+      it.active = !isActive;
+      save(); render();
+      toast((it.active ? "เปิดใช้งาน \"" : "ปิดใช้งาน \"") + it.name + "\" แล้ว");
+    };
+    A.deleteItemCatalog = (id) => {
+      const it = state.itemCatalog.find(x => x.id === id); if (!it) return;
+      if (isItemHeldByAnyone(it)) { showFieldError("itemCatalogErr", "ลบถาวรไม่ได้ — มีสมาชิกถือครองไอเทมนี้อยู่แล้ว แนะนำให้ปิดใช้งานแทน"); return; }
+      if (isCanonicalCatalogItem(it)) { showFieldError("itemCatalogErr", "ลบถาวรไม่ได้ — ไอเทมนี้ถูกอ้างอิงอยู่ในสูตรผสม/อัพเกรด แนะนำให้ปิดใช้งานแทน"); return; }
+      askConfirm("ยืนยันลบไอเทม \"" + it.name + "\" ออกจากแคตตาล็อกถาวร?", "ลบไอเทม", () => {
+        state.itemCatalog = state.itemCatalog.filter(x => x.id !== id);
+        save(); render();
+        toast("ลบไอเทมออกจากแคตตาล็อกแล้ว");
+      });
+    };
     A.answerFeedback = (id) => {
       const answer = val("fbAnswer_" + id);
       if (!answer) { showFieldError("fbAdminErr", "กรุณากรอกคำตอบ"); return; }
@@ -1292,6 +1359,7 @@
         case "editProfile": return screenEditProfile();
         case "changePw": return screenChangePw();
         case "feedback": return screenFeedback();
+        case "notifSettings": return screenNotifSettings();
         case "sessionSetup": return screenSessionSetup();
         case "session": return screenSession();
         case "revival": return screenRevival();
@@ -1514,6 +1582,7 @@
     </div>
     <button class="btn-outline" data-act="goto" data-arg="editProfile">✏️ แก้ไขโปรไฟล์</button>
     <button class="btn-outline" data-act="goto" data-arg="changePw">🔒 เปลี่ยนรหัสผ่าน</button>
+    <button class="btn-outline" data-act="goto" data-arg="notifSettings">🔔 การแจ้งเตือน</button>
     <button class="btn-outline" data-act="goto" data-arg="feedback">💬 ส่ง Feedback</button>
     <button class="btn-danger" data-act="logout">ออกจากระบบ</button>
   </div>
@@ -1566,6 +1635,29 @@
         <p style="font-size:13px;margin:6px 0;color:#3a2b55">${f.message}</p>
         ${f.answer ? `<p style="font-size:12px;background:#f5f0ff;padding:6px;border-radius:8px;color:#5a3fa0">💬 ${f.answer}</p>` : ""}
       </div>`).join("") || `<p style="text-align:center;color:#8a7d9c;font-size:13px">ยังไม่มี Feedback</p>`}
+  </div>`;
+    }
+
+    /* ── การแจ้งเตือน (UC-26) ── */
+    function screenNotifSettings() {
+      const m = me();
+      return `${topbar("การแจ้งเตือน", "settings")}
+  <div class="p-4 flex flex-col gap-3">
+    <div class="card flex justify-between items-center">
+      <div>
+        <div style="font-weight:800;color:#3a2b55;font-size:13px">🔊 เสียงแจ้งเตือน</div>
+        <div style="font-size:11px;color:#8a7d9c">เล่นเสียงเมื่อมีการแจ้งเตือน (เช่น พักเกินกำหนด)</div>
+      </div>
+      <button class="${m.settings.soundEnabled ? 'btn-secondary' : 'btn-outline'}" style="width:auto;padding:6px 14px;font-size:12px" data-act="toggleNotifSound">${m.settings.soundEnabled ? 'เปิด' : 'ปิด'}</button>
+    </div>
+    <div class="card flex justify-between items-center">
+      <div>
+        <div style="font-weight:800;color:#3a2b55;font-size:13px">📳 การสั่น</div>
+        <div style="font-size:11px;color:#8a7d9c">สั่นเครื่องเมื่อมีการแจ้งเตือน</div>
+      </div>
+      <button class="${m.settings.vibrationEnabled ? 'btn-secondary' : 'btn-outline'}" style="width:auto;padding:6px 14px;font-size:12px" data-act="toggleNotifVibration">${m.settings.vibrationEnabled ? 'เปิด' : 'ปิด'}</button>
+    </div>
+    <p style="font-size:11px;color:#8a7d9c">การตั้งค่ามีผลทันทีไม่ต้องกดบันทึกแยก — ปิดทั้งเสียงและการสั่นแล้ว ระบบยังคงส่งการแจ้งเตือน (ข้อความ/ไอคอน) ตามปกติทุกกรณี เพียงไม่มีเสียงหรือการสั่นประกอบ มีผลกับการแจ้งเตือนทุกจุดของระบบทันที เช่น พักเกินกำหนด (UC-07), คำขอเป็นเพื่อน (UC-20)</p>
   </div>`;
     }
 
@@ -2035,11 +2127,43 @@
       <div id="recipeErr" class="errtext hidden mt-1"></div>
       <button class="btn-secondary mt-2" data-act="saveRecipeConfig">บันทึกสูตรผสม</button>
     </div>
+    <div class="card">
+      <p style="font-weight:800;color:#3a2b55;font-size:13px">➕ เพิ่มไอเทมใหม่</p>
+      <label class="field-label mt-2">ประเภท</label>
+      <select id="newItemCatType" class="input" onchange="A.toggleNewItemSlotField(this.value)">
+        <option value="equip">ไอเทมแต่งตัว (Equip)</option>
+        <option value="material">วัตถุดิบผสม (Material)</option>
+      </select>
+      <div id="newItemSlotWrap">
+        <label class="field-label mt-2">ช่องสวมใส่</label>
+        <select id="newItemSlot" class="input">
+          ${Object.keys(SLOT_LABEL).map(s => `<option value="${s}">${SLOT_LABEL[s]}</option>`).join("")}
+        </select>
+      </div>
+      <label class="field-label mt-2">ระดับความหายาก</label>
+      <select id="newItemRarity" class="input">
+        ${RARITY_ORDER.map(r => `<option value="${r}">${RARITY_LABEL[r]}</option>`).join("")}
+      </select>
+      <label class="field-label mt-2">ชื่อไอเทม</label>
+      <input id="newItemCatName" class="input" placeholder="เช่น หมวกเงา">
+      <div id="newItemCatErr" class="errtext hidden mt-1"></div>
+      <button class="btn-secondary mt-2" data-act="addCatalogItem">เพิ่มไอเทม</button>
+    </div>
     <p style="font-weight:800;color:#3a2b55;font-size:13px">แคตตาล็อกไอเทม (${state.itemCatalog.length} รายการ)</p>
-    <div class="flex flex-col gap-1" style="max-height:180px;overflow:auto">
-      ${state.itemCatalog.map(it => `<div class="card flex justify-between" style="padding:8px">
-        <span style="font-size:11px" class="rarity-${it.rarity}">${it.name}</span>
-        <span style="font-size:10px;color:#8a7d9c">${it.type === 'equip' ? SLOT_LABEL[it.slot] : 'วัตถุดิบ'}</span>
+    <div id="itemCatalogErr" class="errtext hidden"></div>
+    <div class="flex flex-col gap-1" style="max-height:260px;overflow:auto">
+      ${state.itemCatalog.map(it => `<div class="card" style="padding:8px">
+        <div class="flex gap-2 items-center">
+          <input id="itemName_${it.id}" class="input" style="flex:1;font-size:11px;padding:6px" value="${it.name}">
+          <button class="btn-secondary" style="width:auto;padding:6px 8px;font-size:10px" data-act="renameItem" data-arg="${it.id}">💾</button>
+        </div>
+        <div class="flex justify-between items-center mt-1">
+          <span style="font-size:10px;color:#8a7d9c" class="rarity-${it.rarity}">${it.type === 'equip' ? SLOT_LABEL[it.slot] : 'วัตถุดิบ'} · ${RARITY_LABEL[it.rarity]}${it.active === false ? ' · ปิดใช้งานอยู่' : ''}</span>
+          <div class="flex gap-1">
+            <button class="${it.active === false ? 'btn-secondary' : 'btn-outline'}" style="width:auto;padding:5px 8px;font-size:10px" data-act="toggleItemActive" data-arg="${it.id}">${it.active === false ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}</button>
+            <button class="btn-danger" style="width:auto;padding:5px 8px;font-size:10px" data-act="deleteItemCatalog" data-arg="${it.id}">ลบถาวร</button>
+          </div>
+        </div>
       </div>`).join("")}
     </div>
   </div>`;
