@@ -1,6 +1,7 @@
-' โมดูล 7: Admin — การจัดการระบบ (UC-25, UC-26, UC-27)
+' โมดูล 7: Admin — การจัดการระบบ (UC-24, UC-25)
 ' ไม่มีความสัมพันธ์ข้ามโมดูลเชิง include/extend
-' UC-27 (ดูและตอบกลับ Feedback) เกี่ยวข้องกับ UC-07 (โมดูล 1) เชิงข้อมูลเท่านั้น (ใช้ข้อมูล Feedback ร่วมกัน)
+' UC-25 (ดูและตอบกลับ Feedback) เกี่ยวข้องกับ UC-06 (โมดูล 1) เชิงข้อมูลเท่านั้น (ใช้ข้อมูล Feedback ร่วมกัน)
+' แอดมินไม่มี use case จัดการรูปแบบอวตารอีกต่อไป (ตัดออกจากขอบเขต)
 @startuml usecase_module7
 !theme plain
 skinparam defaultFontName TH Sarabun New
@@ -34,17 +35,15 @@ actor "ผู้ดูแลระบบ\n(Admin)" as Admin
 
 rectangle "โมดูล 7 · Admin — การจัดการระบบ" {
   package "E1 · การจัดการเนื้อหาเกม" {
-    usecase "UC-25\nจัดการข้อมูลไอเทม\nและอัตราดรอป" as UC25
-    usecase "UC-26\nจัดการรูปแบบอวตาร" as UC26
+    usecase "UC-24\nจัดการข้อมูลไอเทม\nและอัตราดรอป\n(เพิ่ม/แก้ไข/ลบ/ปิดใช้งาน)" as UC24
   }
 
   package "E2 · การจัดการ Feedback ผู้ใช้" {
-    usecase "UC-27\nดูและตอบกลับ Feedback" as UC27
+    usecase "UC-25\nดูและตอบกลับ Feedback" as UC25
   }
 }
 
+Admin -- UC24
 Admin -- UC25
-Admin -- UC26
-Admin -- UC27
 
 @enduml

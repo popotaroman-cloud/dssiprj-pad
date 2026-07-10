@@ -1,0 +1,52 @@
+@startuml M1_activity_ตั้งค่าการแจ้งเตือน
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-26 ตั้งค่าการแจ้งเตือน (เสียง/การสั่น) — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดหน้าตั้งค่า เลือกเมนู "การแจ้งเตือน";
+
+|ระบบ|
+:แสดงสวิตช์ "เสียงแจ้งเตือน" และ "การสั่น" แยกกัน พร้อมสถานะปัจจุบัน\n(ค่า Default หากยังไม่เคยตั้งค่าเอง: เปิดทั้งสองอย่าง);
+
+|สมาชิก|
+:สลับสวิตช์เปิด/ปิดอย่างใดอย่างหนึ่งหรือทั้งคู่ตามต้องการ\n(สวิตช์ทั้งสองตั้งค่าแยกจากกันได้อิสระ ไม่ผูกกัน);
+
+|ระบบ|
+:บันทึกค่าและมีผลทันทีโดยไม่ต้องกดบันทึกแยก;
+note right
+  ค่านี้มีผลกับการแจ้งเตือนทุกจุดของระบบทันที
+  (เช่น UC-07 พักเกินกำหนด, UC-20 คำขอเป็นเพื่อน)
+  แม้ปิดทั้งเสียงและการสั่น ระบบยังคงส่ง push notification
+  (ข้อความ/ไอคอน) ตามปกติทุกกรณี ไม่ใช่การปิดการแจ้งเตือนทั้งหมด
+end note
+
+stop
+
+legend right
+  |<back:white>    </back>| Actor ภายนอก (สมาชิก) |
+  |<back:#F5F5F5>    </back>| ระบบ (monolith — เลนเดียว) |
+endlegend
+
+@enduml

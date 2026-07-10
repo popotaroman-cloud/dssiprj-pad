@@ -1,0 +1,67 @@
+@startuml M3_activity_เปิดกล่องสุ่ม
+!pragma layout smetana
+skinparam defaultFontName "TH Sarabun New"
+skinparam defaultFontSize 14
+
+!theme plain
+skinparam titleFontName "TH Sarabun New"
+skinparam titleFontSize 20
+skinparam noteFontName "TH Sarabun New"
+skinparam ArrowFontName "TH Sarabun New"
+skinparam ArrowFontSize 12
+skinparam swimlaneTitleFontName "TH Sarabun New"
+skinparam swimlaneTitleFontSize 14
+
+skinparam activity {
+  BackgroundColor #F5F5F5
+  BorderColor #424242
+  FontName "TH Sarabun New"
+  FontSize 13
+  DiamondBackgroundColor #FAFAFA
+  DiamondBorderColor #616161
+}
+
+title UC-10 เปิดกล่องสุ่ม — Activity Diagram
+
+|สมาชิก|
+start
+:เปิดกระเป๋าไอเทม (UC-12);
+
+|ระบบ|
+if (มีกล่องสุ่มเหลืออยู่ในกระเป๋าหรือไม่?) then (ไม่มีเลย)
+  :ไม่แสดงตัวเลือกเปิดกล่อง\nแนะนำให้ไปโฟกัส (ลิงก์ไป UC-07);
+  stop
+else (มี)
+endif
+:แสดงกล่องสุ่มเฉพาะชนิดที่มีจริงในกระเป๋า\n(กล่องระดับต้น/กลาง/สูง แยกกัน — ชนิดถูกกำหนดตายตัว\nตั้งแต่ตอนได้รับจาก UC-07 ตามความยาวเซสชัน เปลี่ยนภายหลังไม่ได้);
+
+|สมาชิก|
+:เลือกกล่องสุ่มชนิดที่ต้องการเปิด (ทีละใบ);
+:กดเปิดกล่องสุ่มที่เลือก;
+
+|ระบบ|
+:สุ่มไอเทมตามอัตราดรอปของชนิดกล่องนั้น\n(กล่องระดับต้น 85/13/2/0%, ระดับกลาง 55/30/12/3%,\nระดับสูง 35/35/22/8% ตามลำดับ สามัญ/หายาก/หายากมาก/ตำนาน);
+
+if (เปิดกล่องชนิดนี้ครบ 10 รอบติดต่อกันแล้ว\nโดยไม่ได้ของถึงเกณฑ์การันตีของชนิดนี้หรือไม่?\n(ตัวนับ Pity แยกต่างหากตามชนิดกล่องโดยสิ้นเชิง ไม่นับรวมกัน)) then (ครบ 10 รอบ)
+  :การันตีดรอปตามเกณฑ์ของชนิดกล่องนั้นแทนผลสุ่มปกติ\n(ระดับต้น→หายากขึ้นไป, ระดับกลาง→หายากมากขึ้นไป, ระดับสูง→ตำนานขึ้นไป);
+  :รีเซ็ตตัวนับ Pity ของชนิดกล่องนั้นเป็น 0;
+else (ยังไม่ครบ 10 รอบ)
+  if (ได้ของถึงเกณฑ์การันตีของชนิดกล่องนั้นจากผลสุ่มปกติหรือไม่?) then (ได้)
+    :รีเซ็ตตัวนับ Pity ของชนิดกล่องนั้นเป็น 0;
+  else (ไม่ได้)
+    :เพิ่มตัวนับ Pity ของชนิดกล่องนั้นอีก 1 รอบ;
+  endif
+endif
+
+:นำกล่องสุ่มที่เปิดออกจากกระเป๋า;
+:เพิ่มไอเทมที่สุ่มได้เข้ากระเป๋า (UC-12);
+:แสดงผลไอเทมที่ได้รับ พร้อมความคืบหน้าตัวนับ Pity ปัจจุบัน\nของชนิดกล่องนั้น (เช่น "อีก 3 กล่องจนการันตีของหายากมาก/ตำนาน");
+
+stop
+
+legend right
+  |<back:white>    </back>| Actor ภายนอก (สมาชิก) |
+  |<back:#F5F5F5>    </back>| ระบบ (monolith — เลนเดียว) |
+endlegend
+
+@enduml

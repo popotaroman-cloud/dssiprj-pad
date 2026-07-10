@@ -579,7 +579,7 @@
       member.lastLoginDate = today;
     }
 
-    /* ───────── History / Stats (UC-24, UC-23) — ตัวกรองช่วงเวลา + แยก Focus/Break/Over-rest ───────── */
+    /* ───────── History / Stats (UC-23, ใช้ร่วมกับโปรไฟล์เพื่อน UC-22) — ตัวกรองช่วงเวลา + แยก Focus/Break/Over-rest ───────── */
     const PERIOD_LABEL = { all: "ทั้งหมด", today: "วันนี้", week: "7 วันล่าสุด", month: "30 วันล่าสุด" };
     function periodSinceMs(period) {
       const now = simNow();
@@ -777,6 +777,13 @@
 
     /* ───────── Rooms ───────── */
     function genRoomCode() { return Math.random().toString(36).slice(2, 8).toUpperCase(); }
+    // UC-16 Business Rules — Tie-break: เวลาโฟกัสสะสมมากกว่าชนะก่อน ถ้าเท่ากันพอดี
+    // ผู้ที่มีเวลาพัก (Rest) สะสมน้อยกว่าเป็นผู้ชนะ (ไม่นับเวลาพักเกินกำหนด/Over-rest ในการตัดสิน)
+    // ถ้ายังเท่ากันอีก ถือว่าชนะร่วมกัน (Tie)
+    function roomRankCompare(a, b) {
+      if (b.focusSec !== a.focusSec) return b.focusSec - a.focusSec;
+      return (a.breakSec || 0) - (b.breakSec || 0);
+    }
     function createRoom(name, durationMin, focusMin, breakMin) {
       const id = uid("room");
       state.rooms[id] = {
@@ -810,6 +817,8 @@
     }
     function startRoom(roomId) {
       const room = state.rooms[roomId];
+      // UC-16 Alt Flow: ต้องมีสมาชิกอย่างน้อย 2 คนก่อนเริ่มห้องได้ (ปุ่มถูกปิดใช้งานแล้วในหน้าจอ แต่กันซ้ำไว้ที่นี่ด้วย)
+      if (room.members.length < 2) { toast("ต้องมีสมาชิกอย่างน้อย 2 คนก่อนเริ่มห้องได้"); return; }
       room.status = "active"; room.startedAt = simNow(); room.closesAt = simNow() + room.durationMin * 60000;
       save(); render();
       toast("เริ่มห้องแล้ว! นับเวลาถอยหลัง " + room.durationMin + " นาที");
@@ -827,7 +836,7 @@
     function closeRoom(roomId, auto) {
       const room = state.rooms[roomId];
       room.status = "closed";
-      room.ranking = room.members.slice().sort((a, b) => b.focusSec - a.focusSec);
+      room.ranking = room.members.slice().sort(roomRankCompare);
       room.members.forEach(m => logRoomHistory(room, m));
       save();
       if (state.currentUserId && room.members.some(m => m.memberId === state.currentUserId)) {
@@ -869,16 +878,25 @@
       const fn = A[t.dataset.act];
       if (fn) fn(t.dataset.arg, t);
     });
+    // UC-07 Alt Flow "หยุดชั่วคราวนอกการควบคุมของผู้ใช้": กลับเข้าแอปภายใน 2 นาที = นับเวลาต่อให้ฟรี
+    // เกิน 2 นาที = ถือว่า "ออกกลางคัน" เหมือนกดยกเลิกกลางทาง (HP -10 คงที่ ไม่ได้กล่องสุ่ม)
+    const INTERRUPTION_GRACE_MS = 2 * 60 * 1000;
     document.addEventListener("visibilitychange", () => {
       if (!state || !state.activeSession) return;
       const s = state.activeSession;
-      if (document.hidden) { s._pauseSimSnapshot = simNow(); }
+      if (document.hidden) { s._pauseSimSnapshot = simNow(); save(); }
       else if (s._pauseSimSnapshot != null) {
         const gap = simNow() - s._pauseSimSnapshot;
-        s.phaseStartedSim += gap;
         s._pauseSimSnapshot = null;
-        save();
-        toast("▶️ กลับมาโฟกัสต่อ (เวลาที่หลุดโฟกัสไม่ถูกนับ)");
+        if (gap > INTERRUPTION_GRACE_MS) {
+          const { roomId, mode } = applyCancelPenalty(s);
+          toast("หลุดโฟกัสเกิน 2 นาที ถือว่าออกกลางคัน HP -10 (ค่าคงที่) ไม่ได้กล่องสุ่ม");
+          navigate(mode === "room" ? "roomView" : "home", roomId);
+        } else {
+          s.phaseStartedSim += gap;
+          save();
+          toast("▶️ กลับมาโฟกัสต่อ (เวลาที่หลุดโฟกัสไม่ถูกนับ)");
+        }
       }
     });
 
@@ -915,18 +933,6 @@
       doLoginStreak(me()); settleDecay(me());
       navigate(me().unconscious ? "revival" : "home");
       toast("เข้าสู่ระบบสำเร็จ! 🔥 Streak: " + me().streak);
-    };
-    A.doForgot = () => {
-      const email = val("forgotEmail");
-      if (!email) { showFieldError("forgotErr", "กรอกอีเมลก่อน"); return; }
-      navigate("forgotSent", email);
-    };
-    A.doResetPassword = () => {
-      const p1 = val("newPw1"), p2 = val("newPw2");
-      if (!p1 || !p2 || p1 !== p2) { showFieldError("resetErr", "รหัสผ่านไม่ตรงกันหรือไม่ครบ"); return; }
-      if (p1.length < 6) { showFieldError("resetErr", "รหัสผ่านต้องมีความยาวอย่างน้อย 6 ตัวอักษร (เงื่อนไขความปลอดภัย)"); return; }
-      toast("ตั้งรหัสผ่านใหม่สำเร็จ! (จำลอง) เพิกถอน token ทุกอุปกรณ์แล้ว กรุณาเข้าสู่ระบบใหม่");
-      navigate("login");
     };
     A.logout = () => {
       if (state.activeSession) { toast("มีเซสชันโฟกัสกำลังทำงานอยู่ ต้องจบหรือยกเลิกก่อนออกจากระบบ"); return; }
@@ -969,7 +975,7 @@
     /* ==== Settings / Profile ==== */
     A.saveDefaultDuration = () => {
       const f = parseInt(val("defFocus")), b = parseInt(val("defBreak"));
-      if (!f || f < 1 || f > 180 || !b || b < 1 || b > 60) { showFieldError("durErr", "กรอกค่าให้อยู่ในช่วงที่กำหนด (โฟกัส 1-180, พัก 1-60 นาที)"); return; }
+      if (!f || f < 1 || f > 600 || !b || b < 1 || b > 60) { showFieldError("durErr", "กรอกค่าให้อยู่ในช่วงที่กำหนด (โฟกัส 1-600, พัก 1-60 นาที)"); return; }
       me().settings.defaultFocus = f; me().settings.defaultBreak = b;
       save(); toast("บันทึกระยะเวลาเริ่มต้นแล้ว"); navigate("settings");
     };
@@ -1028,7 +1034,7 @@
       const itemId = val("sessSelectItem");
       const focusMin = parseInt(val("sessFocus")), breakMin = parseInt(val("sessBreak"));
       if (!itemId) { showFieldError("sessErr", "เลือกรายการที่จะโฟกัสก่อน"); return; }
-      if (!focusMin || focusMin < 1 || !breakMin || breakMin < 1) { showFieldError("sessErr", "กรอกระยะเวลาให้ถูกต้อง"); return; }
+      if (!focusMin || focusMin < 1 || focusMin > 600 || !breakMin || breakMin < 1 || breakMin > 60) { showFieldError("sessErr", "กรอกระยะเวลาให้อยู่ในช่วงที่กำหนด (โฟกัส 1-600, พัก 1-60 นาที)"); return; }
       const item = state.focusItems.find(x => x.id === itemId);
       state.activeSession = {
         memberId: me().id, itemId, itemName: item.name, focusMin, breakMin,
@@ -1061,18 +1067,24 @@
       holdTimer = setTimeout(() => { A.cancelSessionConfirmed(); }, 1200);
     };
     A.holdCancelEnd = () => { if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; } };
-    A.cancelSessionConfirmed = () => {
-      const s = state.activeSession; if (!s) return;
+    // บทลงโทษยกเลิกเซสชันกลางทาง (UC-07 Business Rules): HP ลดลง 10 หน่วยคงที่
+    // (ไม่คำนวณตามสัดส่วนเวลาที่โฟกัสไปแล้ว) ถ้า HP ปัจจุบันน้อยกว่า 10 ให้เหลือ 0 ไม่ติดลบ
+    // ใช้ร่วมกันทั้งกรณี "กดยกเลิกกลางทาง" และกรณี "หลุดโฟกัสเกิน 2 นาที" (ถือว่าออกกลางคันเช่นกัน)
+    const CANCEL_PENALTY_HP = 10;
+    function applyCancelPenalty(s) {
       const member = state.members[s.memberId];
-      const elapsedMin = clamp((simNow() - s.phaseStartedSim) / 60000, 0, s.focusMin);
-      const heal = Math.round(member.maxHp * (elapsedMin / s.focusMin));
-      member.hp = clamp(member.hp + heal, 0, member.maxHp);
+      member.hp = clamp(member.hp - CANCEL_PENALTY_HP, 0, member.maxHp);
       member.lastDecayCheckAt = simNow();
       state.sessions.push({ id: uid("ses"), memberId: s.memberId, itemName: s.itemName, focusMin: s.focusMin, status: "cancelled", endedAt: simNow(), mode: s.mode, roomId: s.roomId });
       const roomId = s.roomId, mode = s.mode;
       state.activeSession = null;
       save();
-      toast("ยกเลิกเซสชันแล้ว คืน HP ตามสัดส่วน ไม่ได้กล่องสุ่ม");
+      return { roomId, mode };
+    }
+    A.cancelSessionConfirmed = () => {
+      const s = state.activeSession; if (!s) return;
+      const { roomId, mode } = applyCancelPenalty(s);
+      toast("ยกเลิกเซสชันแล้ว HP -10 (ค่าคงที่) ไม่ได้กล่องสุ่ม");
       navigate(mode === "room" ? "roomView" : "home", roomId);
     };
     A.skipBreak = () => { commitRestStats(state.activeSession); state.activeSession = null; save(); navigate("sessionSetup"); };
@@ -1130,6 +1142,8 @@
     A.createRoomSubmit = () => {
       const name = val("roomName"), dur = parseInt(val("roomDuration")), f = parseInt(val("roomFocus")), b = parseInt(val("roomBreak"));
       if (!name || !dur || !f || !b) { showFieldError("roomErr", "กรอกข้อมูลห้องให้ครบ"); return; }
+      if (dur < 5 || dur > 1000) { showFieldError("roomErr", "เวลาห้องต้องอยู่ในช่วง 5-1000 นาที"); return; }
+      if (f < 1 || f > 600 || b < 1 || b > 60) { showFieldError("roomErr", "ระยะเวลาโฟกัส/พักร่วมต้องอยู่ในช่วงที่กำหนด (โฟกัส 1-600, พัก 1-60 นาที)"); return; }
       createRoom(name, dur, f, b);
     };
     A.joinRoomSubmit = () => {
@@ -1147,6 +1161,7 @@
     A.editRoomDuration = (id) => {
       const f = parseInt(val("roomEditFocus")), b = parseInt(val("roomEditBreak"));
       if (!f || !b) { showFieldError("roomEditErr", "กรอกค่าให้ครบ"); return; }
+      if (f < 1 || f > 600 || b < 1 || b > 60) { showFieldError("roomEditErr", "ระยะเวลาต้องอยู่ในช่วงที่กำหนด (โฟกัส 1-600, พัก 1-60 นาที)"); return; }
       const room = state.rooms[id]; room.focusMin = f; room.breakMin = b;
       save(); render(); toast("อัพเดตระยะเวลาร่วมของห้องแล้ว");
     };
@@ -1174,24 +1189,11 @@
     });
 
     /* ==== Admin ==== */
-    A.toggleAvatarTemplate = (id) => {
-      const activeCount = state.avatarTemplates.filter(t => t.active).length;
-      const tpl = state.avatarTemplates.find(t => t.id === id);
-      if (tpl.active && activeCount <= 3) { showFieldError("avaAdminErr", "เหลือรูปแบบเปิดใช้งานน้อยกว่า 3 แบบ อาจไม่พอสำหรับสมาชิกใหม่ กดอีกครั้งเพื่อยืนยัน"); tpl._warned = true; if (!tpl._forceOff) { tpl._forceOff = true; render(); return; } }
-      tpl.active = !tpl.active; tpl._forceOff = false;
-      save(); render();
-    };
     A.saveRecipeConfig = () => {
       const uq = parseInt(val("recipeUpgradeQty")), sq = parseInt(val("recipeShieldQty"));
       if (!uq || uq < 1 || !sq || sq < 1) { showFieldError("recipeErr", "กรอกจำนวนให้ถูกต้อง (อย่างน้อย 1 ชิ้น)"); return; }
       state.recipeConfig = { upgradeQty: uq, shieldQty: sq };
       save(); render(); toast("บันทึกสูตรผสมไอเทมแล้ว");
-    };
-    A.addAvatarTemplate = () => {
-      const name = val("newTplName"), emoji = val("newTplEmoji");
-      if (!name || !emoji) { showFieldError("newTplErr", "กรุณากรอกชื่อและอีโมจิให้ครบ"); return; }
-      state.avatarTemplates.push({ id: uid("tpl"), name, emoji, active: true });
-      save(); render(); toast("เพิ่มรูปแบบอวตาร \"" + name + "\" แล้ว");
     };
     A.saveDropRates = (tier) => {
       const c = parseInt(val("dr_" + tier + "_common")) || 0, r = parseInt(val("dr_" + tier + "_rare")) || 0,
@@ -1283,9 +1285,6 @@
         case "welcome": return screenWelcome();
         case "register": return screenRegister();
         case "login": return screenLogin();
-        case "forgot": return screenForgot();
-        case "forgotSent": return screenForgotSent();
-        case "resetPw": return screenResetPw();
         case "createAvatar": return screenCreateAvatar();
         case "home": return screenHome();
         case "focusList": return screenFocusList();
@@ -1310,7 +1309,6 @@
         case "history": return screenHistory();
         case "adminDash": return screenAdminDash();
         case "adminItems": return screenAdminItems();
-        case "adminAvatars": return screenAdminAvatars();
         case "adminFeedback": return screenAdminFeedback();
         default: return screenWelcome();
       }
@@ -1347,35 +1345,6 @@
     <div><label class="field-label">รหัสผ่าน</label><input id="loginPw" type="password" class="input" value="123456"></div>
     <div id="loginErr" class="errtext hidden"></div>
     <button class="btn-primary mt-2" data-act="doLogin">เข้าสู่ระบบ</button>
-    <button class="btn-outline" data-act="goto" data-arg="forgot">ลืมรหัสผ่าน?</button>
-  </div>`;
-    }
-    function screenForgot() {
-      return `${topbar("ลืมรหัสผ่าน", "login")}
-  <div class="p-5 flex flex-col gap-3">
-    <p style="font-size:13px;color:#8a7d9c">กรอกอีเมลที่ลงทะเบียนไว้ เราจะส่งลิงก์รีเซ็ตรหัสผ่านให้ (จำลอง)</p>
-    <input id="forgotEmail" class="input" placeholder="you@email.com">
-    <div id="forgotErr" class="errtext hidden"></div>
-    <button class="btn-primary" data-act="doForgot">ส่งลิงก์รีเซ็ต</button>
-    <button class="btn-outline" data-act="goto" data-arg="login">ยกเลิก</button>
-  </div>`;
-    }
-    function screenForgotSent() {
-      return `${topbar("ตรวจสอบอีเมล", "forgot")}
-  <div class="p-6 flex flex-col gap-3 items-center text-center">
-    <div style="font-size:48px">📧</div>
-    <p style="font-size:13px;color:#3a2b55">หากอีเมลนี้มีอยู่ในระบบ จะได้รับลิงก์รีเซ็ตรหัสผ่าน (มีอายุ 15 นาที) — (จำลองอีเมล)</p>
-    <button class="btn-primary" data-act="goto" data-arg="resetPw">เปิดลิงก์รีเซ็ต (จำลอง)</button>
-    <button class="btn-outline" data-act="goto" data-arg="login">กลับไปเข้าสู่ระบบ</button>
-  </div>`;
-    }
-    function screenResetPw() {
-      return `${topbar("ตั้งรหัสผ่านใหม่", "login")}
-  <div class="p-5 flex flex-col gap-3">
-    <input id="newPw1" type="password" class="input" placeholder="รหัสผ่านใหม่">
-    <input id="newPw2" type="password" class="input" placeholder="ยืนยันรหัสผ่านใหม่">
-    <div id="resetErr" class="errtext hidden"></div>
-    <button class="btn-primary" data-act="doResetPassword">บันทึกรหัสผ่านใหม่</button>
   </div>`;
     }
 
@@ -1673,7 +1642,7 @@
   </div>`;
     }
 
-    /* ── Revival (UC-16) ── */
+    /* ── Revival (UC-15) ── */
     function screenRevival() {
       const m = me();
       if (!m.unconscious) {
@@ -1871,7 +1840,7 @@
       const isOwner = room.ownerId === state.currentUserId;
       const now = simNow();
       const remainMin = room.status === "active" ? Math.max(0, (room.closesAt - now) / 60000) : room.durationMin;
-      const ranked = room.members.slice().sort((a, b) => b.focusSec - a.focusSec);
+      const ranked = room.members.slice().sort(roomRankCompare);
       const inSessionHere = state.activeSession && state.activeSession.roomId === roomId;
       const pastDeadline = room.status === "active" && now >= room.closesAt;
       return `${topbar(room.name, "roomList")}
@@ -1885,7 +1854,8 @@
     </div>
     <button class="btn-outline" data-act="refreshRoom" data-arg="${room.id}">🔄 รีเฟรชหน้าห้อง</button>
     ${isOwner && room.status === "waiting" ? `
-      <button class="btn-primary" data-act="startRoomAct" data-arg="${room.id}">▶️ เริ่มห้อง</button>
+      ${room.members.length < 2 ? `<p class="errtext">ต้องมีสมาชิกอย่างน้อย 2 คนก่อนเริ่มห้องได้ (ตอนนี้มี ${room.members.length} คน)</p>` : ""}
+      <button class="btn-primary" data-act="startRoomAct" data-arg="${room.id}" ${room.members.length < 2 ? "disabled" : ""}>▶️ เริ่มห้อง</button>
       <button class="btn-outline" data-act="addBotAct" data-arg="${room.id}|Ploy">➕ เชิญเพื่อนจำลอง (Ploy)</button>
       <button class="btn-outline" data-act="addBotAct" data-arg="${room.id}|Ken">➕ เชิญเพื่อนจำลอง (Ken)</button>
     ` : ""}
@@ -1920,7 +1890,7 @@
       const roomId = state.screenArg || state.currentRoomId;
       const room = state.rooms[roomId];
       if (!room) return screenRoomList();
-      const ranked = room.ranking || room.members.slice().sort((a, b) => b.focusSec - a.focusSec);
+      const ranked = room.ranking || room.members.slice().sort(roomRankCompare);
       return `${topbar("สรุปผลห้อง", "roomList")}
   <div class="p-4 flex flex-col gap-3">
     <div class="card text-center" style="background:#fff7e6">
@@ -2038,7 +2008,6 @@
       <p style="font-size:22px;font-weight:900;color:#3a2b55">${Object.keys(state.members).length} คน</p>
     </div>
     <button class="btn-outline" data-act="goto" data-arg="adminItems">🎁 จัดการไอเทม/อัตราดรอป</button>
-    <button class="btn-outline" data-act="goto" data-arg="adminAvatars">👤 จัดการรูปแบบอวตาร</button>
     <button class="btn-outline" data-act="goto" data-arg="adminFeedback">💬 ดู/ตอบกลับ Feedback</button>
     <button class="btn-danger" data-act="logout">ออกจากระบบ</button>
   </div>`;
@@ -2075,26 +2044,6 @@
     </div>
   </div>`;
     }
-    function screenAdminAvatars() {
-      return `${topbar("จัดการรูปแบบอวตาร", "adminDash")}
-  <div class="p-4 flex flex-col gap-2">
-    <div id="avaAdminErr" class="errtext hidden"></div>
-    ${state.avatarTemplates.map(t => `
-      <div class="card flex justify-between items-center">
-        <span style="font-size:13px">${t.emoji} ${t.name}</span>
-        <button class="${t.active ? 'btn-danger' : 'btn-secondary'}" style="width:auto;padding:6px 12px;font-size:11px" data-act="toggleAvatarTemplate" data-arg="${t.id}">${t.active ? 'ปิดใช้งาน' : 'เปิดใช้งาน'}</button>
-      </div>`).join("")}
-    <div class="card mt-2">
-      <p style="font-weight:800;color:#3a2b55;font-size:13px">➕ เพิ่มรูปแบบอวตารใหม่</p>
-      <label class="field-label mt-2">ชื่อรูปแบบ</label>
-      <input id="newTplName" class="input" placeholder="เช่น หมอผี">
-      <label class="field-label mt-2">อีโมจิ</label>
-      <input id="newTplEmoji" class="input" placeholder="🧙‍♀️">
-      <div id="newTplErr" class="errtext hidden mt-1"></div>
-      <button class="btn-secondary mt-2" data-act="addAvatarTemplate">เพิ่มรูปแบบ</button>
-    </div>
-  </div>`;
-    }
     function screenAdminFeedback() {
       const list = state.feedbacks.slice().sort((a, b) => b.createdAt - a.createdAt);
       return `${topbar("ดู/ตอบกลับ Feedback", "adminDash")}
@@ -2120,7 +2069,7 @@
     render();
     setInterval(tick, 1000);
     setInterval(() => {
-      // เฉพาะหน้าเซสชันเท่านั้นที่ต้องเป็นเรียลไทม์ (นาฬิกาถอยหลัง) — ห้องโฟกัส (UC-18) ตามสเปคคือ
+      // เฉพาะหน้าเซสชันเท่านั้นที่ต้องเป็นเรียลไทม์ (นาฬิกาถอยหลัง) — หน้าห้องโฟกัส/Ranking (UC-17) ตามสเปคคือ
       // "อัพเดตเมื่อเปิด/รีเฟรชหน้าห้อง ไม่ใช่การนับถอยหลังแบบเรียลไทม์ต่อเนื่อง" จึงไม่ auto-refresh ที่นี่
       const liveScreens = ["session"];
       if (liveScreens.includes(state.screen)) render();

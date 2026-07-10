@@ -1,3 +1,6 @@
+' ฉบับละเอียดรวมทุกโมดูล (UC-01 ถึง UC-25) — อัพเดตให้ตรงกับ usecase_description.md ฉบับปัจจุบัน
+' (เดิมไฟล์นี้ใช้รหัส UC-26 ถึง UC-35 ซึ่งเป็นเวอร์ชันเก่า แก้ไขให้ตรงกับ proposal/usecase/usecase_module1.puml ถึง usecase_module7.puml แล้ว)
+' ความสัมพันธ์ระหว่าง use case อ้างอิงตรงจาก usecase_description.md: UC01 include UC02, UC15 include UC07, UC16 include UC23
 @startuml focus_usecase
 !theme plain
 skinparam defaultFontName TH Sarabun New
@@ -23,7 +26,7 @@ skinparam rectangle {
 }
 skinparam ArrowColor #424242
 
-title <b>แอปพลิเคชันจับเวลาโฟกัสในรูปแบบเกม (Focus)</b>\n(Use Case Diagram — ฉบับละเอียด อ้างอิง Use Case Specification ครบทุกโมดูล)
+title <b>แอปพลิเคชันจับเวลาโฟกัสในรูปแบบเกม (Focus)</b>\n(Use Case Diagram — ฉบับละเอียด อ้างอิง Use Case Specification UC-01 ถึง UC-25)
 
 left to right direction
 
@@ -33,53 +36,60 @@ actor "ผู้ดูแลระบบ\n(Admin)" as Admin
 
 rectangle "แอปพลิเคชัน Focus" {
 
-  ' ===== โมดูล 1: บัญชีและการเริ่มต้นใช้งาน =====
-  package "บัญชีและการเริ่มต้นใช้งาน" {
-    usecase "UC-01\nสมัครสมาชิก" as UC01
-    usecase "UC-02\nสร้างอวตาร" as UC02
-    usecase "UC-03\nจัดการรายการสิ่งที่โฟกัส" as UC03
-    usecase "UC-31\nเข้าสู่ระบบ" as UC31
-    usecase "UC-32\nออกจากระบบ" as UC32
+  ' ===== โมดูล 1: บัญชีและการเริ่มต้นใช้งาน (UC-01 ถึง UC-06) =====
+  package "โมดูล 1 · บัญชีและการเริ่มต้นใช้งาน" {
+    usecase "UC-01\nการสมัครสมาชิก" as UC01
+    usecase "UC-02\nการสร้างอวตาร" as UC02
+    usecase "UC-03\nจัดการรายการสิ่งที่โฟกัส\n(เพิ่ม/ลบ)" as UC03
+    usecase "UC-04\nแก้ไขโปรไฟล์และ\nเปลี่ยนรหัสผ่าน" as UC04
+    usecase "UC-05\nตั้งค่าระยะเวลาเริ่มต้น\nของโฟกัส/พัก" as UC05
+    usecase "UC-06\nส่ง Feedback" as UC06
   }
 
-  ' ===== โมดูล 2: เซสชันโฟกัส (Core Loop) =====
-  package "เซสชันโฟกัส (Core Loop)" {
-    usecase "UC-04\nเริ่มจับเวลาโฟกัส\n(ตีบอส)" as UC04
+  ' ===== โมดูล 2: เซสชันโฟกัส (Core Loop) (UC-07 ถึง UC-09) =====
+  package "โมดูล 2 · เซสชันโฟกัส (Core Loop)" {
+    usecase "UC-07\nเริ่มจับเวลาโฟกัส\n(ตีบอส)" as UC07
+    usecase "UC-08\nเข้าสู่ระบบ" as UC08
+    usecase "UC-09\nออกจากระบบ" as UC09
   }
 
-  ' ===== โมดูล 3: ไอเทมและกล่องสุ่ม =====
-  package "ไอเทมและกล่องสุ่ม" {
+  ' ===== โมดูล 3: ไอเทมและกล่องสุ่ม (UC-10 ถึง UC-14) =====
+  package "โมดูล 3 · ไอเทมและกล่องสุ่ม" {
     usecase "UC-10\nเปิดกล่องสุ่ม\n(รวม Pity System)" as UC10
-    usecase "UC-12\nผสมไอเทม (Crafting)" as UC12
-    usecase "UC-13\nใช้ไอเทมโล่เวลา\n(ป้องกัน HP/Streak 24-48 ชม.)" as UC13
+    usecase "UC-11\nผสมไอเทม (Crafting)" as UC11
+    usecase "UC-12\nดูกระเป๋าไอเทม\n(Inventory)" as UC12
+    usecase "UC-13\nใช้ไอเทมโล่เวลา" as UC13
+    usecase "UC-14\nสวมใส่/ถอดไอเทม\nแต่งตัวอวตาร\n(Equip/Unequip)" as UC14
   }
 
-  ' ===== โมดูล 4: อวตารและความต่อเนื่อง (ระบบชุบชีวิต) =====
-  package "อวตารและความต่อเนื่อง" {
-    usecase "UC-30\nระบบชุบชีวิต\n(Revival System)" as UC30
+  ' ===== โมดูล 4: อวตารและความต่อเนื่อง (ระบบชุบชีวิต) (UC-15) =====
+  package "โมดูล 4 · อวตารและความต่อเนื่อง" {
+    usecase "UC-15\nระบบชุบชีวิต\n(Revival System)" as UC15
   }
 
-  ' ===== โมดูล 5: ห้องโฟกัสและสังคม =====
-  package "ห้องโฟกัส" {
-    usecase "UC-18\nจัดการห้องโฟกัส" as UC18
-    usecase "UC-20\nดูเวลาโฟกัสของ\nสมาชิกในห้อง" as UC20
+  ' ===== โมดูล 5: ห้องโฟกัสและสังคม (UC-16 ถึง UC-22) =====
+  package "โมดูล 5 · ห้องโฟกัส" {
+    usecase "UC-16\nจัดการห้องโฟกัส" as UC16
+    usecase "UC-17\nดูเวลาโฟกัสของ\nสมาชิกในห้อง (Ranking)" as UC17
+    usecase "UC-18\nออกจากห้องโฟกัส" as UC18
+    usecase "UC-19\nเตะสมาชิกออกจาก\nห้องโฟกัส" as UC19
   }
 
-  package "ระบบเพื่อน" {
-    usecase "UC-21\nเพิ่มเพื่อน" as UC21
-    usecase "UC-35\nยกเลิกคำขอเป็นเพื่อน / ลบเพื่อน" as UC35
+  package "โมดูล 5 · ระบบเพื่อน" {
+    usecase "UC-20\nเพิ่มเพื่อน" as UC20
+    usecase "UC-21\nยกเลิกคำขอเป็นเพื่อน / ลบเพื่อน" as UC21
+    usecase "UC-22\nดูโปรไฟล์และ\nสถิติเพื่อน" as UC22
   }
 
-  ' ===== โมดูล 6: ประวัติและสถิติ =====
-  package "ประวัติและสถิติ" {
-    usecase "UC-22\nดูประวัติและสถิติการโฟกัส\n(โฟกัส/พัก/เบรกเกิน แยกกัน)" as UC22
+  ' ===== โมดูล 6: ประวัติและสถิติ (UC-23) =====
+  package "โมดูล 6 · ประวัติและสถิติ" {
+    usecase "UC-23\nดูประวัติและสถิติการโฟกัส\n(โฟกัส/พัก/เบรกเกิน แยกกัน)" as UC23
   }
 
-  ' ===== โมดูล 7: Admin — การจัดการระบบ =====
-  package "Admin — การจัดการระบบ" {
-    usecase "UC-26\nจัดการข้อมูลไอเทม\nและอัตราดรอป" as UC26
-    usecase "UC-27\nจัดการรูปแบบอวตาร" as UC27
-    usecase "UC-29\nเรียกดูแดชบอร์ด\nสถิติการใช้งานระบบ" as UC29
+  ' ===== โมดูล 7: Admin — การจัดการระบบ (UC-24, UC-25) =====
+  package "โมดูล 7 · Admin — การจัดการระบบ" {
+    usecase "UC-24\nจัดการข้อมูลไอเทม\nและอัตราดรอป" as UC24
+    usecase "UC-25\nดูและตอบกลับ Feedback" as UC25
   }
 }
 
@@ -87,30 +97,44 @@ rectangle "แอปพลิเคชัน Focus" {
 Guest -- UC01
 
 ' ===== Member =====
+Member -- UC02
 Member -- UC03
-Member -- UC31
-Member -- UC32
 Member -- UC04
+Member -- UC05
+Member -- UC06
+Member -- UC07
+Member -- UC08
+Member -- UC09
 Member -- UC10
+Member -- UC11
 Member -- UC12
 Member -- UC13
-Member -- UC30
+Member -- UC14
+Member -- UC15
+Member -- UC16
+Member -- UC17
 Member -- UC18
+Member -- UC19
 Member -- UC20
 Member -- UC21
-Member -- UC35
 Member -- UC22
+Member -- UC23
 
 ' ===== Admin =====
-Admin -- UC31
-Admin -- UC32
-Admin -- UC26
-Admin -- UC27
-Admin -- UC29
+Admin -- UC08
+Admin -- UC09
+Admin -- UC24
+Admin -- UC25
 
 ' ===== ความสัมพันธ์ระหว่าง use case =====
 UC01 ..> UC02 : <<include>>
-UC30 ..> UC04 : <<include>>
-UC18 ..> UC22 : <<include>>
+UC15 ..> UC07 : <<include>>
+UC16 ..> UC23 : <<include>>
+
+' หมายเหตุ: UC-05→UC-07 (pre-fill), UC-06→UC-25 (ข้อมูล Feedback ร่วมกัน),
+' UC-10/UC-11/UC-13/UC-14→UC-12 (แหล่งข้อมูลไอเทมร่วม), UC-18/UC-19→UC-16 (ผลกระทบต่อสมาชิกในห้อง),
+' UC-20→UC-22 (pre-condition ต้องเป็นเพื่อนกันก่อน), UC-22→UC-14/UC-08/UC-23 (ข้อมูลที่แสดงบนโปรไฟล์เพื่อน)
+' ทั้งหมดเป็นความสัมพันธ์เชิงข้อมูล/pre-condition เท่านั้น ไม่ใช่ <<include>>/<<extend>> เชิง flow
+' ตาม usecase_description.md จึงไม่วาดเส้นความสัมพันธ์เพิ่มเติมนอกเหนือจาก 3 เส้นข้างต้น
 
 @enduml

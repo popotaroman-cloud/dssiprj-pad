@@ -37,10 +37,12 @@ rectangle "แอปพลิเคชัน Focus" {
 }
 
 ' ===== ความสัมพันธ์ actor–use case (เส้นธรรมดา) =====
+' หมายเหตุ: Admin เชื่อมกับ M2 (ไม่ใช่ M1) เพราะ UC-08 (เข้าสู่ระบบ)/UC-09 (ออกจากระบบ)
+' ซึ่งมี Admin เป็น Actor หลักร่วมด้วย ถูกจัดอยู่ในโมดูล 2 ตามรหัส FN-SES-002/003
 Guest -- M1
 Member -- M1
-Admin -- M1
 Member -- M2
+Admin -- M2
 Member -- M3
 Member -- M4
 Member -- M5
