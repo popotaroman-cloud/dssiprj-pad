@@ -1135,7 +1135,7 @@
     /* ==== Settings / Profile ==== */
     A.saveDefaultDuration = () => {
       const f = parseInt(val("defFocus")), b = parseInt(val("defBreak"));
-      if (!f || f < 1 || f > 600 || !b || b < 1 || b > 60) { showFieldError("durErr", "กรอกค่าให้อยู่ในช่วงที่กำหนด (โฟกัส 1-600, พัก 1-60 นาที)"); return; }
+      if (!f || f < 1 || f > 180 || !b || b < 1 || b > 60) { showFieldError("durErr", "กรอกค่าให้อยู่ในช่วงที่กำหนด (โฟกัส 1-180, พัก 1-60 นาที)"); return; }
       me().settings.defaultFocus = f; me().settings.defaultBreak = b;
       save(); toast("บันทึกระยะเวลาเริ่มต้นแล้ว"); navigate("settings");
     };
@@ -1202,7 +1202,7 @@
       const itemId = val("sessSelectItem");
       const focusMin = parseInt(val("sessFocus")), breakMin = parseInt(val("sessBreak"));
       if (!itemId) { showFieldError("sessErr", "เลือกรายการที่จะโฟกัสก่อน"); return; }
-      if (!focusMin || focusMin < 1 || focusMin > 600 || !breakMin || breakMin < 1 || breakMin > 60) { showFieldError("sessErr", "กรอกระยะเวลาให้อยู่ในช่วงที่กำหนด (โฟกัส 1-600, พัก 1-60 นาที)"); return; }
+      if (!focusMin || focusMin < 1 || focusMin > 180 || !breakMin || breakMin < 1 || breakMin > 60) { showFieldError("sessErr", "กรอกระยะเวลาให้อยู่ในช่วงที่กำหนด (โฟกัส 1-180, พัก 1-60 นาที)"); return; }
       const item = state.focusItems.find(x => x.id === itemId);
       state.activeSession = {
         memberId: me().id, itemId, itemName: item.name, focusMin, breakMin,
@@ -1339,7 +1339,7 @@
       const name = val("roomName"), dur = parseInt(val("roomDuration")), f = parseInt(val("roomFocus")), b = parseInt(val("roomBreak"));
       if (!name || !dur || !f || !b) { showFieldError("roomErr", "กรอกข้อมูลห้องให้ครบ"); return; }
       if (dur < 5 || dur > 1000) { showFieldError("roomErr", "เวลาห้องต้องอยู่ในช่วง 5-1000 นาที"); return; }
-      if (f < 1 || f > 600 || b < 1 || b > 60) { showFieldError("roomErr", "ระยะเวลาโฟกัส/พักร่วมต้องอยู่ในช่วงที่กำหนด (โฟกัส 1-600, พัก 1-60 นาที)"); return; }
+      if (f < 1 || f > 300 || b < 1 || b > 60) { showFieldError("roomErr", "ระยะเวลาโฟกัส/พักร่วมต้องอยู่ในช่วงที่กำหนด (โฟกัส 1-300, พัก 1-60 นาที)"); return; }
       createRoom(name, dur, f, b);
     };
     A.joinRoomSubmit = () => {
@@ -1357,7 +1357,7 @@
     A.editRoomDuration = (id) => {
       const f = parseInt(val("roomEditFocus")), b = parseInt(val("roomEditBreak"));
       if (!f || !b) { showFieldError("roomEditErr", "กรอกค่าให้ครบ"); return; }
-      if (f < 1 || f > 600 || b < 1 || b > 60) { showFieldError("roomEditErr", "ระยะเวลาต้องอยู่ในช่วงที่กำหนด (โฟกัส 1-600, พัก 1-60 นาที)"); return; }
+      if (f < 1 || f > 300 || b < 1 || b > 60) { showFieldError("roomEditErr", "ระยะเวลาต้องอยู่ในช่วงที่กำหนด (โฟกัส 1-300, พัก 1-60 นาที)"); return; }
       const room = state.rooms[id]; room.focusMin = f; room.breakMin = b;
       save(); render(); toast("อัพเดตระยะเวลาร่วมของห้องแล้ว");
     };
